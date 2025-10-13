@@ -26,7 +26,7 @@ const defaultProps: FavoriteButtonProps = {
 const FavoriteButton = (props: FavoriteButtonProps) => {
     const [isHovered, setIsHovered] = useState(false);
     const {size, color, hoverColor, backgroundColor, thickness, activeBackground, wordId, setActive, isActive} = {...defaultProps, ...props};
-    console.log(wordId);
+    
     const styles = {
         stroke: color,
         fill: backgroundColor,

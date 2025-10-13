@@ -1,4 +1,4 @@
-import { Module } from "@/generated/prisma";
+import { Language, Module } from "@/generated/prisma";
 import { Card as CardDBType } from "@/generated/prisma";
 
 export interface Card {
@@ -32,6 +32,16 @@ export interface Languages {
     definition: string;
 }
 
+export interface CardWithFavorite extends Card{
+    isFavorite?: boolean;
+}
+
+export interface WordsModule extends Module{
+    cards: CardWithFavorite[];
+    termLanguage: Language;
+    definitionLanguage: Language;
+}
+
 export interface ModuleInterface{
     languages: Languages;
     cards: Card[];
@@ -59,6 +69,5 @@ export interface ModuleWithCount extends Module{
 
 // Type for module with cards and with languages
 export interface ModuleMax extends Module{
-
     cards: CardDBType[];
 }

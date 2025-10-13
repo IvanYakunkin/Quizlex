@@ -42,7 +42,7 @@ export default function Introduce() {
                     </div>
                 </div>
 
-                <div className={styles.inroduce__import}>
+                {/* <div className={styles.inroduce__import}>
                     <div className={styles.introduce__title}>Advanced module import</div>
                     <div className={styles.introduce__importElements}>
                         <Image src="/images/importModule.png" width={800} height={800} alt="Test" className={styles.introduce__importImage} />
@@ -63,7 +63,7 @@ export default function Introduce() {
                     <div className={styles.introduce__importElements}>
                         <Image src="/images/createModule.png" width={800} height={800} alt="Test" className={styles.introduce__importImage} />
                     </div>
-                </div>
+                </div> */}
             </div>
         </main>
     );

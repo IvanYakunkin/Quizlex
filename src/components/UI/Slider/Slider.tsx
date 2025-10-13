@@ -40,7 +40,6 @@ const Slider = (props: SliderProps) => {
     // Contains css-class for animation
     const [slideAnimate, setSlideAnimate] = useState("");
 
-    const cardsCounter = (props.currentCardId + 1) + " / " + props.cards.length;
     const currentCard = props.cards[props.currentCardId];
 
     const toNextWord = useCallback(() => {
@@ -102,19 +101,13 @@ const Slider = (props: SliderProps) => {
         setIsTranslationShown(!isTranslationShown);
     }
 
-    // Define what word to show on each side
-    let frontSideLabel;
-    let backSideLabel;
-    let isFavoriteActive = false;
+    // Define which word should be shown for each side
+    let frontSideLabel, backSideLabel;
 
     if((isFlipped && isTranslationShown) || (!isFlipped && !isTranslationShown)){  
         [frontSideLabel, backSideLabel] = [currentCard.term, currentCard.definition];
     }else{
         [frontSideLabel, backSideLabel] = [currentCard.definition, currentCard.term];
-    }
-    
-    if(props.cards[props.currentCardId].isFavorite){
-        isFavoriteActive = true;
     }
 
     useImperativeHandle(props.sliderRef, () => ({
@@ -190,13 +183,13 @@ const Slider = (props: SliderProps) => {
                         <FavoriteButton 
                             size={25} 
                             hoverColor="var(--blue-color-400)" 
-                            isActive={isFavoriteActive} 
-                            wordId={props.currentCardId} 
+                            isActive={props.cards[props.currentCardId].isFavorite} 
+                            wordId={props.cards[props.currentCardId].id} 
                             setActive={clickFavorite}
                         />
                     </div> 
                     
-                    <div className={styles.counter}>{cardsCounter}</div>
+                    <div className={styles.counter}>{(props.currentCardId + 1) + " / " + props.cards.length}</div>
 
                     <div className={styles.headerRight}>
                         <AudioButton   
@@ -229,10 +222,16 @@ const Slider = (props: SliderProps) => {
             <div className={slideAnimate ? moduleSliderClass + " " + modulesSliderAnimationClass : moduleSliderClass} onClick={flipCart} onTouchStart={handleTouchStart} onTouchMove={handleTouchMove}>  
                 <div className={styles.header}>
                     <div className={styles.headerLeft}>            
-                        <FavoriteButton size={25} hoverColor="var(--blue-color-400)" isActive={isFavoriteActive} wordId={props.currentCardId} setActive={clickFavorite}/>
+                        <FavoriteButton 
+                            size={25} 
+                            hoverColor="var(--blue-color-400)" 
+                            isActive={props.cards[props.currentCardId].isFavorite} 
+                            wordId={props.cards[props.currentCardId].id} 
+                            setActive={clickFavorite}
+                        />
                     </div> 
                     
-                    <div className={styles.counter}>{cardsCounter}</div>
+                    <div className={styles.counter}>{(props.currentCardId + 1) + " / " + props.cards.length}</div>
 
                     <div className={styles.headerRight}>
                         <AudioButton   

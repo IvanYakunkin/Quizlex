@@ -70,6 +70,7 @@ export function setFavoriteLS(setCards: React.Dispatch<React.SetStateAction<Card
 
 export async function setFavoriteDB(setCards: React.Dispatch<React.SetStateAction<Card[]>>, wordId: number, moduleId: number, userEmail: string){
     changeFavoriteState(setCards, wordId);
+    
     const favoriteResponse = await fetch("/api/favorites/", {
         method: 'POST',
         headers: {

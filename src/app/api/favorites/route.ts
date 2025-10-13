@@ -9,19 +9,19 @@ export async function POST(req: Request) {
     const userId = await findUserIdByEmail(userEmail);
     
     if(!userId){
-        return NextResponse.json({error: "Unable to find user"}, {status: 404});
+      return NextResponse.json({error: "Unable to find user"}, {status: 404});
     }
 
     if(await isCardFavorite(userId, wordId)){
-        const createdFavorite = await setCardFavorite(userId, moduleId, wordId);
-        if(createdFavorite){
-            return NextResponse.json(createdFavorite, {status: 201});
-        }
+      const deletedFavorite = deleteCardFavorite(userId, wordId);
+      if(deletedFavorite){
+          return NextResponse.json(deletedFavorite, {status: 201});
+      }
     }else{
-        const deletedFavorite = deleteCardFavorite(userId, wordId);
-        if(deletedFavorite){
-            return NextResponse.json(deletedFavorite, {status: 201});
-        }
+      const createdFavorite = await setCardFavorite(userId, moduleId, wordId);
+      if(createdFavorite){
+          return NextResponse.json(createdFavorite, {status: 201});
+      }  
     }
     
     return NextResponse.json({error: "Internal Server Error"}, {status: 500});

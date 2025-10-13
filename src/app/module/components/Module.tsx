@@ -1,6 +1,6 @@
 "use client"
 
-import { Card, Languages, ModuleInterface } from "@/types/types";
+import { Card, Languages, ModuleInterface, WordsModule } from "@/types/types";
 import CardsPreview from "@/components/UI/CardsPreview/CardsPreview";
 import Slider from "@/components/UI/Slider/Slider";
 import { useEffect, useRef, useState } from "react";
@@ -10,7 +10,6 @@ import LearningTypes from "../components/LearningTypes";
 import Image from "next/image";
 import styles from "../page.module.css";
 import { useRouter } from "next/navigation";
-import { Language, Module as ModuleType} from "@/generated/prisma";
 import { useSession } from "next-auth/react";
 
 interface SliderRef{
@@ -18,14 +17,8 @@ interface SliderRef{
     switchDefaultSides: () => void;
 }
 
-interface IModuleWithCards extends ModuleType{
-    cards: Card[];
-    termLanguage: Language;
-    definitionLanguage: Language;
-}
-
 interface ModuleProps{
-    moduleData?: IModuleWithCards | null
+    moduleData?: WordsModule | null;
 }
 
 const defaultLanguages = {term: "en-EN", definition: "en-En"};
@@ -118,8 +111,6 @@ const Module = ({moduleData}: ModuleProps) => {
             }
         }
     }
-
-    console.log(cards);
     
     return (
         <main>
@@ -200,17 +191,15 @@ const Module = ({moduleData}: ModuleProps) => {
                 </div>
 
                 <CardsPreview 
-                    cards={cards} 
-                    setCards={setCards} 
                     title="" 
                     showNumbers={false} 
-                    language={languages.term} 
                     showOptions={true}
+                    cards={cards} 
+                    setCards={setCards} 
+                    language={languages.term} 
                 />
-
-            </div>
-            </div>
-            }
+                </div>
+        </div>}
         </main>
     )
 }

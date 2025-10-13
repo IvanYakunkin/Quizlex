@@ -2,6 +2,22 @@ import { PrismaClient } from "@/generated/prisma";
 
 const prisma = new PrismaClient();
 
+export const getFavoriteCards = async  (userId: number, moduleId: number) => {
+    const favoriteCards = await prisma.favoriteCard.findMany({
+        where : {
+            userId: userId,
+            moduleId: +moduleId
+        },
+        select: {
+            cardId: true,
+        }
+    });
+
+    const favoriteIds = favoriteCards.map(fav => fav.cardId);
+
+    return favoriteIds;
+}
+
 export const isCardFavorite = async (userId: number, cardId: number) => {
     const existingFavorite = await prisma.favoriteCard.findUnique({
         where: {
@@ -24,7 +40,7 @@ export const deleteCardFavorite = async (userId: number, cardId: number) => {
             }
         }
     });
-
+    
     return deletedFavorite;
 }
 

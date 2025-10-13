@@ -1,5 +1,10 @@
 import { findModuleById } from "@/services/moduleService";
 import Module from "../components/Module";
+import { getServerSession, Session } from "next-auth";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { findUserIdByEmail } from "@/services/userService";
+import { getFavoriteCards } from "@/services/favoriteService";
+import { WordsModule } from "@/types/types";
 
 export default async function Page({
   params,
@@ -9,9 +14,30 @@ export default async function Page({
 
     const { id } = await params;
 
-    const moduleData = await findModuleById(id);
+    const wordsModule: WordsModule | null = await findModuleById(id);
+
+    const session: Session | null = await getServerSession(authOptions);
+    if(!session || !session.user?.email){
+      // TODO: Store ID in session
+      // ISSUE: There is no obvious way to store ID in session using next-auth
+      return;
+    }
+
+    const userId = await findUserIdByEmail(session.user.email);
+
+    if(!userId || !wordsModule){
+      return;
+    }
+
+    const favoriteCardIds = await getFavoriteCards(userId, id);
+
+    // Check favorites
+    wordsModule.cards = wordsModule.cards.map(card => ({
+      ...card,
+      isFavorite: favoriteCardIds.includes(card.id)
+    }));
 
     return (
-        <Module moduleData={moduleData} />
+        <Module moduleData={wordsModule} />
     );
 }

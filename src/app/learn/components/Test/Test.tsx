@@ -23,7 +23,7 @@ const templateOptions = {
     default: {value: "Choose the correct answer:", class: ""},
     correct: {value: "Correct!", class: "correct"},
     incorrect: {value: "Incorrect!", class: "incorrect"},
-    showAnswer: {value: "Answer this question later", class: "info"}
+    showAnswer: {value: "Answer this question later", class: "showAnswer"}
 }
 
 const optionsClasses: AnswerOptionsClasses = {
@@ -44,8 +44,7 @@ const switchCorrectCardDuration = 600;
 
 const Test = (props: TestProps) => {
 
-    const [cards, setCards] = useState<Card[]>(props.cards);
-    const [testCards, setTestCards] = useState<Card[]>(shuffleCards(cards)); // These are terms that remain to be answered
+    const [testCards, setTestCards] = useState<Card[]>(shuffleCards(props.cards)); // These are terms that remain to be answered
     const [answeredCards, setAnsweredCards] = useState<Card[]>([]); // Per round
     const [currentCard, setCurrentCard] = useState<Card>(testCards[0]);
     const [answerStatus, setAnswerStatus] = useState<AnswerResult>("");
@@ -56,7 +55,7 @@ const Test = (props: TestProps) => {
     const answerTemplateOptions = useRef<AnswerResultOptions>(templateOptions.default);
     const wordsRoundCounter = useRef(0);
     
-    const answersNumber = cards.length > 3 ? 4 : cards.length;
+    const answersNumber = props.cards.length > 3 ? 4 : props.cards.length;
 
     const checkAnswer = useCallback((id: TestAnswerId) => {
         if(answerStatus) return;
@@ -131,17 +130,17 @@ const Test = (props: TestProps) => {
                 let incorrectAnswerId: number;
                 loop: while(isGenerating){
 
-                    incorrectAnswerId = getRandomInt(0, cards.length);
+                    incorrectAnswerId = getRandomInt(0, props.cards.length);
 
                     for(let v = 0; v < localOptions.length; v++){
-                        if(localOptions[v].id === cards[incorrectAnswerId].id){
+                        if(localOptions[v].id === props.cards[incorrectAnswerId].id){
                             continue loop;
                         }
                     }
 
                     // Push only if it is an incorrect option
-                    if(cards[incorrectAnswerId].id !== currentCard.id){
-                        newOption = cards[incorrectAnswerId];
+                    if(props.cards[incorrectAnswerId].id !== currentCard.id){
+                        newOption = props.cards[incorrectAnswerId];
                         isGenerating = false;    
                     }   
                 }
@@ -151,7 +150,7 @@ const Test = (props: TestProps) => {
 
         setAnswerOptions(localOptions);
 
-    }, [answersNumber, testCards, currentCard, cards]);
+    }, [answersNumber, testCards, currentCard, props.cards]);
     
     // Keyboard
     useEffect(() => {        
@@ -183,7 +182,7 @@ const Test = (props: TestProps) => {
     }, [answerStatus, answerOptions, checkAnswer, toNextWord]);
 
 
-    const wordsCounterLabel = cards.length - testCards.length + 1 + " / " + cards.length;
+    const wordsCounterLabel = props.cards.length - testCards.length + 1 + " / " + props.cards.length;
 
     const testOptions = (
         <TestOptions
@@ -200,7 +199,7 @@ const Test = (props: TestProps) => {
     const resultsTemplate = (
         <ResultPage 
             cards={answeredCards} 
-            setCards={setCards}
+            setCards={setAnsweredCards}
             closeResultPage = {() => {setShowResultPage(false);setAnsweredCards([])}} 
             isGameOver = {showResultPage && testCards.length === 0}
             language = {props.languages.term}

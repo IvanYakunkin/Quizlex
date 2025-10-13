@@ -7,12 +7,12 @@ import { useSession } from "next-auth/react";
 import { useParams } from "next/navigation";
 
 interface CardsPreviewProps{
-    cards: Card[],
-    setCards?: React.Dispatch<React.SetStateAction<Card[]>>,
-    title?: string,
-    language?: string,
-    showNumbers?: boolean,
-    showOptions?: boolean,
+    cards: Card[];
+    setCards?: React.Dispatch<React.SetStateAction<Card[]>>;
+    title?: string;
+    language?: string;
+    showNumbers?: boolean;
+    showOptions?: boolean;
     additionalText?: string;   
 }
 

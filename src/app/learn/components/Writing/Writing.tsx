@@ -12,19 +12,18 @@ interface WritingProps{
 }
 
 const successTimerDuration = 600;
-const maxWordsPerRound = 2;
+const maxWordsPerRound = 10;
 
 const Writing = (props: WritingProps) => {
-    const [cards, setCards] = useState(props.cards);
     const [answeredCards, setAnsweredCards] = useState<Card[]>([]); // Per round
     const [result, setResult] = useState<WritingResultStatus>("");
-    const [testCards, setTestCards] = useState<Card[]>(shuffleCards(cards));
+    const [testCards, setTestCards] = useState<Card[]>(shuffleCards(props.cards));
     const [currentCard, setCurrentCard] = useState<Card>(testCards[0]);
 
     const inputRef = useRef<HTMLInputElement>(null);
     const wordsRoundCounter = useRef(0);
 
-    const progressLabel = cards.length - testCards.length + 1 + " / " + cards.length;
+    const progressLabel = props.cards.length - testCards.length + 1 + " / " + props.cards.length;
 
     const [currentTemplate, setCurrentTemplate] = useState<JSX.Element>(
         <WritingTemplate 
@@ -113,12 +112,12 @@ const Writing = (props: WritingProps) => {
     const resultPage = useCallback(() => (
         <ResultPage 
             cards={answeredCards} 
-            setCards={setCards}
+            setCards={setAnsweredCards}
             closeResultPage={() => {setResult(""); setAnsweredCards([])}} 
             isGameOver={result === "finished"}
             language={props.languages.term}
         />
-    ), [answeredCards, setCards, result, props.languages.term]);
+    ), [answeredCards, setAnsweredCards, result, props.languages.term]);
 
     // Define the template to show
     useEffect(() => {

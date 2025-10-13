@@ -182,7 +182,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "/home/ivan/Documents/code/production/quizlex/src/generated/prisma",
+      "value": "/home/ivan/Documents/code/production/prod/Quizlex/src/generated/prisma",
       "fromEnvVar": null
     },
     "config": {
@@ -196,12 +196,11 @@ const config = {
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "/home/ivan/Documents/code/production/quizlex/prisma/schema.prisma",
+    "sourceFilePath": "/home/ivan/Documents/code/production/prod/Quizlex/prisma/schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
-    "rootEnvPath": null,
-    "schemaEnvPath": "../../../.env"
+    "rootEnvPath": null
   },
   "relativePath": "../../../prisma",
   "clientVersion": "6.15.0",
@@ -210,6 +209,7 @@ const config = {
     "db"
   ],
   "activeProvider": "mysql",
+  "postinstall": true,
   "inlineDatasources": {
     "db": {
       "url": {

@@ -23,9 +23,9 @@ const LearningHeader = (props: LearningHeaderProps) => {
 
     return (
         <div className={styles.info}>
-            <div className={`${styles.headerBtn} ${styles.back}`} onClick={toHome}><Image src="/images/home.png" width={24} height={24} alt="Quit" /></div>
+            <div className={`${styles.headerBtn}`} onClick={toHome}><Image src="/images/home.png" width={24} height={24} alt="Quit" /></div>
             <div className={styles.set}>{props.moduleName ? props.moduleName : "Your Set"}</div>
-            <div className={`${styles.headerBtn} ${styles.switch}`} onClick={() => props.setChangeLanguage(!props.changeLanguage)}>
+            <div className={`${styles.headerBtn}`} onClick={() => props.setChangeLanguage(!props.changeLanguage)}>
                 <svg version="1.1" id="Layer_1" viewBox="0 0 472.615 472.615">
                     <g> 
                         <g><path d="M355.232,0l-13.525,13.525l65.821,65.821h-279.17c-52.894,0-95.924,43.031-95.924,95.919v59.633h19.128v-59.633
