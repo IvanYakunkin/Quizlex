@@ -1,0 +1,29 @@
+.switcher{
+    background: var(--header-background);
+    width: 270px;
+    height: 48px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+
+.switcher>.method{
+    color: rgb(185, 185, 185);
+    font-size: .9em;
+    width: 131px;
+    height: 40px;
+    margin-left: 4px;
+    margin-right: 4px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.method.active{
+    background: var(--blue-color-600);
+    border-radius: 7px;
+    color: white;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}

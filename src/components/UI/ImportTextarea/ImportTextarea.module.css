@@ -1,0 +1,20 @@
+.import__textarea{
+    width: 100%;
+    min-height: 200px;
+    background-color: transparent;
+    outline: none;
+    border-color: white;
+    border-radius: 8px;
+    padding: 10px;
+    resize: vertical;
+    transition: border-color .2s ease-out;
+    color: white;
+    font-size: 1.1em;
+    font-weight: 600;
+    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    box-sizing: border-box;
+}
+
+.import__textarea:focus{
+    border-color: var(--blue-color-200);
+}

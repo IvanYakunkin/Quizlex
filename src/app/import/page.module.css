@@ -1,0 +1,193 @@
+.baseButton{
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  color: white;
+  border-radius: 4px;
+  font-weight: bold;
+}
+
+.importContent{
+    width: 1000px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+}
+
+.title{
+    font-size: 2em;
+    text-align: center;
+    margin-top: 40px;
+}
+
+.languages{
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 20px;
+}
+
+.language{
+    width: 300px;
+}
+
+.importContainer{
+    background-color: var(--header-background);
+    border-radius: 10px;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+
+.info{
+    font-size: 1.2em;
+    padding-bottom: 10px;
+    padding-left: 15px;
+}
+
+/* Import Area */
+
+.areaContent{
+    padding: 20px;
+}
+
+.menu{
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+}
+
+.separators{
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 0;
+}
+
+.separator{
+    width: 60px;
+    height: 34px;
+    background-color: var(--blue-color-400);
+    padding: 2px;
+    transition: all .2s ease-out;
+}
+
+.separator.active{
+    background: var(--blue-color-700);
+    height: 30px;
+}
+
+.separator:not(.active):hover{
+    opacity: .8;
+}
+
+.buttonSave{
+    padding: 10px 60px;
+    background: green;
+    font-size: 1.1em;
+    border-radius: 4px;
+    transition: all .3s ease-out;
+    cursor: pointer;
+}
+
+.buttonSave:hover{
+    background: var(--blue-color-400);
+}
+
+.moduleField {
+    width: 100%;
+    display: block;
+    margin-top: 10px;
+    border: 0;
+    outline: 0;
+    background-color: transparent;
+    border-bottom: 2px solid var(--blue-color-400);
+    color: white;
+    padding: 10px;
+    font-size: 18px;
+    transition: .2s;
+    box-sizing: border-box;
+}
+
+.moduleField.error{
+   border-bottom-color: rgb(228, 46, 46);
+}
+
+.moduleField:focus:not(.error){
+    border-bottom: 2px solid var(--blue-color-200);
+}
+
+.infoFields{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.spinner {
+    width: 20px;
+    height: 20px;
+    border: 2px solid #f3f3f3;
+    border-top: 2px solid #3498db;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+@media (max-width: 468px) {
+    .importContent{
+        width: 95%;
+    }
+    .languages{
+        flex-direction: column;
+        gap: 25px;
+    }
+    .language{
+        width: 100%;
+    }
+    .menu{
+        flex-direction: column;
+        gap: 10px;
+    }
+    .separators{
+        justify-content: center;
+    }
+
+}
+
+@media (min-width: 468px) and (max-width: 767px) {
+    .importContent{
+        width: 95%;
+    }
+    .languages{
+        flex-direction: column;
+        gap: 25px;
+    }
+    .language{
+        width: 100%;
+    }
+    .buttonSave{
+        padding: 10px 40px;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 1024px){
+    .importContent{
+        width: 95%;
+    }
+}

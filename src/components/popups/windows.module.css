@@ -1,0 +1,119 @@
+.popup{
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(59, 59, 59, 0.4); 
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    z-index: 999;
+}
+
+.container{
+    margin-top: 160px;
+    width: 35%;
+    background-color: var(--background-color);
+    border-radius: 10px;
+    box-shadow: rgba(0, 0, 0, 0.3) 0px 19px 38px, rgba(0, 0, 0, 0.22) 0px 15px 12px;
+}
+
+.info{
+    padding: 20px 30px;
+}
+
+.title{
+    font-size: 2em;
+    font-weight: bold;
+    padding: 20px 0 30px 0;
+}
+
+.close{
+    float: right;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    margin-top: 10px;
+    margin-right: 10px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.close:hover{
+    background-color: var(--header-background);
+}
+
+.warning>div{
+    margin-bottom: 5px;
+}
+
+.module{
+    font-size: 1.4em;
+    font-weight: bold;
+    padding-bottom: 10px;
+}
+
+.buttons{
+    display: flex;
+    justify-content: flex-end;
+    border-top: 1px solid white;
+    padding: 20px 30px;
+    gap: 15px;
+    align-items: center;
+}
+
+.btnConfirm{
+    background-color: rgba(255, 0, 0, 0.597);
+    padding: 12px 25px;
+    border-radius: 5px;
+    width: fit-content;
+    cursor: pointer;
+}
+
+.btnSuccess{
+    background-color: green;
+    padding: 12px 25px;
+    border-radius: 5px;
+    width: fit-content;
+    cursor: pointer;
+}
+
+.btnCancel{
+    cursor: pointer;
+    border: 1px solid white;
+    border-radius: 5px;
+    padding: 10px 15px;
+}
+
+.btnCancel:hover{
+    border: 1px solid var(--blue-color-400);
+}
+
+.btnConfirm:hover, .btnSuccess:hover{
+    opacity: .8;
+}
+
+@media (max-width: 467px) {
+    .container{
+        width: 90%;
+        font-size: .8em;
+    }
+    .title{
+        font-size: 1.8em;
+    }
+}
+
+@media (min-width: 468px) and (max-width: 767px){
+    .container{
+        width: 80%;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 1025px){
+    .container{
+        width: 60%;
+    }
+}
