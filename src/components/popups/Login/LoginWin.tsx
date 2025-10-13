@@ -4,6 +4,8 @@ import Image from "next/image";
 import Switcher from "../../UI/Switcher/Switcher";
 import LoginForm from "./LoginForm";
 import SignUpForm from "./SignUpForm";
+import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 interface LoginWin{
     isOpen: boolean;
@@ -11,11 +13,12 @@ interface LoginWin{
 }
 
 const LoginWin = ({isOpen, onClose}: LoginWin) => {
-
+    const router = useRouter();
     const dialogRef = useRef<HTMLDialogElement>(null);
     const popupRef = useRef<HTMLDivElement>(null);
     const [selectedMethod, setSelectedMethod] = useState<"login" | "signUp">("login");
     const [isEmailLogin, setIsEmailLogin] = useState(false);
+    const [isGoogleLoading, setIsGoogleLoading] = useState(false);
 
     const handleClickOutside = useCallback((event: MouseEvent) => {
         if (popupRef.current && !popupRef.current.contains(event.target as Node)) {
@@ -36,7 +39,16 @@ const LoginWin = ({isOpen, onClose}: LoginWin) => {
                 dialogRef.current.close();
             }
         }
-    }, [isOpen, handleClickOutside])
+    }, [isOpen, handleClickOutside]);
+
+    const googleAuth = async() => {
+        setIsGoogleLoading(true);
+        const authResult = await signIn("google", {redirect: false});
+        if(authResult && authResult.ok && authResult.url){
+            router.push("/modules");
+        }
+        setIsGoogleLoading(false);
+    }
 
     return (
         <dialog ref={dialogRef} className={styles.dialog}>
@@ -54,7 +66,11 @@ const LoginWin = ({isOpen, onClose}: LoginWin) => {
                     {!isEmailLogin  &&
                     <div className={styles.methods}>
                         <Switcher selectedMethod={selectedMethod} setSelectedMethod={setSelectedMethod} />
-                        <div className={styles.google}><Image src={"/images/google.png"} width={32} height={32} alt="Google" />Continue with Google</div>
+                        <div className={styles.google} onClick={googleAuth}>{!isGoogleLoading &&<Image src={"/images/google.png"} width={32} height={32} alt="Google" />}{isGoogleLoading ? 
+                         <div className={styles.loading}>
+                            <div className={styles.spinner}></div>
+                        </div>
+                        : "Continue with Google"}</div>
                     </div>
                     }
                     {isEmailLogin && (

@@ -150,10 +150,10 @@
 .spinner {
     width: 20px;
     height: 20px;
-    border: 2px solid #f3f3f3; /* Light grey border */
-    border-top: 2px solid #3498db; /* Blue top border for the "spinning" part */
+    border: 2px solid #f3f3f3; 
+    border-top: 2px solid #3498db;
     border-radius: 50%;
-    animation: spin 1s linear infinite; /* Apply the animation */
+    animation: spin 1s linear infinite;
 }
 
 @keyframes spin {

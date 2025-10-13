@@ -10,7 +10,7 @@ const Page = async () => {
     if(!session || !session.user?.email){
         return null;
     }
-
+    
     const userId = await findUserIdByEmail(session.user.email);
     if(!userId){
         return null;

@@ -1354,6 +1354,7 @@ export namespace Prisma {
     id: number | null
     login: string | null
     email: string | null
+    authMethod: string | null
     password: string | null
     created_at: Date | null
   }
@@ -1362,6 +1363,7 @@ export namespace Prisma {
     id: number | null
     login: string | null
     email: string | null
+    authMethod: string | null
     password: string | null
     created_at: Date | null
   }
@@ -1370,6 +1372,7 @@ export namespace Prisma {
     id: number
     login: number
     email: number
+    authMethod: number
     password: number
     created_at: number
     _all: number
@@ -1388,6 +1391,7 @@ export namespace Prisma {
     id?: true
     login?: true
     email?: true
+    authMethod?: true
     password?: true
     created_at?: true
   }
@@ -1396,6 +1400,7 @@ export namespace Prisma {
     id?: true
     login?: true
     email?: true
+    authMethod?: true
     password?: true
     created_at?: true
   }
@@ -1404,6 +1409,7 @@ export namespace Prisma {
     id?: true
     login?: true
     email?: true
+    authMethod?: true
     password?: true
     created_at?: true
     _all?: true
@@ -1499,7 +1505,8 @@ export namespace Prisma {
     id: number
     login: string
     email: string
-    password: string
+    authMethod: string
+    password: string | null
     created_at: Date
     _count: UserCountAggregateOutputType | null
     _avg: UserAvgAggregateOutputType | null
@@ -1526,6 +1533,7 @@ export namespace Prisma {
     id?: boolean
     login?: boolean
     email?: boolean
+    authMethod?: boolean
     password?: boolean
     created_at?: boolean
     modules?: boolean | User$modulesArgs<ExtArgs>
@@ -1539,11 +1547,12 @@ export namespace Prisma {
     id?: boolean
     login?: boolean
     email?: boolean
+    authMethod?: boolean
     password?: boolean
     created_at?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "login" | "email" | "password" | "created_at", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "login" | "email" | "authMethod" | "password" | "created_at", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     modules?: boolean | User$modulesArgs<ExtArgs>
     favoriteCards?: boolean | User$favoriteCardsArgs<ExtArgs>
@@ -1560,7 +1569,8 @@ export namespace Prisma {
       id: number
       login: string
       email: string
-      password: string
+      authMethod: string
+      password: string | null
       created_at: Date
     }, ExtArgs["result"]["user"]>
     composites: {}
@@ -1936,6 +1946,7 @@ export namespace Prisma {
     readonly id: FieldRef<"User", 'Int'>
     readonly login: FieldRef<"User", 'String'>
     readonly email: FieldRef<"User", 'String'>
+    readonly authMethod: FieldRef<"User", 'String'>
     readonly password: FieldRef<"User", 'String'>
     readonly created_at: FieldRef<"User", 'DateTime'>
   }
@@ -6388,6 +6399,7 @@ export namespace Prisma {
     id: 'id',
     login: 'login',
     email: 'email',
+    authMethod: 'authMethod',
     password: 'password',
     created_at: 'created_at'
   };
@@ -6446,9 +6458,18 @@ export namespace Prisma {
   export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
 
 
+  export const NullsOrder: {
+    first: 'first',
+    last: 'last'
+  };
+
+  export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
+
+
   export const UserOrderByRelevanceFieldEnum: {
     login: 'login',
     email: 'email',
+    authMethod: 'authMethod',
     password: 'password'
   };
 
@@ -6470,14 +6491,6 @@ export namespace Prisma {
   };
 
   export type ModuleOrderByRelevanceFieldEnum = (typeof ModuleOrderByRelevanceFieldEnum)[keyof typeof ModuleOrderByRelevanceFieldEnum]
-
-
-  export const NullsOrder: {
-    first: 'first',
-    last: 'last'
-  };
-
-  export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
 
 
   export const CardOrderByRelevanceFieldEnum: {
@@ -6531,7 +6544,8 @@ export namespace Prisma {
     id?: IntFilter<"User"> | number
     login?: StringFilter<"User"> | string
     email?: StringFilter<"User"> | string
-    password?: StringFilter<"User"> | string
+    authMethod?: StringFilter<"User"> | string
+    password?: StringNullableFilter<"User"> | string | null
     created_at?: DateTimeFilter<"User"> | Date | string
     modules?: ModuleListRelationFilter
     favoriteCards?: FavoriteCardListRelationFilter
@@ -6541,7 +6555,8 @@ export namespace Prisma {
     id?: SortOrder
     login?: SortOrder
     email?: SortOrder
-    password?: SortOrder
+    authMethod?: SortOrder
+    password?: SortOrderInput | SortOrder
     created_at?: SortOrder
     modules?: ModuleOrderByRelationAggregateInput
     favoriteCards?: FavoriteCardOrderByRelationAggregateInput
@@ -6555,7 +6570,8 @@ export namespace Prisma {
     AND?: UserWhereInput | UserWhereInput[]
     OR?: UserWhereInput[]
     NOT?: UserWhereInput | UserWhereInput[]
-    password?: StringFilter<"User"> | string
+    authMethod?: StringFilter<"User"> | string
+    password?: StringNullableFilter<"User"> | string | null
     created_at?: DateTimeFilter<"User"> | Date | string
     modules?: ModuleListRelationFilter
     favoriteCards?: FavoriteCardListRelationFilter
@@ -6565,7 +6581,8 @@ export namespace Prisma {
     id?: SortOrder
     login?: SortOrder
     email?: SortOrder
-    password?: SortOrder
+    authMethod?: SortOrder
+    password?: SortOrderInput | SortOrder
     created_at?: SortOrder
     _count?: UserCountOrderByAggregateInput
     _avg?: UserAvgOrderByAggregateInput
@@ -6581,7 +6598,8 @@ export namespace Prisma {
     id?: IntWithAggregatesFilter<"User"> | number
     login?: StringWithAggregatesFilter<"User"> | string
     email?: StringWithAggregatesFilter<"User"> | string
-    password?: StringWithAggregatesFilter<"User"> | string
+    authMethod?: StringWithAggregatesFilter<"User"> | string
+    password?: StringNullableWithAggregatesFilter<"User"> | string | null
     created_at?: DateTimeWithAggregatesFilter<"User"> | Date | string
   }
 
@@ -6839,7 +6857,8 @@ export namespace Prisma {
   export type UserCreateInput = {
     login: string
     email: string
-    password: string
+    authMethod?: string
+    password?: string | null
     created_at?: Date | string
     modules?: ModuleCreateNestedManyWithoutUserInput
     favoriteCards?: FavoriteCardCreateNestedManyWithoutUserInput
@@ -6849,7 +6868,8 @@ export namespace Prisma {
     id?: number
     login: string
     email: string
-    password: string
+    authMethod?: string
+    password?: string | null
     created_at?: Date | string
     modules?: ModuleUncheckedCreateNestedManyWithoutUserInput
     favoriteCards?: FavoriteCardUncheckedCreateNestedManyWithoutUserInput
@@ -6858,7 +6878,8 @@ export namespace Prisma {
   export type UserUpdateInput = {
     login?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
-    password?: StringFieldUpdateOperationsInput | string
+    authMethod?: StringFieldUpdateOperationsInput | string
+    password?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     modules?: ModuleUpdateManyWithoutUserNestedInput
     favoriteCards?: FavoriteCardUpdateManyWithoutUserNestedInput
@@ -6868,7 +6889,8 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     login?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
-    password?: StringFieldUpdateOperationsInput | string
+    authMethod?: StringFieldUpdateOperationsInput | string
+    password?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     modules?: ModuleUncheckedUpdateManyWithoutUserNestedInput
     favoriteCards?: FavoriteCardUncheckedUpdateManyWithoutUserNestedInput
@@ -6878,14 +6900,16 @@ export namespace Prisma {
     id?: number
     login: string
     email: string
-    password: string
+    authMethod?: string
+    password?: string | null
     created_at?: Date | string
   }
 
   export type UserUpdateManyMutationInput = {
     login?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
-    password?: StringFieldUpdateOperationsInput | string
+    authMethod?: StringFieldUpdateOperationsInput | string
+    password?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -6893,7 +6917,8 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     login?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
-    password?: StringFieldUpdateOperationsInput | string
+    authMethod?: StringFieldUpdateOperationsInput | string
+    password?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -7145,6 +7170,21 @@ export namespace Prisma {
     not?: NestedStringFilter<$PrismaModel> | string
   }
 
+  export type StringNullableFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | null
+    notIn?: string[] | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    search?: string
+    not?: NestedStringNullableFilter<$PrismaModel> | string | null
+  }
+
   export type DateTimeFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     in?: Date[] | string[]
@@ -7168,6 +7208,11 @@ export namespace Prisma {
     none?: FavoriteCardWhereInput
   }
 
+  export type SortOrderInput = {
+    sort: SortOrder
+    nulls?: NullsOrder
+  }
+
   export type ModuleOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
@@ -7186,6 +7231,7 @@ export namespace Prisma {
     id?: SortOrder
     login?: SortOrder
     email?: SortOrder
+    authMethod?: SortOrder
     password?: SortOrder
     created_at?: SortOrder
   }
@@ -7198,6 +7244,7 @@ export namespace Prisma {
     id?: SortOrder
     login?: SortOrder
     email?: SortOrder
+    authMethod?: SortOrder
     password?: SortOrder
     created_at?: SortOrder
   }
@@ -7206,6 +7253,7 @@ export namespace Prisma {
     id?: SortOrder
     login?: SortOrder
     email?: SortOrder
+    authMethod?: SortOrder
     password?: SortOrder
     created_at?: SortOrder
   }
@@ -7246,6 +7294,24 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedStringFilter<$PrismaModel>
     _max?: NestedStringFilter<$PrismaModel>
+  }
+
+  export type StringNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | null
+    notIn?: string[] | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    search?: string
+    not?: NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedStringNullableFilter<$PrismaModel>
+    _max?: NestedStringNullableFilter<$PrismaModel>
   }
 
   export type DateTimeWithAggregatesFilter<$PrismaModel = never> = {
@@ -7370,29 +7436,9 @@ export namespace Prisma {
     definitionLanguageId?: SortOrder
   }
 
-  export type StringNullableFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | null
-    notIn?: string[] | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    contains?: string | StringFieldRefInput<$PrismaModel>
-    startsWith?: string | StringFieldRefInput<$PrismaModel>
-    endsWith?: string | StringFieldRefInput<$PrismaModel>
-    search?: string
-    not?: NestedStringNullableFilter<$PrismaModel> | string | null
-  }
-
   export type ModuleScalarRelationFilter = {
     is?: ModuleWhereInput
     isNot?: ModuleWhereInput
-  }
-
-  export type SortOrderInput = {
-    sort: SortOrder
-    nulls?: NullsOrder
   }
 
   export type CardOrderByRelevanceInput = {
@@ -7430,24 +7476,6 @@ export namespace Prisma {
   export type CardSumOrderByAggregateInput = {
     id?: SortOrder
     moduleId?: SortOrder
-  }
-
-  export type StringNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | null
-    notIn?: string[] | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    contains?: string | StringFieldRefInput<$PrismaModel>
-    startsWith?: string | StringFieldRefInput<$PrismaModel>
-    endsWith?: string | StringFieldRefInput<$PrismaModel>
-    search?: string
-    not?: NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedStringNullableFilter<$PrismaModel>
-    _max?: NestedStringNullableFilter<$PrismaModel>
   }
 
   export type CardScalarRelationFilter = {
@@ -7520,6 +7548,10 @@ export namespace Prisma {
 
   export type StringFieldUpdateOperationsInput = {
     set?: string
+  }
+
+  export type NullableStringFieldUpdateOperationsInput = {
+    set?: string | null
   }
 
   export type DateTimeFieldUpdateOperationsInput = {
@@ -7820,10 +7852,6 @@ export namespace Prisma {
     connect?: FavoriteCardWhereUniqueInput | FavoriteCardWhereUniqueInput[]
   }
 
-  export type NullableStringFieldUpdateOperationsInput = {
-    set?: string | null
-  }
-
   export type ModuleUpdateOneRequiredWithoutCardsNestedInput = {
     create?: XOR<ModuleCreateWithoutCardsInput, ModuleUncheckedCreateWithoutCardsInput>
     connectOrCreate?: ModuleCreateOrConnectWithoutCardsInput
@@ -7928,6 +7956,21 @@ export namespace Prisma {
     not?: NestedStringFilter<$PrismaModel> | string
   }
 
+  export type NestedStringNullableFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | null
+    notIn?: string[] | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    search?: string
+    not?: NestedStringNullableFilter<$PrismaModel> | string | null
+  }
+
   export type NestedDateTimeFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     in?: Date[] | string[]
@@ -7984,35 +8027,6 @@ export namespace Prisma {
     _max?: NestedStringFilter<$PrismaModel>
   }
 
-  export type NestedDateTimeWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    in?: Date[] | string[]
-    notIn?: Date[] | string[]
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeWithAggregatesFilter<$PrismaModel> | Date | string
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedDateTimeFilter<$PrismaModel>
-    _max?: NestedDateTimeFilter<$PrismaModel>
-  }
-
-  export type NestedStringNullableFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | null
-    notIn?: string[] | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    contains?: string | StringFieldRefInput<$PrismaModel>
-    startsWith?: string | StringFieldRefInput<$PrismaModel>
-    endsWith?: string | StringFieldRefInput<$PrismaModel>
-    search?: string
-    not?: NestedStringNullableFilter<$PrismaModel> | string | null
-  }
-
   export type NestedStringNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel> | null
     in?: string[] | null
@@ -8040,6 +8054,20 @@ export namespace Prisma {
     gt?: number | IntFieldRefInput<$PrismaModel>
     gte?: number | IntFieldRefInput<$PrismaModel>
     not?: NestedIntNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type NestedDateTimeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    in?: Date[] | string[]
+    notIn?: Date[] | string[]
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeWithAggregatesFilter<$PrismaModel> | Date | string
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedDateTimeFilter<$PrismaModel>
+    _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
   export type ModuleCreateWithoutUserInput = {
@@ -8258,7 +8286,8 @@ export namespace Prisma {
   export type UserCreateWithoutModulesInput = {
     login: string
     email: string
-    password: string
+    authMethod?: string
+    password?: string | null
     created_at?: Date | string
     favoriteCards?: FavoriteCardCreateNestedManyWithoutUserInput
   }
@@ -8267,7 +8296,8 @@ export namespace Prisma {
     id?: number
     login: string
     email: string
-    password: string
+    authMethod?: string
+    password?: string | null
     created_at?: Date | string
     favoriteCards?: FavoriteCardUncheckedCreateNestedManyWithoutUserInput
   }
@@ -8370,7 +8400,8 @@ export namespace Prisma {
   export type UserUpdateWithoutModulesInput = {
     login?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
-    password?: StringFieldUpdateOperationsInput | string
+    authMethod?: StringFieldUpdateOperationsInput | string
+    password?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     favoriteCards?: FavoriteCardUpdateManyWithoutUserNestedInput
   }
@@ -8379,7 +8410,8 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     login?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
-    password?: StringFieldUpdateOperationsInput | string
+    authMethod?: StringFieldUpdateOperationsInput | string
+    password?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     favoriteCards?: FavoriteCardUncheckedUpdateManyWithoutUserNestedInput
   }
@@ -8579,7 +8611,8 @@ export namespace Prisma {
   export type UserCreateWithoutFavoriteCardsInput = {
     login: string
     email: string
-    password: string
+    authMethod?: string
+    password?: string | null
     created_at?: Date | string
     modules?: ModuleCreateNestedManyWithoutUserInput
   }
@@ -8588,7 +8621,8 @@ export namespace Prisma {
     id?: number
     login: string
     email: string
-    password: string
+    authMethod?: string
+    password?: string | null
     created_at?: Date | string
     modules?: ModuleUncheckedCreateNestedManyWithoutUserInput
   }
@@ -8660,7 +8694,8 @@ export namespace Prisma {
   export type UserUpdateWithoutFavoriteCardsInput = {
     login?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
-    password?: StringFieldUpdateOperationsInput | string
+    authMethod?: StringFieldUpdateOperationsInput | string
+    password?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     modules?: ModuleUpdateManyWithoutUserNestedInput
   }
@@ -8669,7 +8704,8 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     login?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
-    password?: StringFieldUpdateOperationsInput | string
+    authMethod?: StringFieldUpdateOperationsInput | string
+    password?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     modules?: ModuleUncheckedUpdateManyWithoutUserNestedInput
   }

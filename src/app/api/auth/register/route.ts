@@ -12,7 +12,7 @@ export async function POST(req: Request) {
       return NextResponse.json({error: "The password must contain at least 5 characters!"}, {status: 400});
     }
 
-    const newUser = await createUser(login, email, password)
+    const newUser = await createUser(login, email, "credentials", password);
 
     return NextResponse.json(newUser, { status: 201 }); 
 

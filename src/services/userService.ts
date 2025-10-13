@@ -3,7 +3,7 @@ import { hash } from "bcrypt";
 
 const prisma = new PrismaClient();
 
-export async function createUser(login: string, email: string, password: string) {
+export async function createUser(login: string, email: string, authMethod?: string, password?: string) {
     const existingEmail = await prisma.user.findFirst({
       where: { email }
     });
@@ -20,13 +20,14 @@ export async function createUser(login: string, email: string, password: string)
         throw new Error('Login is already in use!');
     }
 
-    const hashedPassword = await hash(password, 10);
+    const hashedPassword = password ? await hash(password, 10) : null;
 
     const newUser = await prisma.user.create({
       data: {
         email,
         password: hashedPassword,
         login,
+        authMethod
       },
     });
 

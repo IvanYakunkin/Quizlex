@@ -80,7 +80,7 @@ const DeleteWin = (props:DeleteWinProps) => {
                 </div>
             </div>
         </div>
-    )
+    );
 }
 
 export default DeleteWin;

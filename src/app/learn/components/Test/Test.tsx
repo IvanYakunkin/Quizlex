@@ -39,7 +39,7 @@ const deniedKeys = [
   "F4", "F5", "F6", "F7", "F8", "F9", "F10", "F11", "F12", "PrintScreen"
 ];
 
-const wordsPerRound = 2;
+const wordsPerRound = 10;
 const switchCorrectCardDuration = 600;
 
 const Test = (props: TestProps) => {
