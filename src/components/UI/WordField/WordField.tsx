@@ -23,10 +23,10 @@ const WordField = (props: WordFieldProps) => {
     return (
         <div className={styles.content}>
             <div>
-                <FieldWithLetters ref={termInputRef} value={props.card.term} language="german" placeholder="Word" onChange={props.updateTerm} /> 
+                <FieldWithLetters ref={termInputRef} value={props.card.term || ""} language="german" placeholder="Word" onChange={props.updateTerm} /> 
             </div>
             <div>
-                <FieldWithLetters ref={definitionInputRef} value={props.card.definition} language="russian" placeholder="Definition" onChange={props.updateDefinition} /> 
+                <FieldWithLetters ref={definitionInputRef} value={props.card.definition || ""} language="russian" placeholder="Definition" onChange={props.updateDefinition} /> 
             </div>
         </div>
     );

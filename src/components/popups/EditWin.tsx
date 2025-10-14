@@ -4,8 +4,6 @@ import { Card } from "@/types/types";
 import { useEffect, useRef, useState } from "react";
 import WordField from "../UI/WordField/WordField";
 import styles from "./windows.module.css";
-import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
 
 interface EditWinProps{
     moduleId?: number;

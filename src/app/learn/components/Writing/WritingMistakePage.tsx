@@ -19,7 +19,7 @@ const WritingMistakePage = (props: WritingMistakePageProps) => {
     const checkAnswer = useCallback(() => {
         if(inputRef.current){
             const correctAnswer = props.changeLanguage ? props.currentCard.term : props.currentCard.definition;
-            const result: boolean = checkWriting(inputRef.current.value, correctAnswer);
+            const result = checkWriting(inputRef.current.value, correctAnswer || "");
             
             if(result) return props.setResult("incorrect");
         }        

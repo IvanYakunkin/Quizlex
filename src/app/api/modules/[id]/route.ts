@@ -7,7 +7,7 @@ import { NextResponse } from "next/server";
 
 export async function GET(
   request: Request,
-  { params }: { params: Promise<{ id: number }> }
+  { params }: { params: Promise<{ id: string }> }
 ) {
     try {
         const { id } = await params;
@@ -24,7 +24,7 @@ export async function GET(
             return NextResponse.json({error: "User is not authorized"}, {status: 401});
         }
 
-        const wordsModule = await findUserModuleById(userId, id);
+        const wordsModule = await findUserModuleById(userId, +id);
        
         if(!wordsModule){
             return NextResponse.json({error: "Module not found"}, {status: 404});
@@ -40,7 +40,7 @@ export async function GET(
 
 export async function DELETE(
   request: Request,
-  { params }: { params: Promise<{ id: number }> }
+  { params }: { params: Promise<{ id: string }> }
 ) {
     try {
         const { id } = await params;
@@ -57,13 +57,13 @@ export async function DELETE(
             return NextResponse.json({error: "User is not authorized"}, {status: 401});
         }
 
-        const foundModule = await findUserModuleById(userId, id);
+        const foundModule = await findUserModuleById(userId, +id);
 
         if (!foundModule) {
             return NextResponse.json({ error: 'Module not found' }, { status: 404 });
         }
 
-        const deletedModule = await deleteModule(id, userId);
+        const deletedModule = await deleteModule(+id, userId);
 
         return NextResponse.json(deletedModule, { status: 200 });
 
@@ -75,7 +75,7 @@ export async function DELETE(
 
 export async function PATCH(
   request: Request,
-  { params }: { params: Promise<{ id: number }> }
+  { params }: { params: Promise<{ id: string }> }
 ) {
     try {
         const { id } = await params;
@@ -98,13 +98,13 @@ export async function PATCH(
             return NextResponse.json({ error: 'Word is required' }, { status: 400 });
         }
 
-        const foundModule = await findUserModuleById(userId, id);
+        const foundModule = await findUserModuleById(userId, +id);
 
         if (!foundModule) {
             return NextResponse.json({ error: 'Module not found' }, { status: 404 });
         }
 
-        const updatedModule = await updateModuleWord(id, userId, card);
+        const updatedModule = await updateModuleWord(+id, userId, card);
 
         return NextResponse.json(updatedModule, { status: 200 });
 

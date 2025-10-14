@@ -18,7 +18,7 @@ const WritingTemplate = (props: WritingTemplateProps) => {
     const checkAnswer = useCallback(() => {
         if(props.inputRef.current){
             const correctAnswer = props.changeLanguage ? props.currentCard.term : props.currentCard.definition;
-            const result = checkWriting(props.inputRef.current.value, correctAnswer);
+            const result = checkWriting(props.inputRef.current.value, correctAnswer || "");
 
             if(result){
                 return props.setResult("correct");
