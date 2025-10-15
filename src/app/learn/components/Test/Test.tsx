@@ -201,8 +201,9 @@ const Test = (props: TestProps) => {
             cards={answeredCards} 
             setCards={setAnsweredCards}
             closeResultPage = {() => {setShowResultPage(false);setAnsweredCards([])}} 
-            isGameOver = {showResultPage && testCards.length === 0}
+            isGameOver = {testCards.length === 0}
             language = {props.languages.term}
+            additionalText=""
         />
     );
 

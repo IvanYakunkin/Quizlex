@@ -34,9 +34,11 @@ const DeleteWin = (props:DeleteWinProps) => {
         if(status === "authenticated"){
             if(props.moduleId){
                 await deleteModuleFromDB(props.moduleId); 
+                router.push("/modules");
             }
         }else{
             localStorage.removeItem('module');
+            router.push("/");
         }
     }
 
