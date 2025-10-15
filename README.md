@@ -2,6 +2,7 @@
 
 This application is designed to help users learn foreign language words through interactive flashcards. Built with React, Next.js, MySQL, and Prisma, this app provides an efficient and user-friendly way to enhance your vocabulary skills.
 
+You can visit the website at: [quizlex.ru](http://quizlex.ru)
 ## Features
 
 - **Free Vocabulary Creation and Import**: Easily create and import vocabulary cards (flashcards) for various languages.
@@ -49,7 +50,7 @@ To get started with the Foreign Language Vocabulary Trainer, follow these steps:
 4. **Run Migrations**:
    Use Prisma to set up the database schema:
    ```bash
-   npx prisma migrate dev --name init
+   npx prisma migrate deploy
    ```
 
 5. **Start the Development Server**:
@@ -66,6 +67,7 @@ To get started with the Foreign Language Vocabulary Trainer, follow these steps:
 
 - React.js
 - Next.js
+- Next-Auth
 - MySQL
 - Prisma
 
