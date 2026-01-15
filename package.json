@@ -10,11 +10,10 @@
   },
   "dependencies": {
     "bcrypt": "^6.0.0",
-    "next": "15.5.2",
+    "next": "^15.5.9",
     "next-auth": "^4.24.11",
-    "nodemailer": "^6.10.1",
+    "nodemailer": "^7.0.12",
     "react": "19.1.0",
-    "react-card-flip": "^1.2.3",
     "react-dom": "19.1.0"
   },
   "devDependencies": {
@@ -30,5 +29,10 @@
     "prisma": "^6.17.1",
     "tsx": "^4.20.5",
     "typescript": "5.9.3"
+  },
+  "overrides": {
+    "react-card-flip": {
+      "react": "$react"
+    }
   }
 }

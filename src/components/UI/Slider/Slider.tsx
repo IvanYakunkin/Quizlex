@@ -1,12 +1,12 @@
 import { Languages, Card } from "@/types/types";
 import { useState, useEffect, useImperativeHandle, useCallback } from "react";
-import ReactCardFlip from 'react-card-flip'; 
 import AudioButton from "../AudioButton/AudioButton";
 import FavoriteButton from "../FavoriteButton/FavoriteButton";
 import { setFavoriteDB, setFavoriteLS } from "@/utils/common";
 import styles from "./Slider.module.css";
 import { useSession } from "next-auth/react";
 import { useParams } from "next/navigation";
+import CardFlipper from "../CardFlipper/CardFlipper";
 
 interface SliderRef{
     refreshCards?: () => void;
@@ -176,7 +176,7 @@ const Slider = (props: SliderProps) => {
     const modulesSliderAnimationClass = slideAnimate === "slideRightAnimation" ? styles.slideRightAnimation : styles.slideLeftAnimation;
 
     return (
-        <ReactCardFlip flipDirection="vertical" isFlipped={isFlipped} infinite={true} flipSpeedBackToFront={0.3} flipSpeedFrontToBack={0.3}>
+        <CardFlipper flipDirection="vertical" isFlipped={isFlipped} infinite={true} flipSpeedBackToFront={0.3} flipSpeedFrontToBack={0.3}>
             <div className={slideAnimate ? moduleSliderClass + " " + modulesSliderAnimationClass : moduleSliderClass} onClick={flipCart} onTouchStart={handleTouchStart} onTouchMove={handleTouchMove}>
                 <div className={styles.header}>
                     <div className={styles.headerLeft}>            
@@ -260,7 +260,7 @@ const Slider = (props: SliderProps) => {
                 </div>
                 }
             </div>
-        </ReactCardFlip>
+        </CardFlipper>
     )
 };
 
