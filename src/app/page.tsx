@@ -3,9 +3,9 @@ import styles from "./page.module.css";
 import Link from "next/link";
 
 export default function Introduce() {
-    
+
     return (
-        <main className={styles.main}>
+        <main className={styles.main} data-testid="main-page">
             <div className={styles.introduce}>
                 <div className={styles.introduce__preview}>
                     <div className={styles.introduce__previewInfo}>

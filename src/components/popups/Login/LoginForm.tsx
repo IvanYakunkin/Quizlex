@@ -4,13 +4,13 @@ import Switcher from "../../UI/Switcher/Switcher";
 import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
 
-interface LoginFormProps{
+interface LoginFormProps {
     selectedMethod: "login" | "signUp";
     setSelectedMethod: Dispatch<SetStateAction<"login" | "signUp">>;
     closeWindow: () => void;
 }
 
-const LoginForm = ({selectedMethod, setSelectedMethod, closeWindow}: LoginFormProps) => {
+const LoginForm = ({ selectedMethod, setSelectedMethod, closeWindow }: LoginFormProps) => {
     const router = useRouter();
     const emailRef = useRef<HTMLInputElement>(null);
     const passwordRef = useRef<HTMLInputElement>(null);
@@ -19,24 +19,24 @@ const LoginForm = ({selectedMethod, setSelectedMethod, closeWindow}: LoginFormPr
     const [error, setError] = useState("");
 
     const focusInput = (inputRef: RefObject<HTMLInputElement | null>) => {
-        if(inputRef.current){
-           inputRef.current.focus(); 
+        if (inputRef.current) {
+            inputRef.current.focus();
         }
     }
-  
-    const handleSubmit = async(event: React.FormEvent<HTMLFormElement>) => {
+
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         setSubmitLoading(true);
         const form = event.currentTarget;
         const email = (form.elements.namedItem('email') as HTMLInputElement).value.trim();
         const password = (form.elements.namedItem('password') as HTMLInputElement).value.trim();
 
-        const response = await signIn('credentials', {email, password, redirect: false});
+        const response = await signIn('credentials', { email, password, redirect: false });
 
-        if(response){
-            if(response.error){
+        if (response) {
+            if (response.error) {
                 setError("Incorrect email or password!");
-            }else{
+            } else {
                 closeWindow();
                 router.push("/modules");
             }
@@ -57,7 +57,7 @@ const LoginForm = ({selectedMethod, setSelectedMethod, closeWindow}: LoginFormPr
                     <label>
                         Email Address
                     </label>
-                    <input type="email" name="email" ref={emailRef} placeholder="Enter valid email address" required/>
+                    <input type="email" name="email" ref={emailRef} placeholder="Enter valid email address" required />
                 </div>
             </div>
             <div className={styles.formBlock} onClick={() => focusInput(passwordRef)}>
@@ -68,18 +68,18 @@ const LoginForm = ({selectedMethod, setSelectedMethod, closeWindow}: LoginFormPr
                     <label>
                         Enter Password
                     </label>
-                    <input type="password" name="password" ref={passwordRef} placeholder="Enter your password" required/>
+                    <input type="password" name="password" ref={passwordRef} placeholder="Enter your password" required />
                 </div>
             </div>
-            {error !== "" && 
-            <div className={styles.error}>Email/password combination incorrect. Let&apos;s try that again.</div>
+            {error !== "" &&
+                <div className={styles.error} data-testid="auth-error" >Email/password combination incorrect. Let&apos;s try that again.</div>
             }
             <button type="submit" className={styles.button} disabled={submitLoading}>
-            {submitLoading ?  
-                <div className={styles.loading}>
-                    <div className={styles.spinner}></div>
-                </div> 
-            : "Login"}
+                {submitLoading ?
+                    <div className={styles.loading}>
+                        <div className={styles.spinner} data-testid="login-spinner"></div>
+                    </div>
+                    : "Login"}
             </button>
         </form>
     );

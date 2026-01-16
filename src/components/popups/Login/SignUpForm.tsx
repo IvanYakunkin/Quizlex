@@ -4,15 +4,15 @@ import Switcher from "../../UI/Switcher/Switcher";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
-interface SignUpFormProps{
+interface SignUpFormProps {
     selectedMethod: "login" | "signUp";
     setSelectedMethod: Dispatch<SetStateAction<"login" | "signUp">>;
     closeWindow: () => void;
 }
 
-const SignUpForm = ({selectedMethod, setSelectedMethod, closeWindow}: SignUpFormProps) => {
+const SignUpForm = ({ selectedMethod, setSelectedMethod, closeWindow }: SignUpFormProps) => {
     const router = useRouter();
-    const emailRef = useRef<HTMLInputElement>(null);    
+    const emailRef = useRef<HTMLInputElement>(null);
     const loginRef = useRef<HTMLInputElement>(null);
     const passwordRef = useRef<HTMLInputElement>(null);
     const passwordConfirmRef = useRef<HTMLInputElement>(null);
@@ -21,12 +21,12 @@ const SignUpForm = ({selectedMethod, setSelectedMethod, closeWindow}: SignUpForm
     const [submitLoading, setSubmitLoading] = useState(false);
 
     const focusInput = (inputRef: RefObject<HTMLInputElement | null>) => {
-        if(inputRef.current){
-            inputRef.current.focus(); 
+        if (inputRef.current) {
+            inputRef.current.focus();
         }
     }
 
-    const handleSubmit = async(event: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         setSubmitLoading(true);
         const form = event.currentTarget;
@@ -34,8 +34,8 @@ const SignUpForm = ({selectedMethod, setSelectedMethod, closeWindow}: SignUpForm
         const login = (form.elements.namedItem('login') as HTMLInputElement).value.trim();
         const password = (form.elements.namedItem('password') as HTMLInputElement).value.trim();
         const passwordConfirm = (form.elements.namedItem('passwordConfirm') as HTMLInputElement).value.trim();
-        
-        if(validateForm(email, login, password, passwordConfirm)){
+
+        if (validateForm(email, login, password, passwordConfirm)) {
             try {
                 const response = await fetch('/api/auth/register', {
                     method: 'POST',
@@ -72,20 +72,20 @@ const SignUpForm = ({selectedMethod, setSelectedMethod, closeWindow}: SignUpForm
 
         setSubmitLoading(false);
     }
-    
+
     // Simple validation rules
     const validateForm = (email: string, login: string, password: string, passwordConfirm: string) => {
-        if(!email || !login || !password || !passwordConfirm){
+        if (!email || !login || !password || !passwordConfirm) {
             setError("Fill the fields!");
 
             return false;
         }
-        if(password !== passwordConfirm){
+        if (password !== passwordConfirm) {
             setError("Passwords don't match!");
 
             return false;
         }
-        if(password.length <= 4){
+        if (password.length <= 4) {
             setError("The password must contain at least 5 characters!")
 
             return false;
@@ -106,7 +106,7 @@ const SignUpForm = ({selectedMethod, setSelectedMethod, closeWindow}: SignUpForm
                     <label>
                         Email Address
                     </label>
-                    <input type="email" name="email" ref={emailRef} placeholder="Enter valid email address" required/>
+                    <input type="email" name="email" ref={emailRef} placeholder="Enter valid email address" required />
                 </div>
             </div>
             <div className={styles.formBlock} onClick={() => focusInput(loginRef)}>
@@ -119,7 +119,7 @@ const SignUpForm = ({selectedMethod, setSelectedMethod, closeWindow}: SignUpForm
                     <label>
                         Enter Login
                     </label>
-                    <input type="text" name="login" ref={loginRef} placeholder="Enter unique login" required/>
+                    <input type="text" name="login" ref={loginRef} placeholder="Enter unique login" required />
                 </div>
             </div>
             <div className={styles.formBlock} onClick={() => focusInput(passwordRef)}>
@@ -130,7 +130,7 @@ const SignUpForm = ({selectedMethod, setSelectedMethod, closeWindow}: SignUpForm
                     <label>
                         Enter Password
                     </label>
-                    <input type="password" name="password" ref={passwordRef} placeholder="Enter your password" required/>
+                    <input type="password" name="password" ref={passwordRef} placeholder="Enter your password" required />
                 </div>
             </div>
             <div className={styles.formBlock} onClick={() => focusInput(passwordConfirmRef)}>
@@ -141,18 +141,18 @@ const SignUpForm = ({selectedMethod, setSelectedMethod, closeWindow}: SignUpForm
                     <label>
                         Re-enter Password
                     </label>
-                    <input type="password" name="passwordConfirm" ref={passwordConfirmRef} placeholder="Re-enter your password" required/>
+                    <input type="password" name="passwordConfirm" ref={passwordConfirmRef} placeholder="Re-enter your password" required />
                 </div>
             </div>
-            {error !== "" && 
-            <div className={styles.error}>{error}</div>
+            {error !== "" &&
+                <div className={styles.error}>{error}</div>
             }
             <button type="submit" className={styles.button} disabled={submitLoading}>
-                {submitLoading ?  
-                <div className={styles.loading}>
-                    <div className={styles.spinner}></div>
-                </div> 
-            : "Sign Up"}
+                {submitLoading ?
+                    <div className={styles.loading}>
+                        <div className={styles.spinner} data-testid="signup-spinner"></div>
+                    </div>
+                    : "Sign Up"}
             </button>
         </form>
     );
