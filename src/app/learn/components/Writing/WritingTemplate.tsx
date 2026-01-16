@@ -21,6 +21,11 @@ export const WritingTemplate = ({
     progressLabel,
 }: WritingTemplateProps) => {
 
+    const showAnswer = () => {
+        onChange("");
+        checkAnswer();
+    }
+
     useEffect(() => {
         const keyboard = (event: KeyboardEvent) => {
             if (event.code === "Enter") {
@@ -48,18 +53,14 @@ export const WritingTemplate = ({
                 </div>
 
                 <Field
-                    ref={(node) => {
-                        if (node) {
-                            node.focus();
-                        }
-                    }}
+                    autoFocus
                     value={inputValue}
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => onChange(e.target.value)}
                     correct={writingStatus === "correct"}
                 />
 
                 <div className={styles.answersBtns}>
-                    <div className={styles.answer__nextBtn} onClick={checkAnswer}><span>Show answer?</span></div>
+                    <div className={styles.answer__nextBtn} onClick={showAnswer}><span>Show answer?</span></div>
                     <div
                         className={writingStatus === "correct" ? `${styles.inputBtn} ${styles.correct}` : styles.inputBtn}
                         onClick={checkAnswer}

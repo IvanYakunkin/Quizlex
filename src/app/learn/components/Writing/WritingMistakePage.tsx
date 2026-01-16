@@ -45,6 +45,7 @@ export const WritingMistakePage = ({
             } else if (event.code === "Space" && !isAnswerEmpty) {
                 toNextWord();
             } else if (event.code === "Digit2" && !isAnswerEmpty) {
+                event.preventDefault();
                 toNextWord(true);
             }
         }
