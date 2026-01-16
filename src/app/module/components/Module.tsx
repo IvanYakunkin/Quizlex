@@ -2,7 +2,7 @@
 
 import { Card, Languages, ModuleInterface, WordsModule } from "@/types/types";
 import CardsPreview from "@/components/UI/CardsPreview/CardsPreview";
-import Slider from "@/components/UI/Slider/Slider";
+import { Slider } from "@/components/UI/Slider/Slider";
 import { useEffect, useRef, useState } from "react";
 import DeleteWin from "@/components/popups/DeleteWin";
 import EditWin from "@/components/popups/EditWin";

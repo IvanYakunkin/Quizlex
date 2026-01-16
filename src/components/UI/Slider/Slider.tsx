@@ -9,7 +9,7 @@ import CardFlipper from "../CardFlipper/CardFlipper";
 import { setFavoriteDB } from "@/utils/favorites/favoritesDB";
 import { setFavoriteLS } from "@/utils/favorites/favoritesLS";
 
-interface SliderRef {
+export interface SliderRef {
     refreshCards?: () => void;
     switchDefaultSides?: () => void;
     toPrevious?: () => void;
@@ -31,7 +31,7 @@ interface SliderProps {
 const slideAnimationTypes: string[] = ["slideRightAnimation", "slideLeftAnimation"];
 const horizontalAnimationDuration = 100;
 
-const Slider = (props: SliderProps) => {
+export const Slider = (props: SliderProps) => {
     const { status, data: session } = useSession();
     const { id } = useParams();
     const [isFrontDefault, setIsFrontDefault] = useState(true);
@@ -264,5 +264,3 @@ const Slider = (props: SliderProps) => {
         </CardFlipper>
     )
 };
-
-export default Slider;

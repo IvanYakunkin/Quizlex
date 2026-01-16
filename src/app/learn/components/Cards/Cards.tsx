@@ -1,6 +1,6 @@
 import { Languages, Card } from "@/types/types";
 import { useCallback, useEffect, useRef, useState } from "react";
-import Slider from "@/components/UI/Slider/Slider";
+import { Slider } from "@/components/UI/Slider/Slider";
 import ResultPage from "../ResultPage";
 import Image from "next/image";
 import styles from "../../page.module.css";
