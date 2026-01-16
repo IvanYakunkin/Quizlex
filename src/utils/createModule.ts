@@ -6,7 +6,7 @@ const getLanguageId = (code: string, languages: Language[]) => {
     return foundLanguage ? foundLanguage.id : 1;
 }
 
-interface createModuleDBParams{
+export interface CreateModuleDBParams {
     name: string;
     description: string;
     cards: Card[];
@@ -14,7 +14,7 @@ interface createModuleDBParams{
     selectedLanguages: Languages;
 }
 
-export const createModuleDB = async(params: createModuleDBParams) => {
+export const createModuleDB = async (params: CreateModuleDBParams) => {
     const moduleData = {
         name: params.name,
         description: params.description,
@@ -22,30 +22,30 @@ export const createModuleDB = async(params: createModuleDBParams) => {
         definitionLanguageId: getLanguageId(params.selectedLanguages.definition, params.languages),
     }
 
-    try{
+    try {
         const moduleResponse = await fetch("/api/modules", {
-        method: "POST",
-        headers: {
-            'Content-Type': "application/json",
-        },
+            method: "POST",
+            headers: {
+                'Content-Type': "application/json",
+            },
 
-        body: JSON.stringify({module: moduleData, cards: params.cards}),
-    });
-    
-    if(!moduleResponse.ok){
-        throw new Error("Error creating module");
-    }
+            body: JSON.stringify({ module: moduleData, cards: params.cards }),
+        });
 
-    return await moduleResponse.json();
-    
-    }catch(error){
+        if (!moduleResponse.ok) {
+            throw new Error("Error creating module");
+        }
+
+        return await moduleResponse.json();
+
+    } catch (error) {
         console.error(error);
     }
 }
 
 export const createModuleLS = (cards: Card[], selectedLanguages: Languages) => {
-    const cardsModule: ModuleInterface = {languages: selectedLanguages, cards: cards}
+    const cardsModule: ModuleInterface = { languages: selectedLanguages, cards: cards }
     localStorage.setItem('module', JSON.stringify(cardsModule));
-    
+
     return cardsModule;
 }

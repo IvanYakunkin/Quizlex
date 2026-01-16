@@ -1,6 +1,8 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { Card } from "@/types/types";
 import styles from "./ImportTextarea.module.css";
+import { useTextareaTab } from '@/hooks/useTextareaTab';
+import { parseTextToCards } from '@/utils/parsers';
 
 interface TextareaProps {
   separator: string,
@@ -10,42 +12,18 @@ interface TextareaProps {
 
 const placeholderLinesNumber: number = 3;
 
-const ImportTextarea: React.FC<TextareaProps> = ({ separator, setPreview, textareaRef }) => {
+export const ImportTextarea: React.FC<TextareaProps> = ({ separator, setPreview, textareaRef }) => {
 
   const [textareaContent, setTextareaContent] = useState("");
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === 'Tab') {
-      e.preventDefault();
-      const textarea = e.target as HTMLTextAreaElement;
-      const start = textarea.selectionStart;
-      const end = textarea.selectionEnd;
-      const newValue = textarea.value.substring(0, start) + "\t" + textarea.value.substring(end);
-
-      setTextareaContent(newValue);
-
-      const newCursorPos = start + 1;
-      textarea.value = newValue;
-      textarea.selectionStart = newCursorPos;
-      textarea.selectionEnd = newCursorPos;
-    }
-  };
+  const handleKeyDown = useTextareaTab(setTextareaContent);
 
   const textareaChanged = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     setTextareaContent(event.target.value);
   }
 
   useEffect(() => {
-    const previewTerms = textareaContent.split("\n")
-      .map(pair => pair.split(separator).map(el => el.trim()))
-      .filter(([term, definition]) => term || definition)
-      .map(([term = "", definition = ""], key) => ({
-        id: key,
-        term,
-        definition,
-        isFavorite: false
-      }));
-
+    const previewTerms = parseTextToCards(textareaContent, separator);
     setPreview(previewTerms);
   }, [textareaContent, separator, setPreview]);
 
@@ -70,5 +48,3 @@ const ImportTextarea: React.FC<TextareaProps> = ({ separator, setPreview, textar
     </textarea>
   );
 };
-
-export default ImportTextarea;

@@ -1,42 +1,29 @@
-import { Dispatch, RefObject, SetStateAction } from "react";
+import { Card, ValidationErrors, ValidationResult } from "@/types/types";
 
-interface validateFieldsParams{
-    nameInputRef: RefObject<HTMLInputElement | null>;
-    setNameInputError: Dispatch<SetStateAction<boolean>>;
-    descriptionInputRef: RefObject<HTMLInputElement | null>;
-    setDescriptionInputError: Dispatch<SetStateAction<boolean>>;
-    cardsLength: number;
-    textareaRef?: RefObject<HTMLTextAreaElement | null>;
-}
+export const validateAndSanitize = (name: string, description: string, cards: Card[]): ValidationResult => {
+    const errors: ValidationErrors = {};
 
-export const validateFields = (params: validateFieldsParams) => {
-    if(params.nameInputRef.current && params.descriptionInputRef.current){
-        if(params.nameInputRef.current.value.trim() === ""){
-            params.setNameInputError(true); 
-            params.nameInputRef.current.focus();
-            return false;
-        }else{
-            params.setNameInputError(false);
-        }
-        if(params.descriptionInputRef.current.value.trim() === ""){
-            params.setDescriptionInputError(true);
-            params.descriptionInputRef.current.focus();
+    const sanitizedCards = cards.filter(card =>
+        card.term?.trim() || card.definition?.trim()
+    );
 
-            return false;
-        }else{
-            params.setDescriptionInputError(false);
-        }
+    if (!name.trim()) errors.name = "Name your module";
+    if (!description.trim()) errors.description = "Add a description";
 
-        if(params.cardsLength < 1){
-            if(params.textareaRef && params.textareaRef.current){
-                params.textareaRef.current.focus();
-            }
+    const hasIncomplete = sanitizedCards.some(card =>
+        (card.term?.trim() && !card.definition?.trim()) ||
+        (!card.term?.trim() && card.definition?.trim())
+    );
 
-            return false;
-        }
-
-        return true;
+    if (sanitizedCards.length < 2) {
+        errors.cards = "At least two cards are required";
+    } else if (hasIncomplete) {
+        errors.cards = "All cards must have both a term and a definition";
     }
 
-    return false;
-}
+    return {
+        isValid: Object.keys(errors).length === 0,
+        errors,
+        sanitizedCards: sanitizedCards
+    };
+};

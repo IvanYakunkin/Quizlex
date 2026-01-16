@@ -2,14 +2,14 @@
 
 import CreateCard from './CreateCard';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { Card, Languages } from '@/types/types';
+import { Card, Languages, ValidationErrors } from '@/types/types';
 import Select from '@/components/UI/SelectLanguage/Select';
 import styles from "../page.module.css";
 import { Language } from '@/generated/prisma';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import { validateFields } from '@/utils/validateModule';
 import { createModuleDB, createModuleLS } from '@/utils/createModule';
+import { validateAndSanitize } from '@/utils/validateModule';
 
 const emptyCard = { id: 0, term: "", definition: "", isFavorite: false };
 
@@ -20,9 +20,8 @@ interface CreateProps {
 // TODO: 1) Re-renders could be optimized!
 const Create = ({ languages }: CreateProps) => {
     const [cards, setCards] = useState<Card[]>([emptyCard]);
-    const [nameInputError, setNameInputError] = useState(false);
-    const [descriptionInputError, setDescriptionInputError] = useState(false);
     const [selectedLanguages, setSelectedLanguages] = useState<Languages>({ term: "en-EN", definition: "en-EN" });
+    const [formErrors, setFormErrors] = useState<ValidationErrors>();
     const { status } = useSession();
     const router = useRouter();
 
@@ -43,14 +42,26 @@ const Create = ({ languages }: CreateProps) => {
     }
 
     const saveCards = async () => {
-        const isValidate = validateFields({ nameInputRef, setNameInputError, descriptionInputRef, setDescriptionInputError, cardsLength: cards.length });
+        const name = nameInputRef.current?.value || "";
+        const description = descriptionInputRef.current?.value || "";
+        const { isValid, errors, sanitizedCards } = validateAndSanitize(name, description, cards);
 
-        if (isValidate && nameInputRef.current && descriptionInputRef.current) {
+        if (!isValid) {
+            setFormErrors(errors);
+            if (errors.name) nameInputRef.current?.focus();
+            else if (errors.description) descriptionInputRef.current?.focus();
+            else if (errors.cards) {
+                alert(errors.cards);
+            }
+
+            return false;
+        }
+        if (nameInputRef.current && descriptionInputRef.current) {
             if (status === "authenticated") {
                 const createdModule = await createModuleDB({
                     name: nameInputRef.current.value,
                     description: descriptionInputRef.current.value,
-                    cards: cards,
+                    cards: sanitizedCards,
                     languages: languages,
                     selectedLanguages,
                 });
@@ -58,7 +69,7 @@ const Create = ({ languages }: CreateProps) => {
                 const moduleUrl = `/module/${createdModule.id}`;
                 router.push(moduleUrl);
             } else {
-                createModuleLS(cards, selectedLanguages);
+                createModuleLS(sanitizedCards, selectedLanguages);
                 router.push("/module");
             }
         }
@@ -123,8 +134,8 @@ const Create = ({ languages }: CreateProps) => {
                 <div className={styles.title}>Create a new module</div>
                 <div className={styles.info}>
                     <div className={styles.infoFields}>
-                        <input type="text" ref={nameInputRef} className={!nameInputError ? styles.moduleField : `${styles.moduleField} ${styles.error}`} placeholder='Name' />
-                        <input type='text' ref={descriptionInputRef} className={!descriptionInputError ? styles.moduleField : `${styles.moduleField} ${styles.error}`} placeholder='Description' />
+                        <input type="text" ref={nameInputRef} className={!formErrors?.name ? styles.moduleField : `${styles.moduleField} ${styles.error}`} placeholder='Name' />
+                        <input type='text' ref={descriptionInputRef} className={!formErrors?.description ? styles.moduleField : `${styles.moduleField} ${styles.error}`} placeholder='Description' />
                     </div>
                     <div className={styles.buttonSave} onClick={saveCards}>Save</div>
                 </div>

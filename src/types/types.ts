@@ -71,3 +71,15 @@ export interface ModuleWithCount extends Module {
 export interface ModuleMax extends Module {
     cards: CardDBType[];
 }
+
+export interface ValidationErrors {
+    name?: string;
+    description?: string;
+    cards?: string;
+}
+
+export interface ValidationResult {
+    isValid: boolean;
+    errors: ValidationErrors;
+    sanitizedCards: Card[];
+}
