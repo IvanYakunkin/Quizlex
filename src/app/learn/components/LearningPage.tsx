@@ -2,36 +2,37 @@
 
 import { useEffect, useState } from "react";
 import LearningHeader from "./LearningHeader";
-import Test from "./Test/Test";
+import { Test } from "./Test/Test";
+import { Writing } from "./Writing/Writing";
 import { LearningType, ModuleInterface, WordsModule } from "@/types/types";
 import styles from "../page.module.css"
-import Writing from "./Writing/Writing";
 import Cards from "./Cards/Cards";
 
-interface LearningProps{
+interface LearningProps {
     learningType: LearningType;
     module?: WordsModule;
 }
 
-const defaultLanguages = {term: "en-EN", definition: "en-EN"};
+const defaultLanguages = { term: "en-EN", definition: "en-EN" };
 
 const LearningPage = ({ learningType, module }: LearningProps) => {
     const [cardsModule, setCardsModule] = useState<WordsModule | ModuleInterface | null>(module ? module : null);
     const [changeLanguage, setChangeLanguage] = useState(false);
-    const [languages, setLanguages] = useState(module ? {term: module.termLanguage.code, definition: module.definitionLanguage.code} : defaultLanguages);
+    const [languages, setLanguages] = useState(module ? { term: module.termLanguage.code, definition: module.definitionLanguage.code } : defaultLanguages);
 
     useEffect(() => {
-        if(!cardsModule){
+        if (!cardsModule) {
             const cardsRawModule = localStorage.getItem("module");
-            if(cardsRawModule){
+            if (cardsRawModule) {
                 setCardsModule(JSON.parse(cardsRawModule));
                 setLanguages(JSON.parse(cardsRawModule).languages);
             }
         }
-    }, [cardsModule]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     const renderLearningComponent = () => {
-        if(cardsModule){
+        if (cardsModule) {
             switch (learningType) {
                 case "test":
                     return <Test cards={cardsModule.cards} languages={languages} changeLanguage={changeLanguage} />
@@ -48,9 +49,9 @@ const LearningPage = ({ learningType, module }: LearningProps) => {
     return (
         <main className="main">
             <div className={styles.learning}>
-                <LearningHeader changeLanguage={changeLanguage} setChangeLanguage={setChangeLanguage} moduleId={module ? module.id : undefined}/>
-                { renderLearningComponent() }
-            </div>    
+                <LearningHeader changeLanguage={changeLanguage} setChangeLanguage={setChangeLanguage} moduleId={module ? module.id : undefined} />
+                {renderLearningComponent()}
+            </div>
         </main>
     );
 }

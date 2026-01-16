@@ -2,13 +2,14 @@ import { Languages, Card } from "@/types/types";
 import { useState, useEffect, useImperativeHandle, useCallback } from "react";
 import AudioButton from "../AudioButton/AudioButton";
 import FavoriteButton from "../FavoriteButton/FavoriteButton";
-import { setFavoriteDB, setFavoriteLS } from "@/utils/common";
 import styles from "./Slider.module.css";
 import { useSession } from "next-auth/react";
 import { useParams } from "next/navigation";
 import CardFlipper from "../CardFlipper/CardFlipper";
+import { setFavoriteDB } from "@/utils/favorites/favoritesDB";
+import { setFavoriteLS } from "@/utils/favorites/favoritesLS";
 
-interface SliderRef{
+interface SliderRef {
     refreshCards?: () => void;
     switchDefaultSides?: () => void;
     toPrevious?: () => void;
@@ -31,7 +32,7 @@ const slideAnimationTypes: string[] = ["slideRightAnimation", "slideLeftAnimatio
 const horizontalAnimationDuration = 100;
 
 const Slider = (props: SliderProps) => {
-    const { status, data: session} = useSession();
+    const { status, data: session } = useSession();
     const { id } = useParams();
     const [isFrontDefault, setIsFrontDefault] = useState(true);
     const [isTranslationShown, setIsTranslationShown] = useState(false);
@@ -39,27 +40,37 @@ const Slider = (props: SliderProps) => {
     const [isFlipped, setIsFlipped] = useState(false);
     // Contains css-class for animation
     const [slideAnimate, setSlideAnimate] = useState("");
+    const [touchStartX, setTouchStartX] = useState(0);
 
     const currentCard = props.cards[props.currentCardId];
 
+
+    const setAnimation = (type: string) => {
+        setSlideAnimate(type);
+
+        setTimeout(() => {
+            setSlideAnimate("");
+        }, horizontalAnimationDuration);
+    }
+
     const toNextWord = useCallback(() => {
-        if(props.currentCardId + 1 < props.cards.length){
-            if(isFrontDefault){
+        if (props.currentCardId + 1 < props.cards.length) {
+            if (isFrontDefault) {
                 setIsTranslationShown(false)
-            }else{
+            } else {
                 setIsTranslationShown(true);
-            } 
+            }
 
             setAnimation(slideAnimationTypes[0]);
             props.setCurrentCardId(props.currentCardId + 1);
-        }  
+        }
     }, [props, isFrontDefault]);
 
     const toPreviousWord = useCallback(() => {
-        if(props.currentCardId > 0){
-            if(isFrontDefault){
+        if (props.currentCardId > 0) {
+            if (isFrontDefault) {
                 setIsTranslationShown(false)
-            }else{
+            } else {
                 setIsTranslationShown(true);
             }
 
@@ -77,18 +88,10 @@ const Slider = (props: SliderProps) => {
         event.stopPropagation();
         toNextWord();
     }
-    
-    const setAnimation = (type:string) => {
-        setSlideAnimate(type);
-
-        setTimeout(() => {
-            setSlideAnimate("");
-        }, horizontalAnimationDuration);
-    }
 
     const flipCart = useCallback(() => {
-        setIsFlipped(!isFlipped);        
-        setIsTranslationShown(!isTranslationShown); 
+        setIsFlipped(!isFlipped);
+        setIsTranslationShown(!isTranslationShown);
     }, [isFlipped, isTranslationShown]);
 
     const refreshCards = () => {
@@ -104,9 +107,9 @@ const Slider = (props: SliderProps) => {
     // Define which word should be shown for each side
     let frontSideLabel, backSideLabel;
 
-    if((isFlipped && isTranslationShown) || (!isFlipped && !isTranslationShown)){  
+    if ((isFlipped && isTranslationShown) || (!isFlipped && !isTranslationShown)) {
         [frontSideLabel, backSideLabel] = [currentCard.term, currentCard.definition];
-    }else{
+    } else {
         [frontSideLabel, backSideLabel] = [currentCard.definition, currentCard.term];
     }
 
@@ -118,33 +121,31 @@ const Slider = (props: SliderProps) => {
     }));
 
     const clickFavorite = (wordId: number) => {
-        if(props.setCards){
-            if(status === "authenticated" && id){
-                if(session.user?.email){
+        if (props.setCards) {
+            if (status === "authenticated" && id) {
+                if (session.user?.email) {
                     setFavoriteDB(props.setCards, wordId, +id, session.user?.email);
                 }
-            }else{
+            } else {
                 setFavoriteLS(props.setCards, wordId);
             }
         }
     }
 
-    let startX: number | null = null;
-
     const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
-        startX = e.touches[0].clientX;
+        setTouchStartX(e.touches[0].clientX);
     };
 
     const handleTouchMove = (e: React.TouchEvent<HTMLDivElement>) => {
-        if (!startX) return;
+        if (!touchStartX) return;
 
-        const xDiff = e.touches[0].clientX - startX;
+        const xDiff = e.touches[0].clientX - touchStartX;
 
         if (xDiff > 50) {
-            startX = null; 
+            setTouchStartX(0);
             toPreviousWord();
-        }else if(xDiff < -50){
-            startX = null;
+        } else if (xDiff < -50) {
+            setTouchStartX(0);
             toNextWord();
         }
     }
@@ -155,21 +156,21 @@ const Slider = (props: SliderProps) => {
             if (event.key === "ArrowRight" && !props.isNavigationHidden) {
                 toNextWord();
             }
-            if(event.key === "ArrowLeft" && !props.isNavigationHidden) {
+            if (event.key === "ArrowLeft" && !props.isNavigationHidden) {
                 toPreviousWord();
             }
-            if(event.code === "Space"){
+            if (event.code === "Space") {
                 event.preventDefault();
                 flipCart();
             }
         };
 
         window.addEventListener("keydown", handleKeyPress);
-        
+
         return () => {
             window.removeEventListener("keydown", handleKeyPress);
         }
-        
+
     }, [props.currentCardId, flipCart, toNextWord, toPreviousWord, props.isNavigationHidden]);
 
     const moduleSliderClass = props.isMaxHeight ? `${styles.slider} ${styles.maxHeight}` : styles.slider;
@@ -179,85 +180,85 @@ const Slider = (props: SliderProps) => {
         <CardFlipper flipDirection="vertical" isFlipped={isFlipped} infinite={true} flipSpeedBackToFront={0.3} flipSpeedFrontToBack={0.3}>
             <div className={slideAnimate ? moduleSliderClass + " " + modulesSliderAnimationClass : moduleSliderClass} onClick={flipCart} onTouchStart={handleTouchStart} onTouchMove={handleTouchMove}>
                 <div className={styles.header}>
-                    <div className={styles.headerLeft}>            
-                        <FavoriteButton 
-                            size={25} 
-                            hoverColor="var(--blue-color-400)" 
-                            isActive={props.cards[props.currentCardId].isFavorite} 
-                            wordId={props.cards[props.currentCardId].id} 
+                    <div className={styles.headerLeft}>
+                        <FavoriteButton
+                            size={25}
+                            hoverColor="var(--blue-color-400)"
+                            isActive={props.cards[props.currentCardId].isFavorite}
+                            wordId={props.cards[props.currentCardId].id}
                             setActive={clickFavorite}
                         />
-                    </div> 
-                    
+                    </div>
+
                     <div className={styles.counter}>{(props.currentCardId + 1) + " / " + props.cards.length}</div>
 
                     <div className={styles.headerRight}>
-                        <AudioButton   
-                            word={isTranslationShown ? currentCard.definition : currentCard.term} 
+                        <AudioButton
+                            word={isTranslationShown ? currentCard.definition : currentCard.term}
                             language={isTranslationShown ? props.languages.definition : props.languages.term}
                             size={25}
                             hoverColor="var(--blue-color-400)"
-                        />   
+                        />
                     </div>
                 </div>
 
                 <div className={styles.content}>{frontSideLabel}</div>
                 {!props.isNavigationHidden &&
-                <div className={styles.footer}>
-                    <div className={styles.nav} onClick={toPreviousWordClick}>
-                        <svg fill="#000000" height="80px" width="80px" version="1.1" id="Layer_1" viewBox="0 0 476.213 476.213">
-                            <polygon points="57.427,223.107 151.82,128.713 130.607,107.5 0,238.106 130.607,368.714 151.82,347.5 57.427,253.107  "/>
-                        </svg>
+                    <div className={styles.footer}>
+                        <div className={styles.nav} onClick={toPreviousWordClick}>
+                            <svg fill="#000000" height="80px" width="80px" version="1.1" id="Layer_1" viewBox="0 0 476.213 476.213">
+                                <polygon points="57.427,223.107 151.82,128.713 130.607,107.5 0,238.106 130.607,368.714 151.82,347.5 57.427,253.107  " />
+                            </svg>
+                        </div>
+                        <div className={`${styles.nav} ${styles.rotated}`} onClick={toNextWordClick}>
+                            <svg fill="#000000" height="80px" width="80px" version="1.1" id="Layer_1" viewBox="0 0 476.213 476.213">
+                                <polygon points="57.427,223.107 151.82,128.713 130.607,107.5 0,238.106 130.607,368.714 151.82,347.5 57.427,253.107  " />
+                            </svg>
+                        </div>
                     </div>
-                    <div className={`${styles.nav} ${styles.rotated}`} onClick={toNextWordClick}>
-                        <svg fill="#000000" height="80px" width="80px" version="1.1" id="Layer_1" viewBox="0 0 476.213 476.213">
-                            <polygon points="57.427,223.107 151.82,128.713 130.607,107.5 0,238.106 130.607,368.714 151.82,347.5 57.427,253.107  "/>
-                        </svg>
-                    </div>
-                </div>
                 }
-                
+
             </div>
 
-            <div className={slideAnimate ? moduleSliderClass + " " + modulesSliderAnimationClass : moduleSliderClass} onClick={flipCart} onTouchStart={handleTouchStart} onTouchMove={handleTouchMove}>  
+            <div className={slideAnimate ? moduleSliderClass + " " + modulesSliderAnimationClass : moduleSliderClass} onClick={flipCart} onTouchStart={handleTouchStart} onTouchMove={handleTouchMove}>
                 <div className={styles.header}>
-                    <div className={styles.headerLeft}>            
-                        <FavoriteButton 
-                            size={25} 
-                            hoverColor="var(--blue-color-400)" 
-                            isActive={props.cards[props.currentCardId].isFavorite} 
-                            wordId={props.cards[props.currentCardId].id} 
+                    <div className={styles.headerLeft}>
+                        <FavoriteButton
+                            size={25}
+                            hoverColor="var(--blue-color-400)"
+                            isActive={props.cards[props.currentCardId].isFavorite}
+                            wordId={props.cards[props.currentCardId].id}
                             setActive={clickFavorite}
                         />
-                    </div> 
-                    
+                    </div>
+
                     <div className={styles.counter}>{(props.currentCardId + 1) + " / " + props.cards.length}</div>
 
                     <div className={styles.headerRight}>
-                        <AudioButton   
-                            word={isTranslationShown ? currentCard.definition : currentCard.term} 
+                        <AudioButton
+                            word={isTranslationShown ? currentCard.definition : currentCard.term}
                             language={isTranslationShown ? props.languages.definition : props.languages.term}
                             size={25}
                             hoverColor="var(--blue-color-400)"
-                        />   
+                        />
                     </div>
                 </div>
 
                 <div className={styles.content}>{backSideLabel}</div>
-                
+
                 {!props.isNavigationHidden &&
-                <div className={styles.footer}>
-                    <div className={styles.nav} onClick={toPreviousWordClick}>
-                        <svg fill="#000000" height="80px" width="80px" version="1.1" id="Layer_1" viewBox="0 0 476.213 476.213">
-                            <polygon points="57.427,223.107 151.82,128.713 130.607,107.5 0,238.106 130.607,368.714 151.82,347.5 57.427,253.107  "/>
-                        </svg>
+                    <div className={styles.footer}>
+                        <div className={styles.nav} onClick={toPreviousWordClick}>
+                            <svg fill="#000000" height="80px" width="80px" version="1.1" id="Layer_1" viewBox="0 0 476.213 476.213">
+                                <polygon points="57.427,223.107 151.82,128.713 130.607,107.5 0,238.106 130.607,368.714 151.82,347.5 57.427,253.107  " />
+                            </svg>
+                        </div>
+                        <div className={`${styles.nav} ${styles.rotated}`} onClick={toNextWordClick}>
+                            <svg fill="#000000" height="80px" width="80px" version="1.1" id="Layer_1" viewBox="0 0 476.213 476.213">
+                                <polygon points="57.427,223.107 151.82,128.713 130.607,107.5 0,238.106 130.607,368.714 151.82,347.5 57.427,253.107  " />
+                            </svg>
+                        </div>
                     </div>
-                    <div className={`${styles.nav} ${styles.rotated}`} onClick={toNextWordClick}>
-                        <svg fill="#000000" height="80px" width="80px" version="1.1" id="Layer_1" viewBox="0 0 476.213 476.213">
-                            <polygon points="57.427,223.107 151.82,128.713 130.607,107.5 0,238.106 130.607,368.714 151.82,347.5 57.427,253.107  "/>
-                        </svg>
-                    </div>
-                </div>
                 }
             </div>
         </CardFlipper>

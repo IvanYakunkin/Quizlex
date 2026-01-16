@@ -1,38 +1,19 @@
 import { memo, useEffect, useRef, useState } from "react";
 import styles from "./WordField.module.css";
+import { lettersDictionary } from "@/utils/lettersDictionary/lettersDictionary";
 
-interface LettersProps{
+interface LettersProps {
     isAnimation?: boolean;
     language: string;
     updateValue: (replaceTo: string) => void;
     isAlwaysShown?: boolean;
 }
 
-type LettersArray = {
-    [key: string]: string[];
-};
-
-const lettersDictionary: LettersArray = {
-    german: ["ä","ö","ü","ß"],
-    french: ["é", "è", "à", "ù", "ê", "â", "ô", "î", "û", "ë", "ï", "ü", "ç", "œ"],
-    spanish: ["¡", "¿", "°", "á", "é", "í", "ñ", "ó", "ú", "ü"],
-    russian: ["а", "б", "в", "г", "д", "е", "ё","ж", "з", "и", "й", "к", "л", "м","н", "о", "п", "р", "с", "т", "у","ф", "х", "ц", "ч", "ш", "щ", "ъ", "ы", "ь", "э", "ю", "я"],
-}
-
-const Letters = (props: LettersProps) => {
-
-    const [letters, setLetters] = useState<string[]>([]);
+export const Letters = memo((props: LettersProps) => {
     const [isUpperCase, setIsUpperCase] = useState(false);
     const containerRef = useRef<HTMLDivElement>(null);
-    
-    useEffect(() => {
-        for(const language in lettersDictionary){
-            if(props.language === language){
-                setLetters(lettersDictionary[language]);
-            }
-        }
-        
-    }, [props.language]);
+
+    const letters = lettersDictionary[props.language];
 
     const putLetter = (letter: string) => {
         props.updateValue(isUpperCase ? letter.toUpperCase() : letter.toLowerCase());
@@ -40,21 +21,21 @@ const Letters = (props: LettersProps) => {
 
     useEffect(() => {
         setTimeout(() => {
-            if(containerRef.current){
-            if(props.isAnimation){
-                
-                const scrollHeight = containerRef.current.scrollHeight;
+            if (containerRef.current) {
+                if (props.isAnimation) {
 
-                requestAnimationFrame(() => {
-                    if(containerRef.current) containerRef.current.style.height = `${scrollHeight}px`;
-                });   
-            }else{
-                if(containerRef.current) containerRef.current.style.height = '0';
+                    const scrollHeight = containerRef.current.scrollHeight;
+
+                    requestAnimationFrame(() => {
+                        if (containerRef.current) containerRef.current.style.height = `${scrollHeight}px`;
+                    });
+                } else {
+                    if (containerRef.current) containerRef.current.style.height = '0';
+                }
             }
-        }
         });
     }, [props.isAnimation]);
-    
+
     return (
         <div className={`${styles.container} desktop`} ref={containerRef}>
             {letters.length > 0 && (
@@ -68,7 +49,6 @@ const Letters = (props: LettersProps) => {
             )}
         </div>
     );
-};
+});
 
-
-export default memo(Letters);
+Letters.displayName = "Letters";

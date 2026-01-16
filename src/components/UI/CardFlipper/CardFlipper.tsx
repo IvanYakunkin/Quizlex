@@ -1,5 +1,5 @@
 import { CardFlipperProps, CardFlipperStyle } from '@/types/CardFlipperProps';
-import { useEffect, useState, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 
 const CardFlipper: React.FC<CardFlipperProps> = (props) => {
   const {
@@ -30,15 +30,13 @@ const CardFlipper: React.FC<CardFlipperProps> = (props) => {
     ...props
   }
 
-  const [isFlippedState, setFlipped] = useState(isFlipped);
   const [rotation, setRotation] = useState(0);
+  const [lastProp, setLastProp] = useState(isFlipped);
 
-  useEffect(() => {
-    if (isFlipped !== isFlippedState) {
-      setFlipped(isFlipped);
-      setRotation((c) => c + 180);
-    }
-  }, [isFlipped, isFlippedState]);
+  if (isFlipped !== lastProp) {
+    setLastProp(isFlipped);
+    setRotation((r) => r + 180);
+  }
 
   const getContainerClassName = useMemo(() => {
     let className = 'react-card-flip';
@@ -57,17 +55,13 @@ const CardFlipper: React.FC<CardFlipperProps> = (props) => {
     return props.children[key];
   };
 
-  const frontRotateY = `rotateY(${
-    infinite ? rotation : isFlipped ? 180 : 0
+  const frontRotateY = `rotateY(${infinite ? rotation : isFlipped ? 180 : 0
     }deg)`;
-  const backRotateY = `rotateY(${
-    infinite ? rotation + 180 : isFlipped ? 0 : -180
+  const backRotateY = `rotateY(${infinite ? rotation + 180 : isFlipped ? 0 : -180
     }deg)`;
-  const frontRotateX = `rotateX(${
-    infinite ? rotation : isFlipped ? 180 : 0
+  const frontRotateX = `rotateX(${infinite ? rotation : isFlipped ? 180 : 0
     }deg)`;
-  const backRotateX = `rotateX(${
-    infinite ? rotation + 180 : isFlipped ? 0 : -180
+  const backRotateX = `rotateX(${infinite ? rotation + 180 : isFlipped ? 0 : -180
     }deg)`;
 
   const styles: CardFlipperStyle = {

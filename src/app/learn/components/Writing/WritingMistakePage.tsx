@@ -1,29 +1,33 @@
-import { Card, WritingResultStatus } from "@/types/types";
+import { Card } from "@/types/types";
 import { useCallback, useEffect, useRef } from "react";
-import { checkWriting } from "@/utils/common";
-import Field from "@/components/UI/WordField/Field";
+import { Field } from "@/components/UI/WordField/Field";
 import styles from "../../page.module.css";
+import { checkWriting } from "@/utils/cards/checkWriting";
 
-interface WritingMistakePageProps{
+interface WritingMistakePageProps {
     currentCard: Card;
     enteredAnswer: string | undefined;
-    setResult: React.Dispatch<React.SetStateAction<WritingResultStatus>>;
-    result: string;
+    toNextWord: (isCorrect?: boolean) => void;
     changeLanguage: boolean;
 }
 
-const WritingMistakePage = (props: WritingMistakePageProps) => {
+export const WritingMistakePage = ({
+    currentCard,
+    enteredAnswer,
+    toNextWord,
+    changeLanguage,
+}: WritingMistakePageProps) => {
 
     const inputRef = useRef<HTMLInputElement>(null);
-
     const checkAnswer = useCallback(() => {
-        if(inputRef.current){
-            const correctAnswer = props.changeLanguage ? props.currentCard.term : props.currentCard.definition;
-            const result = checkWriting(inputRef.current.value, correctAnswer || "");
-            
-            if(result) return props.setResult("incorrect");
-        }        
-    }, [props]);
+        if (inputRef.current) {
+            const correctAnswer = changeLanguage ? currentCard.term : currentCard.definition;
+            const isCorrectResult = checkWriting(inputRef.current.value, correctAnswer || "");
+            if (isCorrectResult) {
+                toNextWord();
+            }
+        }
+    }, [changeLanguage, currentCard, toNextWord]);
 
     useEffect(() => {
         inputRef.current?.focus();
@@ -31,17 +35,17 @@ const WritingMistakePage = (props: WritingMistakePageProps) => {
 
     useEffect(() => {
         const keyboard = (event: KeyboardEvent) => {
-            if(event.code === "Enter" || (props.result === "mistake" && event.code === "Space")){
-                event.preventDefault();
-                if(props.result !== "mistake"){
+            const isAnswerEmpty = enteredAnswer?.trim() === "";
+            if (event.code === "Enter") {
+                if (!isAnswerEmpty) {
+                    toNextWord();
+                } else {
                     checkAnswer();
-                }else{
-                    props.setResult("incorrect");
                 }
-            }
-            else if(event.code === "Digit2" && props.result === "mistake"){
-                event.preventDefault();
-                props.setResult("correctForce");
+            } else if (event.code === "Space" && !isAnswerEmpty) {
+                toNextWord();
+            } else if (event.code === "Digit2" && !isAnswerEmpty) {
+                toNextWord(true);
             }
         }
 
@@ -50,46 +54,42 @@ const WritingMistakePage = (props: WritingMistakePageProps) => {
         return () => {
             window.removeEventListener("keydown", keyboard);
         }
-    }, [props, checkAnswer]);
+    }, [checkAnswer, enteredAnswer, toNextWord]);
 
     return (
         <div className="learning-result">
             <div className={styles.writingResult}>
                 <div className={styles.result__title}>Wrong!</div>
                 <div className={`${styles.result__block} ${styles.term}`}>
-                    <div>{props.changeLanguage ? props.currentCard.definition : props.currentCard.term}</div>
+                    <div>{changeLanguage ? currentCard.definition : currentCard.term}</div>
                 </div>
                 <div className={styles.result__answers}>
-                    { props.result !== "mistake" || 
-                    <div className={`${styles.result__block} ${styles.incorrect}`}>
-                        <label className={styles.result__blockLabel}>Your answer:</label>
-                        <div>{props.enteredAnswer}</div>
-                    </div> 
+                    {enteredAnswer?.trim() !== "" &&
+                        <div className={`${styles.result__block} ${styles.incorrect}`}>
+                            <label className={styles.result__blockLabel}>Your answer:</label>
+                            <div>{enteredAnswer}</div>
+                        </div>
                     }
                     <div className={`${styles.result__block} ${styles.correct}`}>
                         <label className={styles.result__blockLabel}>Correct answer:</label>
-                        <div>{props.changeLanguage ? props.currentCard.term : props.currentCard.definition}</div>
+                        <div>{changeLanguage ? currentCard.term : currentCard.definition}</div>
                     </div>
                 </div>
                 <div className={styles.result__blockRewrite}>
-                    {(props.result !== "mistake" && 
-                    <div className={styles.result__blockWriting}>
-                        <Field ref={inputRef} placeholder="Enter the correct answer:"/>
-                        <div className={`${styles.inputBtn} ${styles.mistake}`} onClick={checkAnswer}>Answer</div>
-                    </div>
+                    {(enteredAnswer?.trim() === "" &&
+                        <div className={styles.result__blockWriting}>
+                            <Field ref={inputRef} placeholder="Enter the correct answer:" />
+                            <div className={`${styles.inputBtn} ${styles.mistake}`} onClick={checkAnswer}>Answer</div>
+                        </div>
                     )
-                    ||
-                    <div className={styles.writingResult__btns}>
-                        <div className={styles.writingNext} onClick={() => props.setResult("incorrect")}><span className="desktop">Press SPACE to continue</span><span className="mobile">Continue</span></div>
-                        <div className={styles.writingNextCorrect} onClick={() => props.setResult("correctForce")}>It&apos;s correct</div>
-                    </div>
-                }
+                        ||
+                        <div className={styles.writingResult__btns}>
+                            <div className={styles.writingNext} onClick={() => toNextWord()}><span className="desktop">Press SPACE to continue</span><span className="mobile">Continue</span></div>
+                            <div className={styles.writingNextCorrect} onClick={() => toNextWord(true)}>It&apos;s correct</div>
+                        </div>
+                    }
                 </div>
-
             </div>
-
         </div>
-        )
+    );
 }
-
-export default WritingMistakePage;

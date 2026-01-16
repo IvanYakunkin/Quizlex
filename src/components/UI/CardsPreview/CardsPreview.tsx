@@ -2,18 +2,19 @@ import styles from "./CardsPreview.module.css";
 import AudioButton from "../AudioButton/AudioButton";
 import FavoriteButton from "../FavoriteButton/FavoriteButton";
 import { Card } from "@/types/types";
-import { setFavoriteDB, setFavoriteLS } from "@/utils/common";
 import { useSession } from "next-auth/react";
 import { useParams } from "next/navigation";
+import { setFavoriteDB } from "@/utils/favorites/favoritesDB";
+import { setFavoriteLS } from "@/utils/favorites/favoritesLS";
 
-interface CardsPreviewProps{
+interface CardsPreviewProps {
     cards: Card[];
     setCards?: React.Dispatch<React.SetStateAction<Card[]>>;
     title?: string;
     language?: string;
     showNumbers?: boolean;
     showOptions?: boolean;
-    additionalText?: string;   
+    additionalText?: string;
 }
 
 const CardsPreview = (props: CardsPreviewProps) => {
@@ -22,12 +23,12 @@ const CardsPreview = (props: CardsPreviewProps) => {
     const { id } = useParams();
 
     const clickFavoriteBtn = (wordId: number) => {
-        if(props.setCards){
-            if(status === "authenticated" && id){
-                if(session.user?.email){
+        if (props.setCards) {
+            if (status === "authenticated" && id) {
+                if (session.user?.email) {
                     setFavoriteDB(props.setCards, wordId, +id, session.user?.email);
                 }
-            }else{
+            } else {
                 setFavoriteLS(props.setCards, wordId);
             }
         }
@@ -36,42 +37,42 @@ const CardsPreview = (props: CardsPreviewProps) => {
     return (
         <div className={styles.wordsPreview}>
             <div className={styles.info}>{props.title === undefined ? "" : props.title}</div>
-            {props.cards.length === 0 && 
-            <div className={styles.additional}>{props.additionalText === undefined ? "No data to preview." : props.additionalText}</div>}
-    
+            {props.cards.length === 0 &&
+                <div className={styles.additional}>{props.additionalText === undefined ? "No data to preview." : props.additionalText}</div>}
+
             <div className={styles.previewContainer}>
                 {props.cards.map((card, key) => (
                     <div className={styles.previewTerm} key={key}>
-                        {props.showNumbers && <div className={styles.number}>{key+1}</div> }
+                        {props.showNumbers && <div className={styles.number}>{key + 1}</div>}
                         <div className={key % 2 === 0 ? styles.data : styles.data + " " + styles.next}>
                             <div className={styles.name}><div>{card.term}</div></div>
                             <div className={styles.definition}>{card.definition}</div>
-                            {props.showOptions && props.language && 
-                            <div className={styles.options}>
-                                <div className={styles.favorite}>
-                                    <FavoriteButton 
-                                        size={21} 
-                                        hoverColor = "var(--blue-color-400)"
-                                        wordId={card.id}
-                                        setActive={() => clickFavoriteBtn(card.id)}
-                                        isActive={card.isFavorite}
-                                    />
+                            {props.showOptions && props.language &&
+                                <div className={styles.options}>
+                                    <div className={styles.favorite}>
+                                        <FavoriteButton
+                                            size={21}
+                                            hoverColor="var(--blue-color-400)"
+                                            wordId={card.id}
+                                            setActive={() => clickFavoriteBtn(card.id)}
+                                            isActive={card.isFavorite}
+                                        />
+                                    </div>
+                                    <div className={styles.playSound}>
+                                        <AudioButton
+                                            word={card.term}
+                                            language={props.language}
+                                            size={25}
+                                            hoverColor="var(--blue-color-400)"
+                                        />
+                                    </div>
                                 </div>
-                                <div className={styles.playSound}>
-                                    <AudioButton   
-                                        word={card.term} 
-                                        language={props.language}
-                                        size={25}
-                                        hoverColor="var(--blue-color-400)"
-                                    />   
-                                </div>
-                            </div>
                             }
                         </div>
                     </div>
                 ))}
             </div>
-       </div>
+        </div>
     )
 }
 

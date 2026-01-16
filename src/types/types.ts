@@ -32,42 +32,42 @@ export interface Languages {
     definition: string;
 }
 
-export interface CardWithFavorite extends Card{
+export interface CardWithFavorite extends Card {
     isFavorite?: boolean;
 }
 
-export interface WordsModule extends Module{
+export interface WordsModule extends Module {
     cards: CardWithFavorite[];
     termLanguage: Language;
     definitionLanguage: Language;
 }
 
-export interface ModuleInterface{
+export interface ModuleInterface {
     languages: Languages;
     cards: Card[];
 }
 
-export interface CardWithClass extends Card{
+export interface CardWithClass extends Card {
     class: string;
 }
 
-export type WritingResultStatus = "correct" | "finished" | "empty" | "mistake" | "result" | "incorrect" | "correctForce" | "";
+export type WritingStatus = "correct" | "finished" | "empty" | "mistake" | "result" | "";
 // -1 force to show an answer
-export type TestAnswerId = -1|0|1|2|3;
+export type TestAnswerId = -1 | 0 | 1 | 2 | 3;
 
 // Import separators type
-export interface ISeparators{
+export interface ISeparators {
     name: string;
     value: string;
 }
 
-export interface ModuleWithCount extends Module{
+export interface ModuleWithCount extends Module {
     _count: {
         cards: number;
     }
 }
 
 // Type for module with cards and with languages
-export interface ModuleMax extends Module{
+export interface ModuleMax extends Module {
     cards: CardDBType[];
 }

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { Card } from "@/types/types";
 import styles from "./ImportTextarea.module.css";
 
@@ -8,11 +8,10 @@ interface TextareaProps {
   textareaRef: React.RefObject<HTMLTextAreaElement | null>,
 }
 
-const placeholderLinesNumber:number = 3;
+const placeholderLinesNumber: number = 3;
 
-const ImportTextarea: React.FC<TextareaProps> = ({separator, setPreview, textareaRef}) => {
-  
-  const [separatorPlaceholder, setSeparatorPlaceholder] = useState("");
+const ImportTextarea: React.FC<TextareaProps> = ({ separator, setPreview, textareaRef }) => {
+
   const [textareaContent, setTextareaContent] = useState("");
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -22,7 +21,7 @@ const ImportTextarea: React.FC<TextareaProps> = ({separator, setPreview, textare
       const start = textarea.selectionStart;
       const end = textarea.selectionEnd;
       const newValue = textarea.value.substring(0, start) + "\t" + textarea.value.substring(end);
-    
+
       setTextareaContent(newValue);
 
       const newCursorPos = start + 1;
@@ -36,39 +35,37 @@ const ImportTextarea: React.FC<TextareaProps> = ({separator, setPreview, textare
     setTextareaContent(event.target.value);
   }
 
-  const generatePlaceholder = useCallback(() => {
-    let sPlaceholders = "";
-    for(let i = 0; i < placeholderLinesNumber; i++){
-      sPlaceholders += "Word " + (i+1) + separator + "Definition " + (i+1) + "\n";
-    }
-    
-    setSeparatorPlaceholder(sPlaceholders);
-  }, [separator]);
-
-  const generatePreview = useCallback(() => {
+  useEffect(() => {
     const previewTerms = textareaContent.split("\n")
       .map(pair => pair.split(separator).map(el => el.trim()))
       .filter(([term, definition]) => term || definition)
-      .map(([term="", definition=""], key) => ({id: key, term, definition, isFavorite: false}));
-    
+      .map(([term = "", definition = ""], key) => ({
+        id: key,
+        term,
+        definition,
+        isFavorite: false
+      }));
+
     setPreview(previewTerms);
   }, [textareaContent, separator, setPreview]);
 
-  useEffect(() => {
-      generatePreview();
-      if(!textareaContent){
-        generatePlaceholder();
-      }
+  const separatorPlaceholder = useMemo(() => {
+    if (textareaContent) return "";
 
-  }, [textareaContent, generatePreview, generatePlaceholder]);
+    let sPlaceholders = "";
+    for (let i = 0; i < placeholderLinesNumber; i++) {
+      sPlaceholders += `Word ${i + 1} ${separator} Definition ${i + 1}\n`;
+    }
+    return sPlaceholders;
+  }, [separator, textareaContent]);
 
   return (
-    <textarea 
+    <textarea
       className={styles.import__textarea}
       ref={textareaRef}
-      value={textareaContent} 
-      onChange={textareaChanged} 
-      onKeyDown={handleKeyDown} 
+      value={textareaContent}
+      onChange={textareaChanged}
+      onKeyDown={handleKeyDown}
       placeholder={separatorPlaceholder}>
     </textarea>
   );

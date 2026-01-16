@@ -1,67 +1,64 @@
-import { memo, useCallback, useState } from "react";
-import Field from "./Field";
-import Letters from "./Letters";
+import { memo, useCallback, useState, RefObject } from "react";
+import { Field } from "./Field";
+import { Letters } from "./Letters";
 
-interface FieldWithLettersProps{
+interface FieldWithLettersProps {
     onChange: (value: string, id?: number) => void;
     cardId?: number;
     placeholder?: string;
     language: string;
     value: string;
-    ref: React.RefObject<HTMLInputElement | null>;
+    ref: RefObject<HTMLInputElement | null>;
     isAlwaysShown?: boolean;
 }
 
-const FieldWithLetters = (props: FieldWithLettersProps) => {
+export const FieldWithLetters = memo(({
+    ref,
+    onChange,
+    value,
+    cardId,
+    placeholder,
+    language,
+    isAlwaysShown
+}: FieldWithLettersProps) => {
 
     const [isAnimation, setIsAnimation] = useState(false);
 
-    const addLetter = useCallback((value: string) => {
+    const addLetter = useCallback((letter: string) => {
+        const input = ref?.current;
+        if (!input) return;
 
-        if (props.ref && 'current' in props.ref && props.ref.current) {
-            if(props.ref.current.value === ""){
-                props.onChange(value);
-            }
+        const start = input.selectionStart ?? value.length;
+        const end = input.selectionEnd ?? value.length;
 
-            const cursorPosition = props.ref.current.selectionStart;
+        const newValue = value.slice(0, start) + letter + value.slice(end);
 
-            if(cursorPosition){
-                const leftPart = props.value.slice(0, cursorPosition);
-                const rightPart = props.value.slice(cursorPosition, props.value.length);
-                const newValue = leftPart + value + rightPart;
-                props.onChange(newValue);
+        onChange(newValue, cardId);
 
-                // Set cursor in the correct position
-                setTimeout(() => {
-                    if(props.ref && props.ref.current){
-                        props.ref.current.selectionStart = cursorPosition+1;
-                        props.ref.current.selectionEnd = cursorPosition+1;
-                    }
-                }, 0);
-            }
-        }
-    }, [props]);
+        input.focus();
+        setTimeout(() => {
+            input.setSelectionRange(start + letter.length, start + letter.length);
+        }, 0);
+    }, [ref, value, onChange, cardId]);
 
-    const updateField = (value: string, id?:number) => {
-        props.onChange(value, id);
-    }
-    
     return (
-        <>  
+        <>
             <Field
-                ref={props.ref}
+                ref={ref}
                 onFocus={() => setIsAnimation(true)}
-                onBlur={() => setIsAnimation(false)} 
-                placeholder={props.placeholder} 
-                onChange={(e) => updateField(e.target.value, props.cardId)} 
-                value={props.value}
+                onBlur={() => setIsAnimation(false)}
+                placeholder={placeholder}
+                onChange={(e) => onChange(e.target.value, cardId)}
+                value={value}
             />
-        
-            <Letters isAnimation={isAnimation} language={props.language} updateValue={addLetter} isAlwaysShown={props.isAlwaysShown}/>
+            <Letters
+                isAnimation={isAnimation}
+                language={language}
+                updateValue={addLetter}
+                isAlwaysShown={isAlwaysShown}
+            />
         </>
-    )
-};
+    );
+});
 
-export default memo(FieldWithLetters);
-
-
+FieldWithLetters.displayName = "FieldWithLetters";

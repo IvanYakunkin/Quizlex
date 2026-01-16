@@ -11,52 +11,53 @@ import { useRouter } from 'next/navigation';
 import { validateFields } from '@/utils/validateModule';
 import { createModuleDB, createModuleLS } from '@/utils/createModule';
 
-const emptyCard = {id: 0, term: "", definition: "", isFavorite: false};
+const emptyCard = { id: 0, term: "", definition: "", isFavorite: false };
 
-interface CreateProps{
+interface CreateProps {
     languages: Language[];
 }
 
 // TODO: 1) Re-renders could be optimized!
-const Create = ({languages}: CreateProps) => {
+const Create = ({ languages }: CreateProps) => {
     const [cards, setCards] = useState<Card[]>([emptyCard]);
     const [nameInputError, setNameInputError] = useState(false);
     const [descriptionInputError, setDescriptionInputError] = useState(false);
-    const [newCardAdded, setNewCardAdded] = useState(false);
-    const [selectedLanguages, setSelectedLanguages] = useState<Languages>({term: "en-EN", definition: "en-EN"});
+    const [selectedLanguages, setSelectedLanguages] = useState<Languages>({ term: "en-EN", definition: "en-EN" });
     const { status } = useSession();
     const router = useRouter();
 
+    const newCardAdded = useRef(false);
+
     const nameInputRef = useRef<HTMLInputElement | null>(null);
     const descriptionInputRef = useRef<HTMLInputElement | null>(null);
-    
+
     const addCard = useCallback(() => {
-        setCards([...cards, {...emptyCard, id: cards[cards.length-1].id+1}]);
-        setNewCardAdded(true);
+        setCards([...cards, { ...emptyCard, id: cards[cards.length - 1].id + 1 }]);
+        newCardAdded.current = true;
     }, [cards]);
 
     const deleteCard = (id: number) => {
-        if(cards.length !== 1){
+        if (cards.length !== 1) {
             setCards(cards.filter((_, index) => index !== id));
         }
     }
 
-    const saveCards = async() => {
-        const isValidate = validateFields({nameInputRef, setNameInputError, descriptionInputRef, setDescriptionInputError, cardsLength: cards.length});
+    const saveCards = async () => {
+        const isValidate = validateFields({ nameInputRef, setNameInputError, descriptionInputRef, setDescriptionInputError, cardsLength: cards.length });
 
-        if(isValidate && nameInputRef.current && descriptionInputRef.current){
-            if(status === "authenticated"){
+        if (isValidate && nameInputRef.current && descriptionInputRef.current) {
+            if (status === "authenticated") {
                 const createdModule = await createModuleDB({
-                    name: nameInputRef.current.value, 
-                    description: descriptionInputRef.current.value, 
-                    cards: cards, 
-                    languages: languages, 
+                    name: nameInputRef.current.value,
+                    description: descriptionInputRef.current.value,
+                    cards: cards,
+                    languages: languages,
                     selectedLanguages,
                 });
 
                 const moduleUrl = `/module/${createdModule.id}`;
                 router.push(moduleUrl);
-            }else{
+            } else {
                 createModuleLS(cards, selectedLanguages);
                 router.push("/module");
             }
@@ -65,35 +66,35 @@ const Create = ({languages}: CreateProps) => {
 
     // Scroll down
     useEffect(() => {
-        if(newCardAdded){
-                window.scrollTo({
+        if (newCardAdded.current) {
+            window.scrollTo({
                 top: document.body.scrollHeight,
                 behavior: 'smooth'
             });
         }
-        setNewCardAdded(false)
+        newCardAdded.current = false;
     }, [newCardAdded]);
 
     useEffect(() => {
         const keyboard = (event: KeyboardEvent) => {
-            if(event.key === "Enter"){
+            if (event.key === "Enter") {
                 const children = document.querySelectorAll(".create__content");
-                if(children){
+                if (children) {
                     const lastFields = children[children.length - 1].querySelectorAll(".card__field");
                     const lastField = lastFields[lastFields.length - 1];
 
-                    if(document.activeElement === lastField){
+                    if (document.activeElement === lastField) {
                         addCard();
                     }
                 }
-            }else if(event.key === "Tab"){
+            } else if (event.key === "Tab") {
                 // Check if focus on the last element
                 const children = document.querySelectorAll(".create__content");
-                if(children){
+                if (children) {
                     const lastFields = children[children.length - 1].querySelectorAll(".card__field");
                     const lastField = lastFields[lastFields.length - 1];
 
-                    if(document.activeElement === lastField){
+                    if (document.activeElement === lastField) {
                         event.preventDefault();
                         addCard();
                     }
@@ -109,11 +110,11 @@ const Create = ({languages}: CreateProps) => {
     }, [cards, addCard]);
 
     const setTermLang = (value: string) => {
-        setSelectedLanguages({...selectedLanguages, term: value});
+        setSelectedLanguages({ ...selectedLanguages, term: value });
     }
 
     const setDefinitionLang = (value: string) => {
-        setSelectedLanguages({...selectedLanguages, definition: value});
+        setSelectedLanguages({ ...selectedLanguages, definition: value });
     }
 
     return (
@@ -122,7 +123,7 @@ const Create = ({languages}: CreateProps) => {
                 <div className={styles.title}>Create a new module</div>
                 <div className={styles.info}>
                     <div className={styles.infoFields}>
-                        <input type="text" ref={nameInputRef} className={!nameInputError ? styles.moduleField : `${styles.moduleField} ${styles.error}`} placeholder='Name'/>
+                        <input type="text" ref={nameInputRef} className={!nameInputError ? styles.moduleField : `${styles.moduleField} ${styles.error}`} placeholder='Name' />
                         <input type='text' ref={descriptionInputRef} className={!descriptionInputError ? styles.moduleField : `${styles.moduleField} ${styles.error}`} placeholder='Description' />
                     </div>
                     <div className={styles.buttonSave} onClick={saveCards}>Save</div>
@@ -137,16 +138,16 @@ const Create = ({languages}: CreateProps) => {
                 </div>
                 <div className={styles.content + " " + "create__content"}>
                     {cards.map((el, id) => (
-                        <CreateCard 
-                            key={el.id} 
-                            setCards={setCards} 
-                            deleteCard={deleteCard} 
-                            card={el} 
-                            cardId={id} 
+                        <CreateCard
+                            key={el.id}
+                            setCards={setCards}
+                            deleteCard={deleteCard}
+                            card={el}
+                            cardId={id}
                         />
                     ))}
                 </div>
-                <div className={styles.addCard} onMouseDown={(e) => {e.preventDefault();addCard();}}>
+                <div className={styles.addCard} onMouseDown={(e) => { e.preventDefault(); addCard(); }}>
                     Add Card
                 </div>
             </div>
