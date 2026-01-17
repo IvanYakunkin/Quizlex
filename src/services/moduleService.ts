@@ -1,6 +1,5 @@
-import { Card, Module, PrismaClient } from '@/generated/prisma/client';
-
-const prisma = new PrismaClient();
+import { Card, Module } from "@/generated/prisma/client";
+import { prisma } from "../../lib/prisma";
 
 // TODO: add different languages in slug.
 function generateSlug(name: string) {
@@ -16,7 +15,6 @@ function prepareCards(cards: Card[], moduleId: number) {
 }
 
 export async function findModuleById(id: number) {
-    const prisma = new PrismaClient();
     const foundModule = await prisma.module.findUnique({
         where: {
             id: +id,

@@ -1,11 +1,10 @@
 import NextAuth from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
-import { PrismaClient, User } from "@/generated/prisma/client";
 import { compare } from 'bcrypt';
 import GoogleProvider from "next-auth/providers/google"
 import { createUser, findUserIdByEmail } from '@/services/userService';
-
-const prisma = new PrismaClient();
+import { prisma } from '../../../../../lib/prisma';
+import { User } from '@/generated/prisma/client';
 
 const handler = NextAuth({
   session: {
@@ -24,18 +23,18 @@ const handler = NextAuth({
         login: {}
       },
       async authorize(credentials) {
-        try{
+        try {
           const user: User | null = await prisma.user.findUnique({
-            where:{
+            where: {
               email: credentials?.email
             }
           });
 
-          if(!user?.password){
+          if (!user?.password) {
             throw new Error("The password was not received");
           }
 
-          if(!user){
+          if (!user) {
             throw new Error("No user found with this email");
           }
 
@@ -47,17 +46,17 @@ const handler = NextAuth({
           if (!passwordCorrect) {
             throw new Error("Incorrect password");
           }
-          
+
           return {
             id: user.id.toString(),
             login: user.login,
             email: user.email,
           };
-          
-        }catch(err){
+
+        } catch (err) {
           console.log(err);
           throw new Error("Authorize: Authentication error");
-        }   
+        }
       },
     }),
     GoogleProvider({
@@ -76,17 +75,17 @@ const handler = NextAuth({
       if (token && session?.user) {
         session.user.email = token.email
       }
-      
+
       return session;
     },
-    async signIn({user, account}){
-      if(account?.provider === "google"){
-        if(!user.email || !user.name){
+    async signIn({ user, account }) {
+      if (account?.provider === "google") {
+        if (!user.email || !user.name) {
           return false;
         }
 
         const existingUser = await findUserIdByEmail(user.email);
-        if(!existingUser){
+        if (!existingUser) {
           await createUser(user.name, user.email, "google");
         }
       }
@@ -97,4 +96,4 @@ const handler = NextAuth({
 });
 
 
-export {handler as GET, handler as POST, handler as authOptions};
+export { handler as GET, handler as POST, handler as authOptions };

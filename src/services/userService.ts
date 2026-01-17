@@ -1,11 +1,9 @@
-import { PrismaClient } from "@/generated/prisma";
 import { hash } from "bcrypt";
-
-const prisma = new PrismaClient();
+import { prisma } from "../../lib/prisma";
 
 export async function createUser(login: string, email: string, authMethod?: string, password?: string) {
     const existingEmail = await prisma.user.findFirst({
-      where: { email }
+        where: { email }
     });
 
     const existingLogin = await prisma.user.findFirst({
@@ -13,22 +11,22 @@ export async function createUser(login: string, email: string, authMethod?: stri
     })
 
     if (existingEmail) {
-       throw new Error('Email is already in use!');
+        throw new Error('Email is already in use!');
     }
 
-    if(existingLogin){
+    if (existingLogin) {
         throw new Error('Login is already in use!');
     }
 
     const hashedPassword = password ? await hash(password, 10) : null;
 
     const newUser = await prisma.user.create({
-      data: {
-        email,
-        password: hashedPassword,
-        login,
-        authMethod
-      },
+        data: {
+            email,
+            password: hashedPassword,
+            login,
+            authMethod
+        },
     });
 
     return newUser;

@@ -1,13 +1,11 @@
-import { PrismaClient } from '@/generated/prisma/client';
 import { NextResponse } from 'next/server';
-
-const prisma = new PrismaClient();
+import { prisma } from '../../../../../lib/prisma';
 
 export async function POST(req: Request) {
   try {
     const { email } = await req.json();
 
-   if (!email) {
+    if (!email) {
       return NextResponse.json({ error: 'Email is empty' }, { status: 400 });
     }
 
@@ -21,13 +19,13 @@ export async function POST(req: Request) {
     }
 
     return NextResponse.json({ id: user.id }, { status: 200 });
-    
+
   } catch (error) {
 
-      console.error(error);
-      return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+    console.error(error);
+    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
 
   } finally {
-      await prisma.$disconnect();
+    await prisma.$disconnect();
   }
 }

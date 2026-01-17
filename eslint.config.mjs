@@ -12,7 +12,10 @@ const eslintConfig = defineConfig([
     'out/**',
     'build/**',
     'next-env.d.ts',
-    'src/generated/**'
+    'src/generated/**',
+    'node_modules',
+    'playwright-report',
+    'prisma'
   ]),
 ])
 

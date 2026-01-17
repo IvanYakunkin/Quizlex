@@ -1,67 +1,66 @@
 generator client {
-  provider = "prisma-client-js"
+  provider = "prisma-client"
   output   = "../src/generated/prisma"
 }
 
 datasource db {
   provider = "mysql"
-  url      = env("DATABASE_URL")
 }
 
 model User {
-  id    Int     @id @default(autoincrement())
-  login  String @unique
-  email String  @unique
-  authMethod String @default("credentials")
-  password String?
+  id         Int      @id @default(autoincrement())
+  login      String   @unique
+  email      String   @unique
+  authMethod String   @default("credentials")
+  password   String?
   created_at DateTime @default(now())
 
-  modules Module[]
+  modules       Module[]
   favoriteCards FavoriteCard[]
 
   @@map("users")
 }
 
-model Language{
-  id Int @id @default(autoincrement())
+model Language {
+  id   Int    @id @default(autoincrement())
   code String
   name String
 
-  termLanguage Module[] @relation("TermLanguage")
+  termLanguage       Module[] @relation("TermLanguage")
   definitionLanguage Module[] @relation("DefinitionLanguage")
 
   @@map("languages")
 }
 
-model Module{
-  id    Int     @id @default(autoincrement())
-  userId Int
-  name String
-  slug String
-  description String
-  termLanguageId Int
+model Module {
+  id                   Int      @id @default(autoincrement())
+  userId               Int
+  name                 String
+  slug                 String
+  description          String
+  termLanguageId       Int
   definitionLanguageId Int
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now())
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @default(now())
 
-  user   User @relation(fields: [userId], references: [id])
-  termLanguage Language @relation("TermLanguage", fields: [termLanguageId], references: [id])
+  user               User     @relation(fields: [userId], references: [id])
+  termLanguage       Language @relation("TermLanguage", fields: [termLanguageId], references: [id])
   definitionLanguage Language @relation("DefinitionLanguage", fields: [definitionLanguageId], references: [id])
 
-  cards Card[]
+  cards         Card[]
   favoriteCards FavoriteCard[]
 
   @@map("modules")
 }
 
-model Card{
-  id Int @id @default(autoincrement())
-  moduleId Int
-  term String?
+model Card {
+  id         Int     @id @default(autoincrement())
+  moduleId   Int
+  term       String?
   definition String?
 
-  module     Module   @relation(fields: [moduleId], references: [id], onDelete: Cascade)
-  
+  module Module @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+
   favoritedBy FavoriteCard[]
 
   @@map("cards")
@@ -72,9 +71,9 @@ model FavoriteCard {
   moduleId Int
   cardId   Int
 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   module Module @relation(fields: [moduleId], references: [id], onDelete: Cascade)
-  card Card @relation(fields: [cardId], references: [id], onDelete: Cascade)
+  card   Card   @relation(fields: [cardId], references: [id], onDelete: Cascade)
 
   @@id([userId, cardId])
   @@map("favorite_cards")

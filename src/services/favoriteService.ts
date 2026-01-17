@@ -1,10 +1,8 @@
-import { PrismaClient } from "@/generated/prisma";
+import { prisma } from "../../lib/prisma";
 
-const prisma = new PrismaClient();
-
-export const getFavoriteCards = async  (userId: number, moduleId: number) => {
+export const getFavoriteCards = async (userId: number, moduleId: number) => {
     const favoriteCards = await prisma.favoriteCard.findMany({
-        where : {
+        where: {
             userId: userId,
             moduleId: +moduleId
         },
@@ -40,7 +38,7 @@ export const deleteCardFavorite = async (userId: number, cardId: number) => {
             }
         }
     });
-    
+
     return deletedFavorite;
 }
 

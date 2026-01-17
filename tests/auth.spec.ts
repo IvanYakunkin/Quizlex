@@ -1,7 +1,5 @@
-import { PrismaClient } from '@/generated/prisma';
 import { test, expect } from '@playwright/test';
-
-const prisma = new PrismaClient();
+import { prisma } from '../lib/prisma';
 
 const randomEmail = `testuser${Date.now()}@example.com`;
 const randomLogin = `testuser${Date.now()}`;

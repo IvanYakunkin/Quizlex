@@ -1,5 +1,4 @@
-import { Language, Module } from "@/generated/prisma";
-import { Card as CardDBType } from "@/generated/prisma";
+import { Language, Module, Card as CardDB } from "../generated/prisma/browser";
 
 export interface Card {
     id: number;
@@ -67,9 +66,9 @@ export interface ModuleWithCount extends Module {
     }
 }
 
-// Type for module with cards and with languages
+// Interface for module with cards and with languages
 export interface ModuleMax extends Module {
-    cards: CardDBType[];
+    cards: CardDB[];
 }
 
 export interface ValidationErrors {

@@ -5,6 +5,7 @@ import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { findUserIdByEmail } from "@/services/userService";
 import { getFavoriteCards } from "@/services/favoriteService";
 import { WordsModule } from "@/types/types";
+import { notFound } from "next/navigation";
 
 export default async function Page({
   params,
@@ -12,32 +13,32 @@ export default async function Page({
   params: Promise<{ id: number }>
 }) {
 
-    const { id } = await params;
+  const { id } = await params;
 
-    const wordsModule: WordsModule | null = await findModuleById(id);
+  const wordsModule: WordsModule | null = await findModuleById(id);
 
-    const session: Session | null = await getServerSession(authOptions);
-    if(!session || !session.user?.email){
-      // TODO: Store ID in session
-      // ISSUE: There is no obvious way to store ID in session using next-auth
-      return;
-    }
+  const session: Session | null = await getServerSession(authOptions);
+  if (!session || !session.user?.email) {
+    // TODO: Store ID in session
+    // ISSUE: There is no obvious way to store ID in session using next-auth
+    notFound();
+  }
 
-    const userId = await findUserIdByEmail(session.user.email);
+  const userId = await findUserIdByEmail(session.user.email);
 
-    if(!userId || !wordsModule){
-      return;
-    }
+  if (!userId || !wordsModule) {
+    notFound();
+  }
 
-    const favoriteCardIds = await getFavoriteCards(userId, id);
+  const favoriteCardIds = await getFavoriteCards(userId, id);
 
-    // Check favorites
-    wordsModule.cards = wordsModule.cards.map(card => ({
-      ...card,
-      isFavorite: favoriteCardIds.includes(card.id)
-    }));
+  // Check favorites
+  wordsModule.cards = wordsModule.cards.map(card => ({
+    ...card,
+    isFavorite: favoriteCardIds.includes(card.id)
+  }));
 
-    return (
-        <Module moduleData={wordsModule} />
-    );
+  return (
+    <Module moduleData={wordsModule} />
+  );
 }
