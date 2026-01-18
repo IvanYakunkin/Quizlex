@@ -1,0 +1,42 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 70vh;
+    color: white;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    padding: 20px;
+    box-sizing: border-box;
+    text-align: center;
+}
+
+.title {
+    font-size: 6em;
+    margin: 0;
+    color: var(--blue-color-200);
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.subtitle {
+    font-size: 1.6em;
+    margin: 0.5em 0;
+}
+
+.message {
+    font-size: 1.2em;
+    margin-bottom: 2em;
+}
+
+.button {
+    padding: 10px 15px;
+    background-color: var(--blue-color-600);
+    border-radius: 4px;
+    color: white;
+    box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+    transition: background .2s ease-out;
+}
+
+.button:hover {
+    background: var(--blue-color-400);
+}
