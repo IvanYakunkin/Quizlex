@@ -6,9 +6,9 @@ import Separators from "./Separators";
 import styles from "../page.module.css";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
-import { Language } from "@/generated/prisma";
 import { createModuleDB, createModuleLS } from "@/utils/createModule";
 import { validateAndSanitize } from "@/utils/validateModule";
+import { Language } from "@/generated/prisma/browser";
 
 interface ImportAreaProps {
     previewCards: Card[];

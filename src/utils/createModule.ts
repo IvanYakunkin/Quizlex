@@ -1,4 +1,4 @@
-import { Language } from "@/generated/prisma";
+import { Language } from "@/generated/prisma/client";
 import { Card, Languages, ModuleInterface } from "@/types/types";
 
 const getLanguageId = (code: string, languages: Language[]) => {
@@ -40,6 +40,7 @@ export const createModuleDB = async (params: CreateModuleDBParams) => {
 
     } catch (error) {
         console.error(error);
+        alert("Error creating a module");
     }
 }
 

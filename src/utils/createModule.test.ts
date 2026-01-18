@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, afterAll, beforeEach } from 'vitest';
 import { createModuleDB, CreateModuleDBParams, createModuleLS } from './createModule';
-import { Card } from '@/generated/prisma';
 import { Languages } from '@/types/types';
+import { Card } from '@/generated/prisma/browser';
 
 describe('createModule logic', () => {
     beforeEach(() => {
