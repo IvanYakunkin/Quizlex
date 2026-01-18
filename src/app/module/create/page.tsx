@@ -1,11 +1,9 @@
 import { getLanguages } from "@/services/languageService";
-import Create from "./components/Create"
+import { ModuleForm } from "@/components/ModuleForm/ModuleForm";
 
-const Page = async () => {
+export default async function CreatePage() {
     const languages = await getLanguages();
     return (
-        <Create languages={languages} />
+        <ModuleForm languagesList={languages} />
     );
 }
-
-export default Page;

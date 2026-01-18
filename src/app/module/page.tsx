@@ -1,9 +1,8 @@
-import Module from "./components/Module";
+import { Module } from "./components/Module/Module";
 
-const Page = () => {
+export default function ModulePage() {
+    // Get module from localStorage
     return (
         <Module />
     );
 }
-
-export default Page;

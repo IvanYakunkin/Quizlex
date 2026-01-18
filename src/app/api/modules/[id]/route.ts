@@ -1,33 +1,31 @@
-import { deleteModule, findUserModuleById, updateModuleWord } from "@/services/moduleService";
+import { deleteModule, findUserModuleById, updateModule, updateModuleWord } from "@/services/moduleService";
 import { findUserIdByEmail } from "@/services/userService";
 import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 
-// Use middlewares for authentication check
-
 export async function GET(
-  request: Request,
-  { params }: { params: Promise<{ id: string }> }
+    request: Request,
+    { params }: { params: Promise<{ id: string }> }
 ) {
     try {
         const { id } = await params;
 
         const session = await getServerSession();
 
-        if(!session || !session.user?.email){
-            return NextResponse.json({error: "User is not authorized"}, {status: 401});
+        if (!session || !session.user?.email) {
+            return NextResponse.json({ error: "User is not authorized" }, { status: 401 });
         }
 
         const userId = await findUserIdByEmail(session.user.email);
 
-        if(!userId){
-            return NextResponse.json({error: "User is not authorized"}, {status: 401});
+        if (!userId) {
+            return NextResponse.json({ error: "User is not authorized" }, { status: 401 });
         }
 
         const wordsModule = await findUserModuleById(userId, +id);
-       
-        if(!wordsModule){
-            return NextResponse.json({error: "Module not found"}, {status: 404});
+
+        if (!wordsModule) {
+            return NextResponse.json({ error: "Module not found" }, { status: 404 });
         }
 
         return NextResponse.json(wordsModule, { status: 200 });
@@ -35,26 +33,26 @@ export async function GET(
     } catch (error) {
         console.error(error);
         return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
-    } 
+    }
 }
 
 export async function DELETE(
-  request: Request,
-  { params }: { params: Promise<{ id: string }> }
+    request: Request,
+    { params }: { params: Promise<{ id: string }> }
 ) {
     try {
         const { id } = await params;
 
         const session = await getServerSession();
 
-        if(!session || !session.user?.email){
-            return NextResponse.json({error: "User is not authorized"}, {status: 401});
+        if (!session || !session.user?.email) {
+            return NextResponse.json({ error: "User is not authorized" }, { status: 401 });
         }
 
         const userId = await findUserIdByEmail(session.user.email);
 
-        if(!userId){
-            return NextResponse.json({error: "User is not authorized"}, {status: 401});
+        if (!userId) {
+            return NextResponse.json({ error: "User is not authorized" }, { status: 401 });
         }
 
         const foundModule = await findUserModuleById(userId, +id);
@@ -70,12 +68,37 @@ export async function DELETE(
     } catch (error) {
         console.error(error);
         return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
-    } 
+    }
+}
+
+export async function PUT(
+    request: Request,
+    { params }: { params: Promise<{ id: string }> }
+) {
+    const { id } = await params;
+
+    const session = await getServerSession();
+
+    if (!session || !session.user?.email) {
+        return NextResponse.json({ error: "User is not authorized" }, { status: 401 });
+    }
+
+    const userId = await findUserIdByEmail(session.user.email);
+
+    if (!userId) {
+        return NextResponse.json({ error: "User is not authorized" }, { status: 401 });
+    }
+
+    const data = await request.json();
+
+    const updatedModule = await updateModule(+id, userId, data.module, data.cards);
+
+    return NextResponse.json(updatedModule, { status: 200 });
 }
 
 export async function PATCH(
-  request: Request,
-  { params }: { params: Promise<{ id: string }> }
+    request: Request,
+    { params }: { params: Promise<{ id: string }> }
 ) {
     try {
         const { id } = await params;
@@ -83,15 +106,15 @@ export async function PATCH(
         const session = await getServerSession();
 
         if (!session || !session.user?.email) {
-        return NextResponse.json({ error: "User is not authorized" }, { status: 401 });
+            return NextResponse.json({ error: "User is not authorized" }, { status: 401 });
         }
 
         const userId = await findUserIdByEmail(session.user.email);
 
         if (!userId) {
-        return NextResponse.json({ error: "User is not authorized" }, { status: 401 });
+            return NextResponse.json({ error: "User is not authorized" }, { status: 401 });
         }
-        
+
         const { card } = await request.json();
 
         if (!card) {
@@ -111,7 +134,7 @@ export async function PATCH(
     } catch (error) {
         console.error(error);
         return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
-    } 
+    }
 }
 
 

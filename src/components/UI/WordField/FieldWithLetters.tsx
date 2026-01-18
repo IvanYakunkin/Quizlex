@@ -1,4 +1,4 @@
-import { memo, useCallback, useState, RefObject } from "react";
+import { memo, useCallback, useState, RefObject, useEffect } from "react";
 import { Field } from "./Field";
 import { Letters } from "./Letters";
 
@@ -19,7 +19,7 @@ export const FieldWithLetters = memo(({
     cardId,
     placeholder,
     language,
-    isAlwaysShown
+    isAlwaysShown,
 }: FieldWithLettersProps) => {
 
     const [isAnimation, setIsAnimation] = useState(false);

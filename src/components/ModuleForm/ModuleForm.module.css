@@ -1,38 +1,38 @@
-.create{
+.moduleForm {
     width: 970px;
     margin: 25px auto;
     color: white;
     padding-bottom: 180px;
 }
 
-.title{
+.title {
     text-align: center;
     font-size: 26px;
-    font-weight: bold;   
+    font-weight: bold;
     margin-bottom: 10px;
 }
 
-.info{
+.info {
     display: flex;
     justify-content: space-between;
     align-items: flex-end;
 }
 
-.infoFields{
+.infoFields {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     width: 430px;
 }
 
-.languages{
+.languages {
     display: flex;
     flex-direction: column;
     gap: 20px;
     margin-top: 30px;
 }
 
-.moduleField {
+.field {
     width: 100%;
     display: block;
     margin-top: 10px;
@@ -47,7 +47,7 @@
     box-sizing: border-box;
 }
 
-.buttonSave{
+.buttonSave {
     padding: 10px 60px;
     background: green;
     font-size: 1.1em;
@@ -56,61 +56,26 @@
     cursor: pointer;
 }
 
-.buttonSave:hover{
+.buttonSave:hover {
     background: var(--blue-color-400);
 }
 
-.moduleField.error{
-   border-bottom-color: rgb(228, 46, 46);
+.field.error {
+    border-bottom-color: rgb(228, 46, 46);
 }
 
-.moduleField:focus:not(.error){
+.field:focus:not(.error) {
     border-bottom: 2px solid var(--blue-color-200);
 }
 
-.card{
-    background: var(--header-background);
-    border-radius: 8px;
-    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
-    animation: pulse 0.5s ease forwards;
-}
-
-.card__title{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 15px;
-    border-bottom: 1px solid var(--background-color);
-    margin-top: 20px;
-}
-
-.card__titleDelete{
-    padding: 5px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border: 1px solid transparent;
-    cursor: pointer;
-}
-
-.card__titleDelete:hover{
-    background: var(--blue-color-400);
-    border-radius: 100%;
-}
-
-.card__titleDelete>img{
-    width: 18px;
-    height: 18px;
-}
-
-.card__content{
+.card__content {
     display: flex;
     flex-direction: column;
     padding: 15px;
     gap: 10px;
 }
 
-.addCard{
+.addCard {
     padding: 25px 0;
     background: var(--header-background);
     text-align: center;
@@ -123,12 +88,12 @@
     box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 }
 
-.addCard:hover{
+.addCard:hover {
     color: var(--blue-color-400);
     opacity: .9;
 }
 
-.content{
+.createContainer {
     padding-top: 30px;
 }
 
@@ -140,58 +105,28 @@
     0% {
         transform: scale(1);
     }
+
     50% {
         transform: scale(1.03);
     }
+
     100% {
         transform: scale(1);
     }
 }
 
-@media (max-width: 468px) {
-    .create{
+@media (max-width: 1024px) {
+    .moduleForm {
         width: 90%;
     }
 
-    .info{
+    .info {
         flex-direction: column;
         align-items: end;
         gap: 15px;
     }
 
-    .infoFields{
-        width: 100%;
-    }
-}
-
-@media (min-width: 468px) and (max-width: 767px) {
-    .create{
-        width: 90%;
-    }
-
-    .info{
-        flex-direction: column;
-        align-items: end;
-        gap: 15px;
-    }
-
-    .infoFields{
-        width: 100%;
-    }
-}
-
-@media (min-width: 768px) and (max-width: 1024px){
-    .create{
-        width: 90%;
-    }
-
-    .info{
-        flex-direction: column;
-        align-items: end;
-        gap: 15px;
-    }
-
-    .info-fields{
+    .info-fields {
         width: 100%;
     }
 }

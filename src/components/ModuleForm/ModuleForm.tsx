@@ -1,30 +1,40 @@
 "use client"
 
-import CreateCard from './CreateCard';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { Card, Languages, ValidationErrors } from '@/types/types';
+import { Card, Languages, ModuleWithCards, ValidationErrors } from '@/types/types';
 import Select from '@/components/UI/SelectLanguage/Select';
-import styles from "../page.module.css";
-import { Language } from '@/generated/prisma';
-import { useSession } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
-import { createModuleDB, createModuleLS } from '@/utils/createModule';
+import styles from "./ModuleForm.module.css";
+import { redirect, useRouter } from 'next/navigation';
+import { createModuleDB } from '@/utils/createModule';
 import { validateAndSanitize } from '@/utils/validateModule';
+import { Language } from '@/generated/prisma/browser';
+import { CreateCard } from './CreateCard/CreateCard';
+import { updateModuleDB } from '@/utils/updateModule';
 
 const emptyCard = { id: 0, term: "", definition: "", isFavorite: false };
 
-interface CreateProps {
-    languages: Language[];
+interface ModuleFormProps {
+    languagesList: Language[];
+    initialModule?: ModuleWithCards;
 }
 
+const defaultLanguages = { term: "en-EN", definition: "en-EN" };
+
 // TODO: 1) Re-renders could be optimized!
-const Create = ({ languages }: CreateProps) => {
-    const [cards, setCards] = useState<Card[]>([emptyCard]);
-    const [selectedLanguages, setSelectedLanguages] = useState<Languages>({ term: "en-EN", definition: "en-EN" });
+export const ModuleForm = ({ languagesList, initialModule }: ModuleFormProps) => {
+    const [cards, setCards] = useState<Card[]>(initialModule ? initialModule.cards : [emptyCard]);
+
+    const [selectedLanguages, setSelectedLanguages] = useState<Languages>(() => {
+        const termLang = languagesList.find(l => l.id === initialModule?.termLanguageId);
+        const defLang = languagesList.find(l => l.id === initialModule?.definitionLanguageId);
+        return termLang && defLang ? { term: termLang.code, definition: defLang.code } : defaultLanguages;
+    });
+
     const [formErrors, setFormErrors] = useState<ValidationErrors>();
-    const { status } = useSession();
+    const [createdCardIndex, setCreatedCardIndex] = useState<number | null>(null);
     const router = useRouter();
 
+    // TODO: use createdCardId instead
     const newCardAdded = useRef(false);
 
     const nameInputRef = useRef<HTMLInputElement | null>(null);
@@ -32,6 +42,7 @@ const Create = ({ languages }: CreateProps) => {
 
     const addCard = useCallback(() => {
         setCards([...cards, { ...emptyCard, id: cards[cards.length - 1].id + 1 }]);
+        setCreatedCardIndex(cards.length);
         newCardAdded.current = true;
     }, [cards]);
 
@@ -57,21 +68,33 @@ const Create = ({ languages }: CreateProps) => {
             return false;
         }
         if (nameInputRef.current && descriptionInputRef.current) {
-            if (status === "authenticated") {
-                const createdModule = await createModuleDB({
-                    name: nameInputRef.current.value,
-                    description: descriptionInputRef.current.value,
+            let redirectModuleId;
+            if (initialModule) { // Update
+                const termLanguageId = languagesList.find(l => selectedLanguages.term === l.code)?.id || 1;
+                const definitionLanguageId = languagesList.find(l => selectedLanguages.definition === l.code)?.id || 1;
+
+                const updatedModule = await updateModuleDB({
+                    id: initialModule.id,
+                    name,
+                    description,
                     cards: sanitizedCards,
-                    languages: languages,
+                    termLanguageId,
+                    definitionLanguageId
+                });
+                redirectModuleId = updatedModule.id;
+            } else { // Create
+                const createdModule = await createModuleDB({
+                    name,
+                    description,
+                    cards: sanitizedCards,
+                    languages: languagesList,
                     selectedLanguages,
                 });
-
-                const moduleUrl = `/module/${createdModule.id}`;
-                router.push(moduleUrl);
-            } else {
-                createModuleLS(sanitizedCards, selectedLanguages);
-                router.push("/module");
+                redirectModuleId = createdModule.id;
             }
+
+            const moduleUrl = `/module/${redirectModuleId}`;
+            router.push(moduleUrl);
         }
     }
 
@@ -130,24 +153,47 @@ const Create = ({ languages }: CreateProps) => {
 
     return (
         <main className="main">
-            <div className={styles.create}>
-                <div className={styles.title}>Create a new module</div>
+            <div className={styles.moduleForm}>
+                {!initialModule &&
+                    <div className={styles.title}>Create a new module</div>
+                }
                 <div className={styles.info}>
                     <div className={styles.infoFields}>
-                        <input type="text" ref={nameInputRef} className={!formErrors?.name ? styles.moduleField : `${styles.moduleField} ${styles.error}`} placeholder='Name' />
-                        <input type='text' ref={descriptionInputRef} className={!formErrors?.description ? styles.moduleField : `${styles.moduleField} ${styles.error}`} placeholder='Description' />
+                        <input
+                            type="text" ref={nameInputRef}
+                            className={!formErrors?.name ? styles.field : `${styles.field} ${styles.error}`}
+                            defaultValue={initialModule ? initialModule.name : ""}
+                            placeholder='Name'
+                            autoFocus
+                        />
+                        <input
+                            type='text'
+                            ref={descriptionInputRef}
+                            className={!formErrors?.description ? styles.field : `${styles.field} ${styles.error}`}
+                            defaultValue={initialModule ? initialModule.description : ""}
+                            placeholder='Description'
+                        />
                     </div>
                     <div className={styles.buttonSave} onClick={saveCards}>Save</div>
                 </div>
                 <div className={styles.languages}>
                     <div className={styles.language}>
-                        <Select languages={languages} label="Original Language" selectedValue={selectedLanguages.term} setLanguage={setTermLang}></Select>
+                        <Select languages={languagesList}
+                            label="Original Language"
+                            selectedValue={selectedLanguages.term}
+                            setLanguage={setTermLang}
+                        />
                     </div>
                     <div className={styles.language}>
-                        <Select languages={languages} label="Translation Language" selectedValue={selectedLanguages.definition} setLanguage={setDefinitionLang}></Select>
+                        <Select
+                            languages={languagesList}
+                            label="Translation Language"
+                            selectedValue={selectedLanguages.definition}
+                            setLanguage={setDefinitionLang}
+                        />
                     </div>
                 </div>
-                <div className={styles.content + " " + "create__content"}>
+                <div className={styles.createContainer + " create__content"}>
                     {cards.map((el, id) => (
                         <CreateCard
                             key={el.id}
@@ -155,6 +201,7 @@ const Create = ({ languages }: CreateProps) => {
                             deleteCard={deleteCard}
                             card={el}
                             cardId={id}
+                            useFocus={createdCardIndex === id}
                         />
                     ))}
                 </div>
@@ -165,5 +212,3 @@ const Create = ({ languages }: CreateProps) => {
         </main>
     )
 }
-
-export default Create;

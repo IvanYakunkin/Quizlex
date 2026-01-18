@@ -1,0 +1,117 @@
+.module {
+    width: 820px;
+    margin: 40px auto;
+    color: white;
+    padding-bottom: 50px;
+}
+
+.title {
+    font-size: 2em;
+    padding-bottom: 20px;
+}
+
+.subtitle {
+    padding-bottom: 20px;
+    font-size: 1.2em;
+}
+
+.learningTypes {
+    padding-bottom: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.learningBtn {
+    padding: 12px 10px;
+    display: flex;
+    flex: 1;
+    align-items: center;
+    justify-content: left;
+    gap: 10px;
+    background: var(--blue-color-600);
+    border-radius: 10px;
+    font-size: 1.1em;
+    font-weight: bold;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: all .2s ease-out;
+}
+
+.learningBtn:hover {
+    border: 2px solid white;
+}
+
+.learningTypes img {
+    width: 24px;
+    height: auto;
+}
+
+.wordsCounter {
+    padding-top: 20px;
+}
+
+.wordsCounter .wordsCounterLine {
+    width: 100%;
+    text-align: center;
+    border-bottom: 1px solid var(--blue-color-600);
+    line-height: 0.1em;
+    margin: 10px 0 20px;
+    font-size: 1.4em;
+    font-weight: bold;
+}
+
+.wordsCounter .wordsCounterLine span {
+    background: var(--background-color);
+    padding: 0 10px;
+    color: var(--blue-color-200);
+}
+
+.updateButton {
+    display: flex;
+    width: fit-content;
+    margin: 0 auto;
+    align-items: center;
+    font-size: 1.1em;
+    padding: 12px 25px;
+    gap: 5px;
+    font-weight: bold;
+    background-color: var(--blue-color-600);
+    color: white;
+    box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+    border-radius: 14px;
+    cursor: pointer;
+    transition: background .2s ease-out;
+    margin-top: 15px;
+}
+
+.updateButton:hover {
+    background: var(--blue-color-400);
+}
+
+@media (max-width: 467px) {
+    .module {
+        width: 90%;
+    }
+
+    .learningBtn {
+        flex: 1 1 40%;
+    }
+}
+
+@media (min-width: 468px) and (max-width: 767px) {
+    .module {
+        width: 90%;
+    }
+
+    .learningBtn {
+        flex: 1 1 40%;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 1024px) {
+    .module {
+        width: 90%;
+    }
+
+}

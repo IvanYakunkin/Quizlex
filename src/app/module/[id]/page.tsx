@@ -1,13 +1,13 @@
 import { findModuleById } from "@/services/moduleService";
-import Module from "../components/Module";
 import { getServerSession, Session } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { findUserIdByEmail } from "@/services/userService";
 import { getFavoriteCards } from "@/services/favoriteService";
 import { WordsModule } from "@/types/types";
 import { notFound } from "next/navigation";
+import { Module } from "../components/Module/Module";
 
-export default async function Page({
+export default async function ModulePage({
   params,
 }: {
   params: Promise<{ id: number }>

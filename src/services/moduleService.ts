@@ -1,5 +1,6 @@
 import { Card, Module } from "@/generated/prisma/client";
 import { prisma } from "../../lib/prisma";
+import { ModuleWithCards } from "@/types/types";
 
 // TODO: add different languages in slug.
 function generateSlug(name: string) {
@@ -95,6 +96,32 @@ export async function deleteModule(moduleId: number, userId: number) {
     });
 
     return deletedModule;
+}
+
+export async function updateModule(moduleId: number, userId: number, module: ModuleWithCards, cards: Card[]) {
+    const updatedModule = await prisma.module.update({
+        where: {
+            id: moduleId,
+            userId
+        },
+        data: {
+            name: module.name,
+            description: module.description,
+            termLanguageId: module.termLanguageId,
+            definitionLanguageId: module.definitionLanguageId,
+            cards: {
+                deleteMany: {},
+                create: cards.map(card => ({
+                    term: card.term,
+                    definition: card.definition
+                })),
+            },
+        },
+        include: {
+            cards: true,
+        },
+    });
+    return updatedModule;
 }
 
 export async function updateModuleWord(moduleId: number, userId: number, word: Card) {

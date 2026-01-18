@@ -1,0 +1,34 @@
+.card {
+    background: var(--header-background);
+    border-radius: 8px;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    animation: pulse 0.5s ease forwards;
+}
+
+.title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 15px;
+    border-bottom: 1px solid var(--background-color);
+    margin-top: 20px;
+}
+
+.deleteTitle {
+    padding: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid transparent;
+    cursor: pointer;
+}
+
+.deleteTitle:hover {
+    background: var(--blue-color-400);
+    border-radius: 100%;
+}
+
+.deleteTitle>img {
+    width: 18px;
+    height: 18px;
+}

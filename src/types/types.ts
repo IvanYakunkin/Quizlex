@@ -67,7 +67,7 @@ export interface ModuleWithCount extends Module {
 }
 
 // Interface for module with cards and with languages
-export interface ModuleMax extends Module {
+export interface ModuleWithCards extends Module {
     cards: CardDB[];
 }
 
