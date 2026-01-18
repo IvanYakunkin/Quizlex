@@ -1,5 +1,5 @@
+import { authOptions } from "@/lib/auth";
 import { deleteModule, findUserModuleById, updateModule, updateModuleWord } from "@/services/moduleService";
-import { findUserIdByEmail } from "@/services/userService";
 import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 
@@ -10,19 +10,13 @@ export async function GET(
     try {
         const { id } = await params;
 
-        const session = await getServerSession();
+        const session = await getServerSession(authOptions);
 
-        if (!session || !session.user?.email) {
+        if (!session || !session.user?.id) {
             return NextResponse.json({ error: "User is not authorized" }, { status: 401 });
         }
 
-        const userId = await findUserIdByEmail(session.user.email);
-
-        if (!userId) {
-            return NextResponse.json({ error: "User is not authorized" }, { status: 401 });
-        }
-
-        const wordsModule = await findUserModuleById(userId, +id);
+        const wordsModule = await findUserModuleById(+session.user.id, +id);
 
         if (!wordsModule) {
             return NextResponse.json({ error: "Module not found" }, { status: 404 });
@@ -43,25 +37,13 @@ export async function DELETE(
     try {
         const { id } = await params;
 
-        const session = await getServerSession();
+        const session = await getServerSession(authOptions);
 
-        if (!session || !session.user?.email) {
+        if (!session || !session.user?.id) {
             return NextResponse.json({ error: "User is not authorized" }, { status: 401 });
         }
 
-        const userId = await findUserIdByEmail(session.user.email);
-
-        if (!userId) {
-            return NextResponse.json({ error: "User is not authorized" }, { status: 401 });
-        }
-
-        const foundModule = await findUserModuleById(userId, +id);
-
-        if (!foundModule) {
-            return NextResponse.json({ error: 'Module not found' }, { status: 404 });
-        }
-
-        const deletedModule = await deleteModule(+id, userId);
+        const deletedModule = await deleteModule(+id, +session.user.id);
 
         return NextResponse.json(deletedModule, { status: 200 });
 
@@ -75,25 +57,24 @@ export async function PUT(
     request: Request,
     { params }: { params: Promise<{ id: string }> }
 ) {
-    const { id } = await params;
+    try {
+        const { id } = await params;
 
-    const session = await getServerSession();
+        const session = await getServerSession();
 
-    if (!session || !session.user?.email) {
-        return NextResponse.json({ error: "User is not authorized" }, { status: 401 });
+        if (!session || !session.user?.id) {
+            return NextResponse.json({ error: "User is not authorized" }, { status: 401 });
+        }
+
+        const data = await request.json();
+
+        const updatedModule = await updateModule(+id, +session.user.id, data.module, data.cards);
+
+        return NextResponse.json(updatedModule, { status: 200 });
+    } catch (error) {
+        console.error(error);
+        return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
     }
-
-    const userId = await findUserIdByEmail(session.user.email);
-
-    if (!userId) {
-        return NextResponse.json({ error: "User is not authorized" }, { status: 401 });
-    }
-
-    const data = await request.json();
-
-    const updatedModule = await updateModule(+id, userId, data.module, data.cards);
-
-    return NextResponse.json(updatedModule, { status: 200 });
 }
 
 export async function PATCH(
@@ -103,15 +84,9 @@ export async function PATCH(
     try {
         const { id } = await params;
 
-        const session = await getServerSession();
+        const session = await getServerSession(authOptions);
 
-        if (!session || !session.user?.email) {
-            return NextResponse.json({ error: "User is not authorized" }, { status: 401 });
-        }
-
-        const userId = await findUserIdByEmail(session.user.email);
-
-        if (!userId) {
+        if (!session || !session.user?.id) {
             return NextResponse.json({ error: "User is not authorized" }, { status: 401 });
         }
 
@@ -121,16 +96,15 @@ export async function PATCH(
             return NextResponse.json({ error: 'Word is required' }, { status: 400 });
         }
 
-        const foundModule = await findUserModuleById(userId, +id);
-
-        if (!foundModule) {
-            return NextResponse.json({ error: 'Module not found' }, { status: 404 });
+        const updatedCard = await updateModuleWord(+id, +session.user.id, card);
+        if (!updatedCard) {
+            return NextResponse.json(
+                { error: "Card not found or access denied" },
+                { status: 404 }
+            );
         }
 
-        const updatedModule = await updateModuleWord(+id, userId, card);
-
-        return NextResponse.json(updatedModule, { status: 200 });
-
+        return NextResponse.json(updatedCard, { status: 200 });
     } catch (error) {
         console.error(error);
         return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });

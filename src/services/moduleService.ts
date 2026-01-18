@@ -1,6 +1,7 @@
 import { Card, Module } from "@/generated/prisma/client";
 import { prisma } from "../../lib/prisma";
 import { ModuleWithCards } from "@/types/types";
+import { PrismaClientKnownRequestError } from "@prisma/client/runtime/client";
 
 // TODO: add different languages in slug.
 function generateSlug(name: string) {
@@ -15,20 +16,21 @@ function prepareCards(cards: Card[], moduleId: number) {
     }));
 }
 
-export async function findModuleById(id: number) {
-    const foundModule = await prisma.module.findUnique({
-        where: {
-            id: +id,
-        },
-        include: {
-            cards: true,
-            termLanguage: true,
-            definitionLanguage: true,
-        }
-    });
+// export async function findModuleById(id: number, userId: number) {
+//     const foundModule = await prisma.module.findUnique({
+//         where: {
+//             id: +id,
+//             userId
+//         },
+//         include: {
+//             cards: true,
+//             termLanguage: true,
+//             definitionLanguage: true,
+//         }
+//     });
 
-    return foundModule;
-}
+//     return foundModule;
+// }
 
 export async function createModule(module: Module, cards: Card[], userId: number) {
 
@@ -49,26 +51,32 @@ export async function createModule(module: Module, cards: Card[], userId: number
 }
 
 export async function findUserModuleById(userId: number, moduleId: number) {
-
-    const wordsModule = await prisma.module.findUnique({
+    const wordsModule = await prisma.module.findFirst({
         where: {
-            id: +moduleId,
+            id: moduleId,
             userId: userId,
         },
         include: {
-            cards: true,
+            termLanguage: true,
+            definitionLanguage: true,
+            cards: {
+                include: {
+                    favoritedBy: {
+                        where: {
+                            userId
+                        }
+                    }
+                }
+            },
         },
     });
-
-    if (!wordsModule) {
-        throw new Error("Module not found");
-    }
 
     return wordsModule;
 }
 
-export async function findUserModules(userId: number) {
+export type UserModule = Awaited<ReturnType<typeof findUserModuleById>>
 
+export async function findUserModules(userId: number) {
     const userModules = prisma.module.findMany({
         where: {
             userId: userId,
@@ -91,11 +99,9 @@ export async function findUserModules(userId: number) {
 }
 
 export async function deleteModule(moduleId: number, userId: number) {
-    const deletedModule = await prisma.module.delete({
-        where: { id: +moduleId, userId: userId },
+    return await prisma.module.delete({
+        where: { id: moduleId, userId: userId },
     });
-
-    return deletedModule;
 }
 
 export async function updateModule(moduleId: number, userId: number, module: ModuleWithCards, cards: Card[]) {
@@ -125,17 +131,24 @@ export async function updateModule(moduleId: number, userId: number, module: Mod
 }
 
 export async function updateModuleWord(moduleId: number, userId: number, word: Card) {
-    const updatedModule = await prisma.card.update({
-        where: {
-            id: word.id,
-            moduleId: +moduleId,
-            module: { userId: userId }
-        },
-        data: {
-            term: word.term,
-            definition: word.definition,
-        },
-    });
-
-    return updatedModule;
+    try {
+        return await prisma.card.update({
+            where: {
+                id: word.id,
+                moduleId: moduleId,
+                module: { userId: userId }
+            },
+            data: {
+                term: word.term,
+                definition: word.definition,
+            },
+        });
+    } catch (error) {
+        if (error instanceof PrismaClientKnownRequestError) {
+            if (error.code === 'P2025') {
+                return null;
+            }
+        }
+        throw error;
+    }
 }

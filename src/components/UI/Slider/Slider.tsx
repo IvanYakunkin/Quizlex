@@ -8,6 +8,7 @@ import { useParams } from "next/navigation";
 import CardFlipper from "../CardFlipper/CardFlipper";
 import { setFavoriteDB } from "@/utils/favorites/favoritesDB";
 import { setFavoriteLS } from "@/utils/favorites/favoritesLS";
+import { changeFavoriteState } from "@/utils/favorites/utils";
 
 export interface SliderRef {
     refreshCards?: () => void;
@@ -32,7 +33,7 @@ const slideAnimationTypes: string[] = ["slideRightAnimation", "slideLeftAnimatio
 const horizontalAnimationDuration = 100;
 
 export const Slider = (props: SliderProps) => {
-    const { status, data: session } = useSession();
+    const { status } = useSession();
     const { id } = useParams();
     const [isFrontDefault, setIsFrontDefault] = useState(true);
     const [isTranslationShown, setIsTranslationShown] = useState(false);
@@ -41,6 +42,7 @@ export const Slider = (props: SliderProps) => {
     // Contains css-class for animation
     const [slideAnimate, setSlideAnimate] = useState("");
     const [touchStartX, setTouchStartX] = useState(0);
+    const [isFavoriteLoading, setIsFavoriteLoading] = useState(false);
 
     const currentCard = props.cards[props.currentCardId];
 
@@ -120,14 +122,21 @@ export const Slider = (props: SliderProps) => {
         toNext: toNextWord,
     }));
 
-    const clickFavorite = (wordId: number) => {
+    const clickFavorite = (cardId: number) => {
         if (props.setCards) {
             if (status === "authenticated" && id) {
-                if (session.user?.email) {
-                    setFavoriteDB(props.setCards, wordId, +id, session.user?.email);
+                if (isFavoriteLoading) return;
+                setIsFavoriteLoading(true);
+                try {
+                    setFavoriteDB(cardId, +id);
+                } catch {
+                    changeFavoriteState(props.setCards, cardId);
+                } finally {
+                    setIsFavoriteLoading(false);
                 }
+                changeFavoriteState(props.setCards, cardId);
             } else {
-                setFavoriteLS(props.setCards, wordId);
+                setFavoriteLS(props.setCards, cardId);
             }
         }
     }

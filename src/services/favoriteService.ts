@@ -54,4 +54,28 @@ export const setCardFavorite = async (userId: number, moduleId: number, cardId: 
     return createdFavorite;
 }
 
+export async function toggleFavoriteCard(userId: number, moduleId: number, cardId: number) {
+    const existingFavorite = await prisma.favoriteCard.findUnique({
+        where: {
+            userId_cardId: { userId, cardId },
+        },
+    });
 
+    if (existingFavorite) {
+        await prisma.favoriteCard.delete({
+            where: {
+                userId_cardId: { userId, cardId },
+            },
+        });
+        return { isFavorite: false };
+    } else {
+        await prisma.favoriteCard.create({
+            data: {
+                userId,
+                moduleId,
+                cardId,
+            },
+        });
+        return { isFavorite: true };
+    }
+}

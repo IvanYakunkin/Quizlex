@@ -1,22 +1,18 @@
 import styles from "./page.module.css";
 import { getServerSession } from "next-auth";
 import { findUserModules } from "@/services/moduleService";
-import { findUserIdByEmail } from "@/services/userService";
 import Modules from "./components/Modules";
+import { authOptions } from "@/lib/auth";
+import { notFound } from "next/navigation";
 
 const Page = async () => {
-    const session = await getServerSession();
+    const session = await getServerSession(authOptions);
 
-    if (!session || !session.user?.email) {
-        return null;
+    if (!session || !session.user.id) {
+        notFound();
     }
 
-    const userId = await findUserIdByEmail(session.user.email);
-    if (!userId) {
-        return null;
-    }
-
-    const userModules = await findUserModules(userId);
+    const userModules = await findUserModules(+session.user.id);
 
     return (
         <main className="main">

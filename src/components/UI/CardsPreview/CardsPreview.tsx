@@ -6,6 +6,8 @@ import { useSession } from "next-auth/react";
 import { useParams } from "next/navigation";
 import { setFavoriteDB } from "@/utils/favorites/favoritesDB";
 import { setFavoriteLS } from "@/utils/favorites/favoritesLS";
+import { changeFavoriteState } from "@/utils/favorites/utils";
+import { useState } from "react";
 
 interface CardsPreviewProps {
     cards: Card[];
@@ -19,15 +21,26 @@ interface CardsPreviewProps {
 
 const CardsPreview = (props: CardsPreviewProps) => {
 
-    const { status, data: session } = useSession();
+    const { status } = useSession();
     const { id } = useParams();
+    const [isLoading, setIsLoading] = useState(false);
 
-    const clickFavoriteBtn = (wordId: number) => {
+    const clickFavoriteBtn = async (wordId: number) => {
         if (props.setCards) {
             if (status === "authenticated" && id) {
-                if (session.user?.email) {
-                    setFavoriteDB(props.setCards, wordId, +id, session.user?.email);
+                if (isLoading) return;
+
+                setIsLoading(true);
+                changeFavoriteState(props.setCards, wordId);
+
+                try {
+                    await setFavoriteDB(wordId, +id);
+                } catch {
+                    changeFavoriteState(props.setCards, wordId);
+                } finally {
+                    setIsLoading(false);
                 }
+
             } else {
                 setFavoriteLS(props.setCards, wordId);
             }
@@ -73,7 +86,7 @@ const CardsPreview = (props: CardsPreviewProps) => {
                 ))}
             </div>
         </div>
-    )
+    );
 }
 
 export default CardsPreview;

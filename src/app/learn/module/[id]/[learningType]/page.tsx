@@ -1,45 +1,29 @@
-// TODO: Add functionality for studying other people's modules
-
-import { findModuleById } from "@/services/moduleService";
-import { LearningType, WordsModule } from "@/types/types";
+import { LearningType } from "@/types/types";
 import LearningPage from "@/app/learn/components/LearningPage";
 import { getServerSession, Session } from "next-auth";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
-import { findUserIdByEmail } from "@/services/userService";
-import { getFavoriteCards } from "@/services/favoriteService";
+import { findUserModuleById, UserModule } from "@/services/moduleService";
+import { authOptions } from "@/lib/auth";
+import { notFound } from "next/navigation";
 
 export default async function Page({
   params,
 }: {
   params: Promise<{ id: number, learningType: LearningType }>
 }) {
-    const moduleId = (await params).id;
-    const learningType = (await params).learningType;
+  const moduleId = (await params).id;
+  const learningType = (await params).learningType;
 
-    const wordsModule: WordsModule | null = await findModuleById(moduleId);
+  const session: Session | null = await getServerSession(authOptions);
+  if (!session || !session.user?.id) {
+    notFound();
+  }
 
-    const session: Session | null = await getServerSession(authOptions);
-    if(!session || !session.user?.email){
-      // TODO: Store ID in session
-      // ISSUE: There is no obvious way to store ID in session using next-auth
-      return;
-    }
+  const userModule: UserModule = await findUserModuleById(+session.user.id, +moduleId);
+  if (!userModule) {
+    notFound();
+  }
 
-    const userId = await findUserIdByEmail(session.user.email);
-
-    if(!userId || !wordsModule){
-      return;
-    }
-
-    const favoriteCardIds = await getFavoriteCards(userId, moduleId);
-
-    // Check favorites
-    wordsModule.cards = wordsModule.cards.map(card => ({
-      ...card,
-      isFavorite: favoriteCardIds.includes(card.id)
-    }));
-   
-    return (
-        <LearningPage learningType={learningType} module={wordsModule} />
-    );
+  return (
+    <LearningPage learningType={learningType} module={userModule} />
+  );
 }

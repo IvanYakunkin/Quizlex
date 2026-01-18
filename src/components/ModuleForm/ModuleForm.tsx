@@ -4,7 +4,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { Card, Languages, ModuleWithCards, ValidationErrors } from '@/types/types';
 import Select from '@/components/UI/SelectLanguage/Select';
 import styles from "./ModuleForm.module.css";
-import { redirect, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { createModuleDB } from '@/utils/createModule';
 import { validateAndSanitize } from '@/utils/validateModule';
 import { Language } from '@/generated/prisma/browser';
@@ -61,9 +61,7 @@ export const ModuleForm = ({ languagesList, initialModule }: ModuleFormProps) =>
             setFormErrors(errors);
             if (errors.name) nameInputRef.current?.focus();
             else if (errors.description) descriptionInputRef.current?.focus();
-            else if (errors.cards) {
-                alert(errors.cards);
-            }
+            else if (errors.cards) alert(errors.cards);
 
             return false;
         }

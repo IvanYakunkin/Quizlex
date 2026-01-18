@@ -31,11 +31,3 @@ export async function createUser(login: string, email: string, authMethod?: stri
 
     return newUser;
 }
-
-export async function findUserIdByEmail(email: string) {
-    const user = await prisma.user.findUnique({
-        where: { email },
-    });
-
-    return user ? user.id : null;
-}

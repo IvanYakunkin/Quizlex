@@ -3,7 +3,7 @@ import "./globals.css";
 import Header from "@/components/Header/Header";
 import { getServerSession, Session } from "next-auth";
 import Providers from "./providers";
-import { authOptions } from "./api/auth/[...nextauth]/route";
+import { authOptions } from "@/lib/auth";
 
 export const metadata: Metadata = {
   title: "Quizlex | Flashcards",
@@ -22,8 +22,8 @@ export default async function RootLayout({
     <html lang="en">
       <body>
         <Providers session={session}>
-        <Header /> 
-        {children}
+          <Header />
+          {children}
         </Providers>
       </body>
     </html>

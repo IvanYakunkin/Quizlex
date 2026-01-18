@@ -1,15 +1,10 @@
-import { Card } from "@/types/types";
-import { changeFavoriteState } from "./utils";
-
-export async function setFavoriteDB(setCards: React.Dispatch<React.SetStateAction<Card[]>>, wordId: number, moduleId: number, userEmail: string) {
-    changeFavoriteState(setCards, wordId);
-
-    const favoriteResponse = await fetch("/api/favorites/", {
+export async function setFavoriteDB(cardId: number, moduleId: number) {
+    const favoriteResponse = await fetch(`/api/cards/${cardId}/favorite/`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ wordId, moduleId, userEmail }),
+        body: JSON.stringify({ moduleId }),
     });
 
     if (!favoriteResponse.ok) {

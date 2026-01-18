@@ -2,8 +2,8 @@
 
 import { Card } from "@/types/types";
 
-export const updateCard = async (id: number, newCard: Card) => {
-    const response = await fetch(`/api/modules/${id}`, {
+export const updateCard = async (moduleId: number, newCard: Card) => {
+    const response = await fetch(`/api/modules/${moduleId}`, {
         method: 'PATCH',
         headers: {
             'Content-Type': 'application/json',
