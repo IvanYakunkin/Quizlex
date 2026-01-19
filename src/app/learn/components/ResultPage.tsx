@@ -54,12 +54,13 @@ export const ResultPage = <T extends BaseCard>(props: ResultPageProps<T>) => {
 
     return (
         <div className={styles.result}>
-            <ReactConfetti
-                initialVelocityY={120}
-                gravity={0.3}
-                numberOfPieces={3000}
-                recycle={false}
-            />
+            {props.isGameOver &&
+                <ReactConfetti
+                    initialVelocityY={120}
+                    gravity={0.3}
+                    numberOfPieces={3000}
+                    recycle={false}
+                />}
             <div className={styles.status}>{props.title ? props.title : "At this stage you have studied:"}</div>
             {props.isGameOver && <div className={styles.congratulations}><Image src="/images/celebrate3.gif" width={200} height={200} alt="Congratulations Icon" /></div>}
             <CardsPreview
