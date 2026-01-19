@@ -54,10 +54,10 @@ model Module {
 }
 
 model Card {
-  id         Int     @id @default(autoincrement())
+  id         Int    @id @default(autoincrement())
   moduleId   Int
-  term       String?
-  definition String?
+  term       String
+  definition String
 
   module Module @relation(fields: [moduleId], references: [id], onDelete: Cascade)
 

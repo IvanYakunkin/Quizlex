@@ -1,10 +1,11 @@
 import { useState, useRef, useCallback, useSyncExternalStore } from "react";
-import { Card, WritingStatus } from "@/types/types";
+import { WritingStatus } from "@/types/types";
 import { getRandomInt } from "@/utils/cards/shuffleCards";
 import { checkWriting } from "@/utils/cards/checkWriting";
+import { BaseCard } from "@/types/module";
 
 interface UseWritingLogicProps {
-    cards: Card[];
+    cards: BaseCard[];
     changeLanguage: boolean;
     maxWordsPerRound?: number;
     successTimerDuration?: number;
@@ -22,12 +23,12 @@ export const useWritingLogic = ({
 }: UseWritingLogicProps) => {
     const isMounted = useSyncExternalStore(subscribe, getClientSnapshot, getServerSnapshot);
 
-    const [testCards, setTestCards] = useState<Card[]>(() => cards);
-    const [answeredCards, setAnsweredCards] = useState<Card[]>([]);
+    const [testCards, setTestCards] = useState<BaseCard[]>(() => cards);
+    const [answeredCards, setAnsweredCards] = useState<BaseCard[]>([]);
     const [writingStatus, setWritingStatus] = useState<WritingStatus>("");
     const [inputValue, setInputValue] = useState("");
 
-    const [currentCard, setCurrentCard] = useState<Card>(() => {
+    const [currentCard, setCurrentCard] = useState<BaseCard>(() => {
         return cards[getRandomInt(0, cards.length - 1)];
     });
 

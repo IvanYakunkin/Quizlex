@@ -1,34 +1,28 @@
 "use client"
 
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { Card, Languages, ModuleWithCards, ValidationErrors } from '@/types/types';
-import Select from '@/components/UI/SelectLanguage/Select';
+import { ValidationErrors } from '@/types/types';
+import { Select } from '@/components/UI/SelectLanguage/Select';
 import styles from "./ModuleForm.module.css";
 import { useRouter } from 'next/navigation';
-import { createModuleDB } from '@/utils/createModule';
-import { validateAndSanitize } from '@/utils/validateModule';
+import { validateAndSanitize } from '@/utils/module/validateModule';
 import { Language } from '@/generated/prisma/browser';
 import { CreateCard } from './CreateCard/CreateCard';
-import { updateModuleDB } from '@/utils/updateModule';
+import { AppModule, BaseCard, CreateModuleInput } from '@/types/module';
+import { createModuleAction, updateModuleAction } from '@/services/moduleActions';
 
 const emptyCard = { id: 0, term: "", definition: "", isFavorite: false };
 
 interface ModuleFormProps {
     languagesList: Language[];
-    initialModule?: ModuleWithCards;
+    initialModule?: AppModule;
 }
-
-const defaultLanguages = { term: "en-EN", definition: "en-EN" };
 
 // TODO: 1) Re-renders could be optimized!
 export const ModuleForm = ({ languagesList, initialModule }: ModuleFormProps) => {
-    const [cards, setCards] = useState<Card[]>(initialModule ? initialModule.cards : [emptyCard]);
-
-    const [selectedLanguages, setSelectedLanguages] = useState<Languages>(() => {
-        const termLang = languagesList.find(l => l.id === initialModule?.termLanguageId);
-        const defLang = languagesList.find(l => l.id === initialModule?.definitionLanguageId);
-        return termLang && defLang ? { term: termLang.code, definition: defLang.code } : defaultLanguages;
-    });
+    const [cards, setCards] = useState<BaseCard[]>(initialModule ? initialModule.cards : [emptyCard]);
+    const [termLanguage, setTermLanguage] = useState(initialModule?.termLanguage || languagesList[0]);
+    const [definitionLanguage, setDefinitionLanguage] = useState(initialModule?.termLanguage || languagesList[0]);
 
     const [formErrors, setFormErrors] = useState<ValidationErrors>();
     const [createdCardIndex, setCreatedCardIndex] = useState<number | null>(null);
@@ -67,32 +61,31 @@ export const ModuleForm = ({ languagesList, initialModule }: ModuleFormProps) =>
         }
         if (nameInputRef.current && descriptionInputRef.current) {
             let redirectModuleId;
-            if (initialModule) { // Update
-                const termLanguageId = languagesList.find(l => selectedLanguages.term === l.code)?.id || 1;
-                const definitionLanguageId = languagesList.find(l => selectedLanguages.definition === l.code)?.id || 1;
-
-                const updatedModule = await updateModuleDB({
-                    id: initialModule.id,
-                    name,
-                    description,
-                    cards: sanitizedCards,
-                    termLanguageId,
-                    definitionLanguageId
-                });
-                redirectModuleId = updatedModule.id;
-            } else { // Create
-                const createdModule = await createModuleDB({
-                    name,
-                    description,
-                    cards: sanitizedCards,
-                    languages: languagesList,
-                    selectedLanguages,
-                });
-                redirectModuleId = createdModule.id;
+            const newModule: CreateModuleInput = {
+                name,
+                description,
+                termLanguageId: termLanguage.id,
+                definitionLanguageId: definitionLanguage.id,
+                cards: sanitizedCards
             }
 
-            const moduleUrl = `/module/${redirectModuleId}`;
-            router.push(moduleUrl);
+            if (initialModule) { // Update
+                const updatedModule = await updateModuleAction(+initialModule.id, newModule);
+                if (updatedModule.success && updatedModule.data) {
+                    redirectModuleId = updatedModule.data.id;
+                } else {
+                    alert("Error updating module");
+                }
+            } else { // Create
+                const createdModule = await createModuleAction(newModule);
+                if (createdModule.success && createdModule.data) {
+                    redirectModuleId = createdModule.data.id;
+                } else {
+                    alert("Error creating module");
+                }
+            }
+
+            router.push(`/module/${redirectModuleId}`);
         }
     }
 
@@ -141,14 +134,6 @@ export const ModuleForm = ({ languagesList, initialModule }: ModuleFormProps) =>
         }
     }, [cards, addCard]);
 
-    const setTermLang = (value: string) => {
-        setSelectedLanguages({ ...selectedLanguages, term: value });
-    }
-
-    const setDefinitionLang = (value: string) => {
-        setSelectedLanguages({ ...selectedLanguages, definition: value });
-    }
-
     return (
         <main className="main">
             <div className={styles.moduleForm}>
@@ -178,16 +163,16 @@ export const ModuleForm = ({ languagesList, initialModule }: ModuleFormProps) =>
                     <div className={styles.language}>
                         <Select languages={languagesList}
                             label="Original Language"
-                            selectedValue={selectedLanguages.term}
-                            setLanguage={setTermLang}
+                            selectedLanguage={termLanguage}
+                            changeLanguage={setTermLanguage}
                         />
                     </div>
                     <div className={styles.language}>
                         <Select
                             languages={languagesList}
                             label="Translation Language"
-                            selectedValue={selectedLanguages.definition}
-                            setLanguage={setDefinitionLang}
+                            selectedLanguage={definitionLanguage}
+                            changeLanguage={setDefinitionLanguage}
                         />
                     </div>
                 </div>

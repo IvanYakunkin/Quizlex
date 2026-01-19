@@ -1,19 +1,17 @@
 "use client"
 
-import { Card, Languages, ModuleInterface } from "@/types/types";
-import CardsPreview from "@/components/UI/CardsPreview/CardsPreview";
+import { CardsPreview } from "@/components/UI/CardsPreview/CardsPreview";
 import { Slider } from "@/components/UI/Slider/Slider";
 import { useEffect, useRef, useState } from "react";
-import DeleteWin from "@/components/popups/DeleteWin";
-import EditWin from "@/components/popups/EditWin";
-import LearningTypes from "./LearningTypes";
-import styles from "./Module.module.css";
-import { useRouter } from "next/navigation";
+import { DeleteWin } from "@/components/popups/DeleteWin";
+import { EditWin } from "@/components/popups/EditWin";
 import { ModuleOptions } from "./ModuleOptions/ModuleOptions";
-import { updateCard } from "@/services/api";
+import { LearningTypes } from "./LearningTypes";
+import { AppModule, BaseCard } from "@/types/module";
+import { updateCardAction } from "@/services/cardActions";
+import styles from "./Module.module.css";
 import Image from "next/image";
 import Link from "next/link";
-import { UserModule } from "@/services/moduleService";
 
 interface SliderRef {
     refreshCards: () => void;
@@ -21,37 +19,15 @@ interface SliderRef {
 }
 
 interface ModuleProps {
-    userModule?: NonNullable<UserModule>;
+    initialModule: AppModule;
 }
 
-const defaultLanguages = { term: "en-EN", definition: "en-En" };
-
-export const Module = ({ userModule }: ModuleProps) => {
-    const router = useRouter();
-
-    const [cards, setCards] = useState<Card[]>((userModule && userModule.cards) ? userModule.cards : []);
-    const [languages, setLanguages] = useState<Languages>(userModule ? { term: userModule.termLanguage.code, definition: userModule.definitionLanguage.code } : defaultLanguages);
+export const Module = ({ initialModule }: ModuleProps) => {
+    const [cards, setCards] = useState<BaseCard[]>((initialModule && initialModule.cards) ? initialModule.cards : []);
     const [currentCardId, setCurrentCardId] = useState(0);
     const [isDeleteWin, setIsDeleteWin] = useState(false);
     const [isEditWin, setIsEditWin] = useState(false);
     const sliderRef = useRef<SliderRef>(null);
-
-    useEffect(() => {
-        const getModuleFromLocalStorage = () => {
-            const localRawModule = localStorage.getItem("module");
-            if (localRawModule) {
-                const localModule: ModuleInterface = JSON.parse(localRawModule);
-                setCards(localModule.cards);
-                setLanguages(localModule.languages);
-            } else {
-                router.push("/import");
-            }
-        }
-
-        if (!cards || !cards.length) {
-            getModuleFromLocalStorage();
-        }
-    }, [cards, router]);
 
     useEffect(() => {
         if (isDeleteWin || isEditWin) {
@@ -77,13 +53,12 @@ export const Module = ({ userModule }: ModuleProps) => {
         }
     }
 
-    const editCards = async (newCard: Card) => {
+    const editCards = async (newCard: BaseCard) => {
         const updatedCards = cards.map(card => card.id === newCard.id ? newCard : card);
         setCards(updatedCards);
-        if (userModule) {
-            await updateCard(userModule.id, newCard);
-        }
-        else {
+        if (!initialModule.isLocal) {
+            await updateCardAction(+initialModule.id, newCard);
+        } else {
             // Update Local Storage
             const storedData = localStorage.getItem('module');
             if (storedData) {
@@ -99,14 +74,14 @@ export const Module = ({ userModule }: ModuleProps) => {
             {cards && cards.length > 0 && <div>
                 {isDeleteWin && (
                     <DeleteWin
-                        moduleId={userModule ? userModule.id : undefined}
+                        moduleId={initialModule.id}
                         onClose={() => setIsDeleteWin(false)}
                     />
                 )}
 
                 {isEditWin && (
                     <EditWin
-                        moduleId={userModule ? userModule.id : undefined}
+                        moduleId={initialModule.id}
                         onClose={() => setIsEditWin(false)}
                         card={cards[currentCardId]}
                         save={editCards}
@@ -115,16 +90,16 @@ export const Module = ({ userModule }: ModuleProps) => {
 
                 <div className={styles.module}>
 
-                    <div className={styles.title}>{userModule ? userModule.name : "Your Module"}</div>
-                    <div className={styles.subtitle}>{userModule ? userModule.description : "You can learn it now!"}</div>
+                    <div className={styles.title}>{initialModule.name}</div>
+                    <div className={styles.subtitle}>{initialModule.description}</div>
 
                     <LearningTypes />
 
                     <Slider
                         cards={cards}
-                        setCards={setCards}
+                        changeCards={(newCards: BaseCard[]) => setCards(newCards)}
                         sliderRef={sliderRef}
-                        languages={languages}
+                        languages={{ term: initialModule.termLanguage.code, definition: initialModule.definitionLanguage.code }}
                         currentCardId={currentCardId}
                         setCurrentCardId={setCurrentCardId}
                     />
@@ -145,11 +120,11 @@ export const Module = ({ userModule }: ModuleProps) => {
                         showNumbers={false}
                         showOptions={true}
                         cards={cards}
-                        setCards={setCards}
-                        language={languages.term}
+                        changeCards={(newCards: BaseCard[]) => setCards(newCards)}
+                        language={initialModule.termLanguage.code}
                     />
-                    {userModule &&
-                        <Link href={`/module/${userModule.id}/edit`} className={styles.updateButton}>
+                    {!initialModule.isLocal &&
+                        <Link href={`/module/${initialModule.id}/edit`} className={styles.updateButton}>
                             <Image src="/images/pen-white.png" width={20} height={20} alt="Pen" />
                             <span>Add or remove words</span>
                         </Link>

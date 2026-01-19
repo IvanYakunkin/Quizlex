@@ -1,10 +1,11 @@
-import { Languages, Card } from "@/types/types";
+import { Languages } from "@/types/types";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Slider } from "@/components/UI/Slider/Slider";
-import ResultPage from "../ResultPage";
+import { ResultPage } from "../ResultPage";
+import { shuffleCards } from "@/utils/cards/shuffleCards";
+import { BaseCard } from "@/types/module";
 import Image from "next/image";
 import styles from "../../page.module.css";
-import { shuffleCards } from "@/utils/cards/shuffleCards";
 
 interface SliderRef {
     toPrevious: () => void;
@@ -13,16 +14,16 @@ interface SliderRef {
 }
 
 interface CardsProps {
-    cards: Card[];
+    cards: BaseCard[];
     changeLanguage: boolean;
     languages: Languages;
 }
 
-interface AnsweredCard extends Card {
+interface AnsweredCard extends BaseCard {
     isCorrect: boolean;
 }
 
-const Cards = (props: CardsProps) => {
+export const Cards = (props: CardsProps) => {
     const [cards, setCards] = useState(props.cards);
     const [currentCardId, setCurrentCardId] = useState(0);
     const [answeredCards, setAnsweredCards] = useState<AnsweredCard[]>([]);
@@ -114,6 +115,7 @@ const Cards = (props: CardsProps) => {
             {isFinished ?
                 <ResultPage
                     cards={answeredCards.filter(card => !card.isCorrect)}
+                    changeCards={(newCards: AnsweredCard[]) => setAnsweredCards(newCards)}
                     closeResultPage={refreshCards}
                     isGameOver={incorrectNumber === 0}
                     language="german"
@@ -136,7 +138,7 @@ const Cards = (props: CardsProps) => {
                     <Slider
                         cards={cards}
                         sliderRef={sliderRef}
-                        setCards={setCards}
+                        changeCards={(newCards: BaseCard[]) => setCards(newCards)}
                         languages={props.languages}
                         currentCardId={currentCardId}
                         setCurrentCardId={setCurrentCardId}
@@ -174,9 +176,5 @@ const Cards = (props: CardsProps) => {
                 </div>
             }
         </div>
-    )
-
+    );
 }
-
-
-export default Cards;

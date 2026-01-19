@@ -1,6 +1,7 @@
-import { Card, ValidationErrors, ValidationResult } from "@/types/types";
+import { CreateCardInput } from "@/types/module";
+import { ValidationErrors, ValidationResult } from "@/types/types";
 
-export const validateAndSanitize = (name: string, description: string, cards: Card[]): ValidationResult => {
+export const validateAndSanitize = (name: string, description: string, cards: CreateCardInput[]): ValidationResult => {
     const errors: ValidationErrors = {};
 
     const sanitizedCards = cards.filter(card =>

@@ -1,19 +1,18 @@
-import { Card } from "@/types/types";
-import { playSound } from "@/utils/common";
+import { BaseCard, CardWithClass } from "@/types/module";
 import styles from "../../page.module.css";
-import { CardWithClass } from "@/types/types";
+import { playSound } from "@/utils/audio/playSound";
 
-interface TestTemplateProps{
-    currentCard: Card;
+interface TestTemplateProps {
+    currentCard: BaseCard;
     wordsCounterLabel: string;
     answerOptions: CardWithClass[];
     selectionHandler: (key: number) => void;
-    testTitleOptions: React.RefObject<{value: string; class: string;}>;
+    testTitleOptions: React.RefObject<{ value: string; class: string; }>;
     changeLanguage: boolean;
     language: string;
 }
 
-const TestTemplate = (props:TestTemplateProps) => {
+export const TestTemplate = (props: TestTemplateProps) => {
     const answerOptionsTemplate = props.answerOptions.map((el, key) => (
         <div className={el.class} key={el.id} onClick={() => props.selectionHandler(key)}><span>{key + 1}. </span>{props.changeLanguage ? el.term : el.definition}</div>
     ));
@@ -21,7 +20,7 @@ const TestTemplate = (props:TestTemplateProps) => {
     const currentTerm = props.changeLanguage ? props.currentCard.definition : props.currentCard.term;
 
     const wordClick = () => {
-        if(currentTerm){
+        if (currentTerm) {
             playSound(currentTerm, props.language);
         }
     }
@@ -42,9 +41,7 @@ const TestTemplate = (props:TestTemplateProps) => {
                 <div className={`${styles.answers__giveUp} ${styles.center}`} onClick={() => props.selectionHandler(-1)}>
                     Show answer?
                 </div>
-            </div>       
+            </div>
         </div>
     )
 }
-
-export default TestTemplate;

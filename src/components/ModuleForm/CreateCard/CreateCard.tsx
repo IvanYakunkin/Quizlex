@@ -1,12 +1,12 @@
-import { Card } from "@/types/types";
 import { memo, useCallback } from "react";
-import WordField from "@/components/UI/WordField/WordField";
+import { WordField } from "@/components/UI/WordField/WordField";
 import styles from "./CreateCard.module.css";
 import Image from "next/image";
+import { BaseCard } from "@/types/module";
 
 interface CreateCardProps {
-    setCards: React.Dispatch<React.SetStateAction<Card[]>>;
-    card: Card
+    setCards: React.Dispatch<React.SetStateAction<BaseCard[]>>;
+    card: BaseCard
     cardId: number;
     deleteCard: (id: number) => void;
     useFocus: boolean;
@@ -31,7 +31,6 @@ export const CreateCard = memo(({ setCards, card, cardId, deleteCard, useFocus }
             </div>
 
             <WordField
-                cardId={cardId}
                 card={card}
                 updateTerm={updateTerm}
                 updateDefinition={updateDefinition}

@@ -1,53 +1,10 @@
-import { Language, Module, Card as CardDB } from "../generated/prisma/browser";
-
-export interface Card {
-    id: number;
-    term: string | null;
-    definition: string | null;
-    moduleId?: number;
-    isFavorite?: boolean;
-}
+import { CreateCardInput } from "./module";
 
 export type LearningType = "cards" | "test" | "writing";
-
-export interface Tokens {
-    refreshToken: string;
-    accessToken: string;
-}
-
-export interface IAuthDto {
-    id: number;
-    login: string;
-    email: string;
-}
-
-export interface LoginOutputData {
-    tokens: Tokens;
-    user: IAuthDto;
-}
 
 export interface Languages {
     term: string;
     definition: string;
-}
-
-export interface CardWithFavorite extends Card {
-    isFavorite?: boolean;
-}
-
-export interface WordsModule extends Module {
-    cards: CardWithFavorite[];
-    termLanguage: Language;
-    definitionLanguage: Language;
-}
-
-export interface ModuleInterface {
-    languages: Languages;
-    cards: Card[];
-}
-
-export interface CardWithClass extends Card {
-    class: string;
 }
 
 export type WritingStatus = "correct" | "finished" | "empty" | "mistake" | "result" | "";
@@ -60,17 +17,6 @@ export interface ISeparators {
     value: string;
 }
 
-export interface ModuleWithCount extends Module {
-    _count: {
-        cards: number;
-    }
-}
-
-// Interface for module with cards and with languages
-export interface ModuleWithCards extends Module {
-    cards: CardDB[];
-}
-
 export interface ValidationErrors {
     name?: string;
     description?: string;
@@ -80,5 +26,5 @@ export interface ValidationErrors {
 export interface ValidationResult {
     isValid: boolean;
     errors: ValidationErrors;
-    sanitizedCards: Card[];
+    sanitizedCards: CreateCardInput[];
 }

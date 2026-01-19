@@ -1,7 +1,8 @@
 import { ModuleForm } from "@/components/ModuleForm/ModuleForm";
 import { authOptions } from "@/lib/auth";
-import { getLanguages } from "@/services/languageService";
-import { findUserModuleById } from "@/services/moduleService";
+import { getLanguages } from "@/services/languageActions";
+import { findUserModuleAction } from "@/services/moduleActions";
+import { mapDbModuleToApp } from "@/types/mappers/mapDbModuleToApp";
 import { getServerSession, Session } from "next-auth";
 import { notFound } from "next/navigation";
 
@@ -13,14 +14,16 @@ export default async function EditPage({ params }: { params: Promise<{ id: numbe
         notFound();
     }
 
-    const userModule = await findUserModuleById(+id, +session.user.id);
+    const userModule = await findUserModuleAction(+id);
+
     if (!userModule) {
         notFound();
     }
+    const moduleForUI = mapDbModuleToApp(userModule);
 
     const languages = await getLanguages();
 
     return (
-        <ModuleForm languagesList={languages} initialModule={userModule} />
+        <ModuleForm languagesList={languages} initialModule={moduleForUI} />
     );
 }

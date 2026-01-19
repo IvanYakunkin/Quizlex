@@ -1,14 +1,14 @@
-import { Languages, Card } from "@/types/types";
 import { useState, useEffect, useImperativeHandle, useCallback } from "react";
 import AudioButton from "../AudioButton/AudioButton";
 import FavoriteButton from "../FavoriteButton/FavoriteButton";
 import styles from "./Slider.module.css";
 import { useSession } from "next-auth/react";
 import { useParams } from "next/navigation";
-import CardFlipper from "../CardFlipper/CardFlipper";
-import { setFavoriteDB } from "@/utils/favorites/favoritesDB";
 import { setFavoriteLS } from "@/utils/favorites/favoritesLS";
 import { changeFavoriteState } from "@/utils/favorites/utils";
+import { BaseCard } from "@/types/module";
+import { CardFlipper } from "../CardFlipper/CardFlipper";
+import { toggleFavoriteAction } from "@/services/favoriteActions";
 
 export interface SliderRef {
     refreshCards?: () => void;
@@ -18,9 +18,9 @@ export interface SliderRef {
 }
 
 interface SliderProps {
-    cards: Card[],
-    languages: Languages,
-    setCards: React.Dispatch<React.SetStateAction<Card[]>>,
+    cards: BaseCard[],
+    languages: { term: string, definition: string },
+    changeCards: (newCards: BaseCard[]) => void,
     currentCardId: number;
     setCurrentCardId: React.Dispatch<React.SetStateAction<number>>;
     isNavigationHidden?: boolean;
@@ -45,7 +45,6 @@ export const Slider = (props: SliderProps) => {
     const [isFavoriteLoading, setIsFavoriteLoading] = useState(false);
 
     const currentCard = props.cards[props.currentCardId];
-
 
     const setAnimation = (type: string) => {
         setSlideAnimate(type);
@@ -122,22 +121,22 @@ export const Slider = (props: SliderProps) => {
         toNext: toNextWord,
     }));
 
-    const clickFavorite = (cardId: number) => {
-        if (props.setCards) {
-            if (status === "authenticated" && id) {
-                if (isFavoriteLoading) return;
-                setIsFavoriteLoading(true);
-                try {
-                    setFavoriteDB(cardId, +id);
-                } catch {
-                    changeFavoriteState(props.setCards, cardId);
-                } finally {
-                    setIsFavoriteLoading(false);
-                }
-                changeFavoriteState(props.setCards, cardId);
-            } else {
-                setFavoriteLS(props.setCards, cardId);
+    const clickFavorite = async (cardId: number) => {
+        if (status === "authenticated" && id) {
+            if (isFavoriteLoading) return;
+
+            setIsFavoriteLoading(true);
+            props.changeCards(changeFavoriteState(props.cards, cardId));
+
+            const result = await toggleFavoriteAction(cardId, +id);
+            if (result.error || result.success === false) {
+                props.changeCards(changeFavoriteState(props.cards, cardId));
+                console.error(result.error);
             }
+            setIsFavoriteLoading(false);
+        } else {
+            setFavoriteLS(cardId);
+            props.changeCards(changeFavoriteState(props.cards, cardId));
         }
     }
 
@@ -194,7 +193,7 @@ export const Slider = (props: SliderProps) => {
                             size={25}
                             hoverColor="var(--blue-color-400)"
                             isActive={props.cards[props.currentCardId].isFavorite}
-                            wordId={props.cards[props.currentCardId].id}
+                            cardId={props.cards[props.currentCardId].id}
                             setActive={clickFavorite}
                         />
                     </div>
@@ -236,7 +235,7 @@ export const Slider = (props: SliderProps) => {
                             size={25}
                             hoverColor="var(--blue-color-400)"
                             isActive={props.cards[props.currentCardId].isFavorite}
-                            wordId={props.cards[props.currentCardId].id}
+                            cardId={props.cards[props.currentCardId].id}
                             setActive={clickFavorite}
                         />
                     </div>

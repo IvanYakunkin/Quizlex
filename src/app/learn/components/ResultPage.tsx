@@ -1,13 +1,13 @@
-import CardsPreview from "@/components/UI/CardsPreview/CardsPreview";
-import { Card } from "@/types/types";
+import { CardsPreview } from "@/components/UI/CardsPreview/CardsPreview";
 import { useCallback, useEffect } from "react";
 import Image from "next/image";
 import styles from "../page.module.css";
 import { useParams, useRouter } from "next/navigation";
+import { BaseCard } from "@/types/module";
 
-interface ResultPageProps {
-    cards: Card[];
-    setCards?: React.Dispatch<React.SetStateAction<Card[]>>
+interface ResultPageProps<T extends BaseCard> {
+    cards: T[];
+    changeCards?: (newCards: T[]) => void;
     closeResultPage: () => void;
     isGameOver: boolean;
     language: string;
@@ -15,7 +15,7 @@ interface ResultPageProps {
     additionalText?: string;
 }
 
-const ResultPage = (props: ResultPageProps) => {
+export const ResultPage = <T extends BaseCard>(props: ResultPageProps<T>) => {
     const router = useRouter();
     const { id } = useParams();
 
@@ -57,7 +57,7 @@ const ResultPage = (props: ResultPageProps) => {
             {props.isGameOver && <div className={styles.congratulations}><Image src="/images/celebrate3.gif" width={200} height={200} alt="Congratulations Icon" /></div>}
             <CardsPreview
                 cards={props.cards}
-                setCards={props.setCards}
+                changeCards={props.changeCards}
                 showNumbers={false}
                 showOptions={true}
                 language={props.language}
@@ -69,5 +69,3 @@ const ResultPage = (props: ResultPageProps) => {
         </div>
     )
 }
-
-export default ResultPage;

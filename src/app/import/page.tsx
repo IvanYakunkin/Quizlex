@@ -1,4 +1,4 @@
-import { getLanguages } from "@/services/languageService";
+import { getLanguages } from "@/services/languageActions";
 import Import from "./components/Import";
 
 export default async function Page() {

@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { validateAndSanitize } from './validateModule';
-import { Card } from '@/types/types';
+import { BaseCard } from '@/types/module';
 
 describe('validateAndSanitize()', () => {
 
@@ -9,7 +9,7 @@ describe('validateAndSanitize()', () => {
             { term: 'Apple', definition: 'Appfel' },
             { term: 'Banana', definition: 'Bananne' }
         ];
-        const result = validateAndSanitize('My Module', 'Description', cards as Card[]);
+        const result = validateAndSanitize('My Module', 'Description', cards as BaseCard[]);
 
         expect(result.isValid).toBe(true);
         expect(result.errors).toEqual({});
@@ -26,7 +26,7 @@ describe('validateAndSanitize()', () => {
 
     it('should return error if less than 2 cards are provided', () => {
         const cards = [{ term: 'Apple', definition: 'Яблоко' }];
-        const result = validateAndSanitize('Title', 'Desc', cards as Card[]);
+        const result = validateAndSanitize('Title', 'Desc', cards as BaseCard[]);
 
         expect(result.isValid).toBe(false);
         expect(result.errors.cards).toBe('At least two cards are required');
@@ -37,7 +37,7 @@ describe('validateAndSanitize()', () => {
             { term: 'Apple', definition: 'Яблоко' },
             { term: 'Banana', definition: '' }
         ];
-        const result = validateAndSanitize('Title', 'Desc', cards as Card[]);
+        const result = validateAndSanitize('Title', 'Desc', cards as BaseCard[]);
 
         expect(result.isValid).toBe(false);
         expect(result.errors.cards).toBe('All cards must have both a term and a definition');
@@ -50,7 +50,7 @@ describe('validateAndSanitize()', () => {
             { term: '', definition: '' },
             { term: '  ', definition: '  ' }
         ];
-        const result = validateAndSanitize('Title', 'Desc', cards as Card[]);
+        const result = validateAndSanitize('Title', 'Desc', cards as BaseCard[]);
 
         expect(result.isValid).toBe(true);
         expect(result.sanitizedCards).toHaveLength(2);

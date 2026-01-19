@@ -1,9 +1,10 @@
 import { LearningType } from "@/types/types";
-import LearningPage from "@/app/learn/components/LearningPage";
+import { LearningPage } from "@/app/learn/components/LearningPage";
 import { getServerSession, Session } from "next-auth";
-import { findUserModuleById, UserModule } from "@/services/moduleService";
 import { authOptions } from "@/lib/auth";
 import { notFound } from "next/navigation";
+import { findUserModuleAction } from "@/services/moduleActions";
+import { mapDbModuleToApp } from "@/types/mappers/mapDbModuleToApp";
 
 export default async function Page({
   params,
@@ -18,12 +19,15 @@ export default async function Page({
     notFound();
   }
 
-  const userModule: UserModule = await findUserModuleById(+session.user.id, +moduleId);
+  const userModule = await findUserModuleAction(+moduleId);
+
   if (!userModule) {
     notFound();
   }
 
+  const moduleForUI = mapDbModuleToApp(userModule);
+
   return (
-    <LearningPage learningType={learningType} module={userModule} />
+    <LearningPage learningType={learningType} module={moduleForUI} />
   );
 }

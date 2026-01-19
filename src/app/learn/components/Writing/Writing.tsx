@@ -1,12 +1,12 @@
-import { Card } from "@/generated/prisma";
-import ResultPage from "../ResultPage";
+import { ResultPage } from "../ResultPage";
 import { WritingMistakePage } from "./WritingMistakePage";
 import { WritingTemplate } from "./WritingTemplate";
 import { Languages } from "@/types/types";
 import { useWritingLogic } from "@/hooks/useWritingLogic";
+import { BaseCard } from "@/types/module";
 
 interface WritingProps {
-    cards: (Omit<Card, 'moduleId'> & { moduleId?: number })[];
+    cards: BaseCard[];
     changeLanguage: boolean;
     languages: Languages;
 }
@@ -52,7 +52,7 @@ export const Writing = (props: WritingProps) => {
             {(writingStatus === "finished" || writingStatus === "result") &&
                 <ResultPage
                     cards={answeredCards}
-                    setCards={() => { }}
+                    changeCards={() => []}
                     closeResultPage={actions.resetRound}
                     title={writingStatus === "finished" ? "Congratulations! You have completed the module!" : ""}
                     isGameOver={writingStatus === "finished"}

@@ -1,18 +1,18 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { Card } from "@/types/types";
 import styles from "./ImportTextarea.module.css";
 import { useTextareaTab } from '@/hooks/useTextareaTab';
 import { parseTextToCards } from '@/utils/parsers';
+import { CreateCardInput } from '@/types/module';
 
 interface TextareaProps {
   separator: string,
-  setPreview: React.Dispatch<React.SetStateAction<Card[]>>,
+  changeCards: (newCards: CreateCardInput[]) => void,
   textareaRef: React.RefObject<HTMLTextAreaElement | null>,
 }
 
 const placeholderLinesNumber: number = 3;
 
-export const ImportTextarea: React.FC<TextareaProps> = ({ separator, setPreview, textareaRef }) => {
+export const ImportTextarea: React.FC<TextareaProps> = ({ separator, changeCards, textareaRef }) => {
 
   const [textareaContent, setTextareaContent] = useState("");
 
@@ -24,8 +24,8 @@ export const ImportTextarea: React.FC<TextareaProps> = ({ separator, setPreview,
 
   useEffect(() => {
     const previewTerms = parseTextToCards(textareaContent, separator);
-    setPreview(previewTerms);
-  }, [textareaContent, separator, setPreview]);
+    changeCards(previewTerms);
+  }, [textareaContent, separator, changeCards]);
 
   const separatorPlaceholder = useMemo(() => {
     if (textareaContent) return "";

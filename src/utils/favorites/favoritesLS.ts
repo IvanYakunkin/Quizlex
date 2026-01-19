@@ -1,13 +1,11 @@
-import { Card, ModuleInterface } from "@/types/types";
-import { changeFavoriteState } from "./utils";
+import { AppModule } from "@/types/module";
 
-export function setFavoriteLS(setCards: React.Dispatch<React.SetStateAction<Card[]>>, wordId: number){
-    changeFavoriteState(setCards, wordId);
-    // Add or remove from favorites in local storage
+export function setFavoriteLS(cardId: number) {
     const localModule = localStorage.getItem("module");
-    if(localModule){
-        const cardsModule: ModuleInterface = JSON.parse(localModule);
-        cardsModule.cards[wordId].isFavorite = !cardsModule.cards[wordId].isFavorite;
-        localStorage.setItem("module", JSON.stringify(cardsModule));
-    }   
+
+    if (localModule) {
+        const appModule: AppModule = JSON.parse(localModule);
+        appModule.cards[cardId].isFavorite = !appModule.cards[cardId].isFavorite;
+        localStorage.setItem("module", JSON.stringify(appModule));
+    }
 }

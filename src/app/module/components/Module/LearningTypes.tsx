@@ -3,7 +3,7 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import styles from "./Module.module.css";
 
-const LearningTypes = () => {
+export const LearningTypes = () => {
     const { id } = useParams();
 
     return (
@@ -15,5 +15,3 @@ const LearningTypes = () => {
         </div>
     );
 }
-
-export default LearningTypes;

@@ -1,17 +1,16 @@
 import { memo, useEffect, useRef } from "react";
 import { FieldWithLetters } from "./FieldWithLetters";
-import { Card } from "@/types/types";
 import styles from "./WordField.module.css";
+import { BaseCard } from "@/types/module";
 
 interface WordFieldProps {
-    cardId?: number;
-    card: Card;
+    card: BaseCard;
     updateTerm: (value: string, id?: number) => void;
     updateDefinition: (value: string, id?: number) => void;
     useFocus?: boolean;
 }
 
-const WordField = (props: WordFieldProps) => {
+export const WordField = memo((props: WordFieldProps) => {
 
     const termInputRef = useRef<HTMLInputElement>(null);
     const definitionInputRef = useRef<HTMLInputElement>(null);
@@ -44,6 +43,6 @@ const WordField = (props: WordFieldProps) => {
             </div>
         </div>
     );
-};
+});
 
-export default memo(WordField);
+WordField.displayName = "WordField";

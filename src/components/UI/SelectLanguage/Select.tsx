@@ -1,20 +1,27 @@
+import { Language } from "@/generated/prisma/browser";
 import styles from "./Select.module.css";
-import { Language } from "@/generated/prisma";
 
 interface SelectProps {
-    selectedValue: string;
-    setLanguage: (value: string) => void;
+    selectedLanguage: Language;
+    changeLanguage: (newLanguage: Language) => void;
     label: string;
     languages: Language[];
 }
 
-const Select = (props: SelectProps) => {
+export const Select = (props: SelectProps) => {
+    const changeLanguage = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        const foundLanguage = props.languages.find(l => l.id === +e.target.value);
+        if (foundLanguage) {
+            props.changeLanguage(foundLanguage);
+        }
+    }
+
     const selectContainer = (
         <div className={styles.selectContainer}>
             <label className={styles.selectLabel}>{props.label}</label>
-            <select className={styles.selectTag} value={props.selectedValue} onChange={(e:React.ChangeEvent<HTMLSelectElement>) => props.setLanguage(e.target.value)}>
+            <select className={styles.selectTag} value={props.selectedLanguage.id} onChange={changeLanguage}>
                 {props.languages.map(el => (
-                    <option value={el.code} key={el.id}>{el.name}</option>
+                    <option value={el.id} key={el.id}>{el.name}</option>
                 ))}
             </select>
         </div>
@@ -22,9 +29,7 @@ const Select = (props: SelectProps) => {
 
     return (
         <div className={styles.selectLanguage}>
-           {selectContainer}
+            {selectContainer}
         </div>
-    )
+    );
 }
-
-export default Select;

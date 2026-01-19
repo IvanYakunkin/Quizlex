@@ -1,18 +1,20 @@
 import { useState, useRef } from "react";
 import { ImportTextarea } from "@/components/UI/ImportTextarea/ImportTextarea";
-import { ISeparators, Card, Languages, ValidationErrors } from "@/types/types";
-import Select from "@/components/UI/SelectLanguage/Select";
-import Separators from "./Separators";
-import styles from "../page.module.css";
+import { ISeparators, ValidationErrors } from "@/types/types";
+import { Select } from "@/components/UI/SelectLanguage/Select";
+import { Separators } from "./Separators";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
-import { createModuleDB, createModuleLS } from "@/utils/createModule";
-import { validateAndSanitize } from "@/utils/validateModule";
+import { validateAndSanitize } from "@/utils/module/validateModule";
 import { Language } from "@/generated/prisma/browser";
+import { CreateCardInput, CreateModuleInput } from "@/types/module";
+import { createModuleAction } from "@/services/moduleActions";
+import { mapLocalModuleToApp } from "@/types/mappers/mapLocalModuleToApp";
+import styles from "../page.module.css";
 
 interface ImportAreaProps {
-    previewCards: Card[];
-    setPreviewCards: React.Dispatch<React.SetStateAction<Card[]>>;
+    previewCards: CreateCardInput[];
+    changeCards: (newCards: CreateCardInput[]) => void;
     languages: Language[];
 }
 
@@ -23,11 +25,12 @@ const separators: ISeparators[] = [
     { name: "-", value: "-" },
 ];
 
-const ImportArea = (props: ImportAreaProps) => {
+export const ImportArea = (props: ImportAreaProps) => {
     const router = useRouter();
     const { status } = useSession();
     const [activeSeparatorId, setActiveSeparatorId] = useState<number>(0);
-    const [selectedLanguages, setSelectedLanguages] = useState<Languages>({ term: "en-EN", definition: "en-EN" });
+    const [selectedTermLang, setSelectedTermLang] = useState<Language>(props.languages[0]);
+    const [selectedDefLang, setSelectedDefLang] = useState<Language>(props.languages[0]);
     const [buttonLoading, setButtonLoading] = useState(false);
     const [formErrors, setFormErrors] = useState<ValidationErrors>();
 
@@ -42,37 +45,39 @@ const ImportArea = (props: ImportAreaProps) => {
         setButtonLoading(true);
 
         const { isValid, errors, sanitizedCards } = validateAndSanitize(name, description, props.previewCards);
-
         if (!isValid) {
-            setFormErrors(errors);
-            if (errors.name) nameInputRef.current?.focus();
-            else if (errors.description) descriptionInputRef.current?.focus();
-            else if (errors.cards) {
-                textareaRef.current?.focus();
-                alert(errors.cards);
-            }
+            fillErrors(errors);
             setButtonLoading(false);
-
-            return false;
+            return;
         }
 
         if (nameInputRef.current && descriptionInputRef.current) {
-            if (status === "authenticated") { // Save to DB
-                const createdModule = await createModuleDB({
-                    name: nameInputRef.current.value,
-                    description: descriptionInputRef.current.value,
-                    cards: sanitizedCards,
-                    languages: props.languages,
-                    selectedLanguages
-                });
 
-                if (createdModule) {
-                    const moduleUrl = `/module/${createdModule.id}`;
+            const newModule: CreateModuleInput = {
+                name,
+                description,
+                termLanguageId: selectedTermLang.id,
+                definitionLanguageId: selectedDefLang.id,
+                cards: sanitizedCards,
+            }
+
+            if (status === "authenticated") {
+                const moduleResponse = await createModuleAction(newModule);
+
+                if (moduleResponse.error || !moduleResponse.data) {
+                    alert(`Error: ${moduleResponse.error}`);
+                    return;
+                }
+
+                if (moduleResponse) {
+                    const moduleUrl = `/module/${moduleResponse.data.id}`;
                     router.push(moduleUrl);
                 }
 
-            } else { // Save to LS
-                createModuleLS(sanitizedCards, selectedLanguages);
+            } else {
+                const appModule = mapLocalModuleToApp(newModule, props.languages);
+                appModule.isLocal = true;
+                localStorage.setItem('module', JSON.stringify(appModule));
                 router.push("/module");
             }
         }
@@ -80,26 +85,55 @@ const ImportArea = (props: ImportAreaProps) => {
         setButtonLoading(false);
     }
 
-    const setTermLang = (value: string) => {
-        setSelectedLanguages({ ...selectedLanguages, term: value });
-    }
+    const fillErrors = (errors: ValidationErrors) => {
+        setFormErrors(errors);
+        if (errors.name) nameInputRef.current?.focus();
+        else if (errors.description) descriptionInputRef.current?.focus();
+        else if (errors.cards) {
+            textareaRef.current?.focus();
+            alert(errors.cards);
+        }
 
-    const setDefinitionLang = (value: string) => {
-        setSelectedLanguages({ ...selectedLanguages, definition: value });
+        return false;
     }
 
     return (
         <div className={styles.importArea}>
             <div className={styles.infoFields}>
-                <input type="text" ref={nameInputRef} className={!formErrors?.name ? styles.moduleField : `${styles.moduleField} ${styles.error}`} placeholder='Name' />
-                <input type='text' ref={descriptionInputRef} className={!formErrors?.description ? styles.moduleField : `${styles.moduleField} ${styles.error}`} placeholder='Description' />
+                <input type="text"
+                    ref={nameInputRef}
+                    className={!formErrors?.name
+                        ? styles.moduleField
+                        : `${styles.moduleField} ${styles.error}`
+                    }
+                    placeholder='Name'
+                />
+                <input
+                    type='text'
+                    ref={descriptionInputRef}
+                    className={!formErrors?.description
+                        ? styles.moduleField
+                        : `${styles.moduleField} ${styles.error}`
+                    }
+                    placeholder='Description'
+                />
             </div>
             <div className={styles.languages}>
                 <div className={styles.language}>
-                    <Select label="Original Language" languages={props.languages} selectedValue={selectedLanguages.term} setLanguage={setTermLang} />
+                    <Select
+                        label="Original Language"
+                        languages={props.languages}
+                        selectedLanguage={selectedTermLang}
+                        changeLanguage={(newLanguage: Language) => setSelectedTermLang(newLanguage)}
+                    />
                 </div>
                 <div className={styles.language}>
-                    <Select label="Translation Language" languages={props.languages} selectedValue={selectedLanguages.definition} setLanguage={setDefinitionLang} />
+                    <Select
+                        label="Translation Language"
+                        languages={props.languages}
+                        selectedLanguage={selectedDefLang}
+                        changeLanguage={(newLanguage: Language) => setSelectedDefLang(newLanguage)}
+                    />
                 </div>
             </div>
 
@@ -108,7 +142,11 @@ const ImportArea = (props: ImportAreaProps) => {
             <div className={styles.importContainer}>
                 <div className={styles.areaContent}>
 
-                    <ImportTextarea separator={separators[activeSeparatorId].value} setPreview={props.setPreviewCards} textareaRef={textareaRef} />
+                    <ImportTextarea
+                        separator={separators[activeSeparatorId].value}
+                        changeCards={props.changeCards}
+                        textareaRef={textareaRef}
+                    />
 
                     <div className={styles.menu}>
                         <Separators
@@ -122,7 +160,7 @@ const ImportArea = (props: ImportAreaProps) => {
                                 <div className={styles.spinner}></div>
                             </div>
                             :
-                            "Save"
+                            <span>Save</span>
                         }
                         </div>
                     </div>
@@ -131,5 +169,3 @@ const ImportArea = (props: ImportAreaProps) => {
         </div>
     );
 }
-
-export default ImportArea;

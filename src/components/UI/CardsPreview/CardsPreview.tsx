@@ -1,17 +1,17 @@
 import styles from "./CardsPreview.module.css";
 import AudioButton from "../AudioButton/AudioButton";
 import FavoriteButton from "../FavoriteButton/FavoriteButton";
-import { Card } from "@/types/types";
 import { useSession } from "next-auth/react";
 import { useParams } from "next/navigation";
-import { setFavoriteDB } from "@/utils/favorites/favoritesDB";
 import { setFavoriteLS } from "@/utils/favorites/favoritesLS";
 import { changeFavoriteState } from "@/utils/favorites/utils";
 import { useState } from "react";
+import { CreateCardInput } from "@/types/module";
+import { toggleFavoriteAction } from "@/services/favoriteActions";
 
-interface CardsPreviewProps {
-    cards: Card[];
-    setCards?: React.Dispatch<React.SetStateAction<Card[]>>;
+interface CardsPreviewProps<T extends CreateCardInput> {
+    cards: T[];
+    changeCards?: (newCards: T[]) => void;
     title?: string;
     language?: string;
     showNumbers?: boolean;
@@ -19,33 +19,36 @@ interface CardsPreviewProps {
     additionalText?: string;
 }
 
-const CardsPreview = (props: CardsPreviewProps) => {
-
+export const CardsPreview = <T extends CreateCardInput>(
+    props: CardsPreviewProps<T>
+) => {
     const { status } = useSession();
     const { id } = useParams();
     const [isLoading, setIsLoading] = useState(false);
 
-    const clickFavoriteBtn = async (wordId: number) => {
-        if (props.setCards) {
-            if (status === "authenticated" && id) {
-                if (isLoading) return;
+    const clickFavoriteBtn = async (cardId: number) => {
+        if (status === "authenticated" && id && props.changeCards) {
+            if (isLoading) return;
 
-                setIsLoading(true);
-                changeFavoriteState(props.setCards, wordId);
+            setIsLoading(true);
+            props.changeCards(changeFavoriteState(props.cards, cardId));
+            const result = await toggleFavoriteAction(cardId, +id);
 
-                try {
-                    await setFavoriteDB(wordId, +id);
-                } catch {
-                    changeFavoriteState(props.setCards, wordId);
-                } finally {
-                    setIsLoading(false);
-                }
+            if (result.error || result.success === false) {
+                props.changeCards(changeFavoriteState(props.cards, cardId));
+                console.error(result.error);
+            }
 
-            } else {
-                setFavoriteLS(props.setCards, wordId);
+            setIsLoading(false);
+        } else {
+            setFavoriteLS(cardId);
+            if (props.changeCards) {
+                const d = changeFavoriteState(props.cards, cardId);
+                props.changeCards(d);
             }
         }
     }
+
 
     return (
         <div className={styles.wordsPreview}>
@@ -66,9 +69,9 @@ const CardsPreview = (props: CardsPreviewProps) => {
                                         <FavoriteButton
                                             size={21}
                                             hoverColor="var(--blue-color-400)"
-                                            wordId={card.id}
-                                            setActive={() => clickFavoriteBtn(card.id)}
-                                            isActive={card.isFavorite}
+                                            cardId={card.id as number}
+                                            setActive={() => clickFavoriteBtn(card.id as number)}
+                                            isActive={card.isFavorite ?? false}
                                         />
                                     </div>
                                     <div className={styles.playSound}>
@@ -88,5 +91,3 @@ const CardsPreview = (props: CardsPreviewProps) => {
         </div>
     );
 }
-
-export default CardsPreview;

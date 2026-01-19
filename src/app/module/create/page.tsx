@@ -1,5 +1,5 @@
-import { getLanguages } from "@/services/languageService";
 import { ModuleForm } from "@/components/ModuleForm/ModuleForm";
+import { getLanguages } from "@/services/languageActions";
 
 export default async function CreatePage() {
     const languages = await getLanguages();

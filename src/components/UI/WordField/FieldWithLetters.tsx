@@ -1,4 +1,4 @@
-import { memo, useCallback, useState, RefObject, useEffect } from "react";
+import { memo, useCallback, useState, RefObject } from "react";
 import { Field } from "./Field";
 import { Letters } from "./Letters";
 

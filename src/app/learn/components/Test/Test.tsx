@@ -1,13 +1,14 @@
-import { Languages, Card, CardWithClass } from "@/types/types";
+import { Languages } from "@/types/types";
 import { useState, useEffect, useRef, useCallback } from "react";
-import ResultPage from "../ResultPage";
-import TestOptions from "./TestOptions";
-import styles from "../../page.module.css";
+import { ResultPage } from "../ResultPage";
+import { TestOptions } from "./TestOptions";
 import { getRandomInt, shuffleCards } from "@/utils/cards/shuffleCards";
 import { playSound } from "@/utils/audio/playSound";
+import { BaseCard, CardWithClass } from "@/types/module";
+import styles from "../../page.module.css";
 
 interface TestProps {
-    cards: Card[];
+    cards: BaseCard[];
     changeLanguage: boolean;
     languages: Languages;
 }
@@ -44,9 +45,9 @@ const wordsPerRound = 10;
 const switchCorrectCardDuration = 600;
 
 export const Test = (props: TestProps) => {
-    const [testCards, setTestCards] = useState<Card[]>(shuffleCards(props.cards)); // These are terms that remain to be answered
-    const [answeredCards, setAnsweredCards] = useState<Card[]>([]); // Per round
-    const [currentCard, setCurrentCard] = useState<Card>(testCards[0]);
+    const [testCards, setTestCards] = useState<BaseCard[]>(shuffleCards(props.cards)); // These are terms that remain to be answered
+    const [answeredCards, setAnsweredCards] = useState<BaseCard[]>([]); // Per round
+    const [currentCard, setCurrentCard] = useState<BaseCard>(testCards[0]);
     const [answerStatus, setAnswerStatus] = useState<AnswerResult>("");
     const [answerOptions, setAnswerOptions] = useState<CardWithClass[]>([]);
     const [showResultPage, setShowResultPage] = useState(false);
@@ -119,7 +120,7 @@ export const Test = (props: TestProps) => {
         correctAnswerPosition.current = getRandomInt(0, answersNumber - 1);
 
         for (let i = 0; i < answersNumber; i++) {
-            let newOption: Card = { id: 0, term: "", definition: "", isFavorite: false };
+            let newOption: BaseCard = { id: 0, term: "", definition: "", isFavorite: false };
             // Add correct answer card
             if (i === correctAnswerPosition.current) {
                 newOption = currentCard;
@@ -213,7 +214,7 @@ export const Test = (props: TestProps) => {
                 </div>
                 : <ResultPage
                     cards={answeredCards}
-                    setCards={setAnsweredCards}
+                    changeCards={setAnsweredCards}
                     closeResultPage={() => { setShowResultPage(false); setAnsweredCards([]) }}
                     isGameOver={testCards.length === 0}
                     language={props.languages.term}

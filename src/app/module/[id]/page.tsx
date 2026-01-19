@@ -1,8 +1,10 @@
-import { findUserModuleById, UserModule } from "@/services/moduleService";
 import { getServerSession, Session } from "next-auth";
 import { notFound } from "next/navigation";
 import { Module } from "../components/Module/Module";
 import { authOptions } from "@/lib/auth";
+import { DbModule } from "@/types/module";
+import { findUserModuleAction } from "@/services/moduleActions";
+import { mapDbModuleToApp } from "@/types/mappers/mapDbModuleToApp";
 
 export default async function ModulePage({
   params,
@@ -16,10 +18,12 @@ export default async function ModulePage({
     notFound();
   }
 
-  const userModule: UserModule = await findUserModuleById(+session.user.id, +id);
+  const userModule: DbModule | null = await findUserModuleAction(+id)
   if (!userModule) notFound();
 
+  const moduleForUI = mapDbModuleToApp(userModule);
+
   return (
-    <Module userModule={userModule} />
+    <Module initialModule={moduleForUI} />
   );
 }

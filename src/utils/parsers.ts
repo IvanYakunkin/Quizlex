@@ -1,6 +1,6 @@
-import { Card } from "@/types/types";
+import { BaseCard } from "@/types/module";
 
-export const parseTextToCards = (text: string, separator: string): Card[] => {
+export const parseTextToCards = (text: string, separator: string): BaseCard[] => {
     return text.split("\n")
         .map(pair => pair.split(separator).map(el => el.trim()))
         .filter(([term, definition]) => term || definition)

@@ -8,7 +8,7 @@ interface SeparatorsProps {
     setActiveSeparatorId: React.Dispatch<React.SetStateAction<number>>
 }
 
-const Separators = (props: SeparatorsProps) => {
+export const Separators = memo((props: SeparatorsProps) => {
 
     const changeActiveSeparator = (separatorId: number) => {
         props.setActiveSeparatorId(separatorId);
@@ -21,6 +21,6 @@ const Separators = (props: SeparatorsProps) => {
             ))}
         </div>
     );
-}
+});
 
-export default memo(Separators);
+Separators.displayName = "Separators";

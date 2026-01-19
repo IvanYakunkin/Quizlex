@@ -1,11 +1,11 @@
-import { Card } from "@/types/types";
 import { useCallback, useEffect, useRef } from "react";
 import { Field } from "@/components/UI/WordField/Field";
 import styles from "../../page.module.css";
 import { checkWriting } from "@/utils/cards/checkWriting";
+import { BaseCard } from "@/types/module";
 
 interface WritingMistakePageProps {
-    currentCard: Card;
+    currentCard: BaseCard;
     enteredAnswer: string | undefined;
     toNextWord: (isCorrect?: boolean) => void;
     changeLanguage: boolean;

@@ -1,7 +1,7 @@
 // TODO: Add functionality for studying other people's modules
 
 import { LearningType } from "@/types/types";
-import LearningPage from "../components/LearningPage";
+import { LearningPage } from "../components/LearningPage";
 
 export default async function Page({
   params,
@@ -9,9 +9,9 @@ export default async function Page({
   params: Promise<{ learningType: LearningType }>
 }) {
 
-    const learningType = (await params).learningType;
-  
-    return (
-        <LearningPage learningType={learningType} />
-    );
+  const learningType = (await params).learningType;
+
+  return (
+    <LearningPage learningType={learningType} />
+  );
 }

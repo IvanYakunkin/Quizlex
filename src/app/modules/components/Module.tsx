@@ -1,13 +1,8 @@
+import { DbModuleWithCount } from "@/types/module";
 import styles from "../page.module.css";
 import Link from "next/link";
-import { ModuleWithCount } from "@/types/types";
 
-interface ModuleProps{
-    module: ModuleWithCount;
-}
-
-const Module = ({module}: ModuleProps) => {
-    
+export const Module = ({ module }: { module: DbModuleWithCount }) => {
     return (
         <Link href={`/module/${module.id}`} className={styles.module}>
             <div className={styles.info}>
@@ -19,5 +14,3 @@ const Module = ({module}: ModuleProps) => {
         </Link>
     );
 }
-
-export default Module;

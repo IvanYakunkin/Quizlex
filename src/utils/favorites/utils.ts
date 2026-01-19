@@ -1,9 +1,10 @@
-import { Card } from "@/types/types";
+import { CreateCardInput } from "@/types/module";
 
-export function changeFavoriteState(setCards: React.Dispatch<React.SetStateAction<Card[]>>, cardId: number) {
-    setCards(prevItems => {
-        return prevItems.map(card => (
-            card.id === cardId ? { ...card, isFavorite: !card.isFavorite } : card
-        ));
-    });
+export function changeFavoriteState<T extends CreateCardInput>(
+    cards: T[],
+    cardId: string | number
+): T[] {
+    return cards.map(card => (
+        card.id === cardId ? { ...card, isFavorite: !card.isFavorite } : card
+    ));
 }

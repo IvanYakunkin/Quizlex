@@ -1,7 +1,7 @@
 import { CardFlipperProps, CardFlipperStyle } from '@/types/CardFlipperProps';
 import { useState, useMemo } from 'react';
 
-const CardFlipper: React.FC<CardFlipperProps> = (props) => {
+export const CardFlipper: React.FC<CardFlipperProps> = (props) => {
   const {
     cardStyles: {
       back,
@@ -121,5 +121,3 @@ const CardFlipper: React.FC<CardFlipperProps> = (props) => {
     </div>
   );
 };
-
-export default CardFlipper;
