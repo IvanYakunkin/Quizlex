@@ -192,6 +192,6 @@ export const ModuleForm = ({ languagesList, initialModule }: ModuleFormProps) =>
                     Add Card
                 </div>
             </div>
-        </main>
+        </main >
     )
 }

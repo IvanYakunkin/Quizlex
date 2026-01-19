@@ -75,6 +75,7 @@ export const Module = ({ initialModule }: ModuleProps) => {
                 {isDeleteWin && (
                     <DeleteWin
                         moduleId={initialModule.id}
+                        moduleName={initialModule.name}
                         onClose={() => setIsDeleteWin(false)}
                     />
                 )}

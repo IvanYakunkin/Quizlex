@@ -1,4 +1,4 @@
-.field{
+.field {
     width: 100%;
     border: 1px solid transparent;
     border-radius: 5px;
@@ -7,27 +7,27 @@
     font-size: 18px;
     box-sizing: border-box;
     padding: 10px;
-    background: #525252;   
+    background: #525252;
     transition: .2s;
     box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
 }
 
-.field:focus{
+.field:focus {
     border: 1px solid var(--blue-color-400);
 }
 
-.field.correct{
+.field.correct {
     border: 1px solid green;
 }
 
-.content{
+.content {
     display: flex;
     flex-direction: column;
     padding: 15px;
     gap: 10px;
 }
 
-.letters{
+.letters {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
@@ -37,7 +37,7 @@
     border-radius: 5px;
 }
 
-.letterOne{
+.letterOne {
     width: 35px;
     height: 35px;
     display: flex;
@@ -51,19 +51,18 @@
     box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
 }
 
-.letterOne:hover{
+.letterOne:hover {
     opacity: .8;
 }
 
-.container{
+.container {
     height: 0;
     transition: height .2s ease;
     overflow: hidden;
 }
 
-.buttonsContainer.show{
+.buttonsContainer.show {
     display: block;
     height: auto;
     overflow: hidden;
 }
-
