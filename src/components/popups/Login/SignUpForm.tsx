@@ -3,6 +3,7 @@ import styles from "./login.module.css";
 import Switcher from "../../UI/Switcher/Switcher";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { Spinner } from "@/components/UI/Spinner/Spinner";
 
 interface SignUpFormProps {
     selectedMethod: "login" | "signUp";
@@ -149,9 +150,7 @@ const SignUpForm = ({ selectedMethod, setSelectedMethod, closeWindow }: SignUpFo
             }
             <button type="submit" className={styles.button} disabled={submitLoading}>
                 {submitLoading ?
-                    <div className={styles.loading}>
-                        <div className={styles.spinner} data-testid="signup-spinner"></div>
-                    </div>
+                    <Spinner />
                     : "Sign Up"}
             </button>
         </form>

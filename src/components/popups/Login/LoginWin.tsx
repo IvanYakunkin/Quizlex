@@ -7,6 +7,7 @@ import SignUpForm from "./SignUpForm";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Draggable from "react-draggable";
+import { Spinner } from "@/components/UI/Spinner/Spinner";
 
 interface LoginWin {
     isOpen: boolean;
@@ -78,9 +79,7 @@ const LoginWin = ({ isOpen, onClose }: LoginWin) => {
                             <div className={styles.methods}>
                                 <Switcher selectedMethod={selectedMethod} setSelectedMethod={setSelectedMethod} />
                                 <div className={styles.google} onClick={googleAuth}>{!isGoogleLoading && <Image src={"/images/google.png"} width={32} height={32} alt="Google" />}{isGoogleLoading ?
-                                    <div className={styles.loading}>
-                                        <div className={styles.spinner}></div>
-                                    </div>
+                                    <Spinner />
                                     : "Continue with Google"}</div>
                             </div>
                         }

@@ -11,6 +11,7 @@ import { CreateCardInput, CreateModuleInput } from "@/types/module";
 import { createModuleAction } from "@/services/moduleActions";
 import { mapLocalModuleToApp } from "@/types/mappers/mapLocalModuleToApp";
 import styles from "../page.module.css";
+import { Spinner } from "@/components/UI/Spinner/Spinner";
 
 interface ImportAreaProps {
     previewCards: CreateCardInput[];
@@ -156,9 +157,7 @@ export const ImportArea = (props: ImportAreaProps) => {
                         />
                         <div className={`${styles.baseButton} ${styles.buttonSave}`} onClick={saveWords}>{buttonLoading
                             ?
-                            <div className={styles.loading}>
-                                <div className={styles.spinner}></div>
-                            </div>
+                            <Spinner />
                             :
                             <span>Save</span>
                         }
