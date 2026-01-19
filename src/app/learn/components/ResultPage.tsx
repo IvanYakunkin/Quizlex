@@ -4,6 +4,7 @@ import Image from "next/image";
 import styles from "../page.module.css";
 import { useParams, useRouter } from "next/navigation";
 import { BaseCard } from "@/types/module";
+import ReactConfetti from "react-confetti";
 
 interface ResultPageProps<T extends BaseCard> {
     cards: T[];
@@ -53,6 +54,12 @@ export const ResultPage = <T extends BaseCard>(props: ResultPageProps<T>) => {
 
     return (
         <div className={styles.result}>
+            <ReactConfetti
+                initialVelocityY={120}
+                gravity={0.3}
+                numberOfPieces={3000}
+                recycle={false}
+            />
             <div className={styles.status}>{props.title ? props.title : "At this stage you have studied:"}</div>
             {props.isGameOver && <div className={styles.congratulations}><Image src="/images/celebrate3.gif" width={200} height={200} alt="Congratulations Icon" /></div>}
             <CardsPreview
