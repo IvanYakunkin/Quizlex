@@ -13,9 +13,6 @@ export default async function Page() {
     }
 
     const userModules = await getUserModulesAction();
-    if (!userModules.success) {
-        alert("Error receiving modules");
-    }
 
     return (
         <main className="main">

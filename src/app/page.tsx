@@ -9,10 +9,10 @@ export default function Introduce() {
             <div className={styles.introduce}>
                 <div className={styles.introduce__preview}>
                     <div className={styles.introduce__previewInfo}>
-                        <div><b>QuizLex</b> - free app for learning foreign words through flashcards.</div>
+                        <div><b>Quizlex</b> - free app for learning foreign words through flashcards.</div>
                         <div className={styles.introduce__additionalInfo}>
                             <div>You can <b>import</b> words from <b>Quizlet</b> </div>
-                            <div>or another app and learn them with QuizLex absolutely free.</div>
+                            <div>or another app and learn them with Quizlex absolutely free.</div>
                             <div className={styles.introduce__smallPreviewText}><small>Without registration</small></div>
                         </div>
                         <Link href="/import" className={styles.introduce__previewButton}>
@@ -21,7 +21,7 @@ export default function Introduce() {
                     </div>
                 </div>
                 <div className={styles.introduce__features}>
-                    <div className={styles.introduce__title}>With QuizLex you can:</div>
+                    <div className={styles.introduce__title}>With Quizlzex you can:</div>
                     <div className={styles.introduce__featuresElements}>
                         <div className={styles.introduce__feature}>
                             <Image src="/images/create-cards.png" width={146} height={120} alt="Create Cards" className={styles.introduce__featureImage} />
