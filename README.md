@@ -1,80 +1,118 @@
-# Quizlex
+# 📚 Quizlex
 
-This application is designed to help users learn foreign language words through interactive flashcards. Built with React, Next.js, MySQL, and Prisma, this app provides an efficient and user-friendly way to enhance your vocabulary skills.
+![License](https://img.shields.io/github/license/IvanYakunkin/Quizlex)
+![CI/CD](https://img.shields.io/github/actions/workflow/status/IvanYakunkin/Quizlex/main.yml)
+![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=flat&logo=typescript&logoColor=white)
+![Next.js](https://img.shields.io/badge/Next.js-000000?style=flat&logo=nextdotjs&logoColor=white)
+![Prisma](https://img.shields.io/badge/Prisma-2D3748?style=flat&logo=prisma&logoColor=white)
 
-You can visit the website at: [quizlex.ru](http://quizlex.ru)
-## Features
+**Quizlex** is a free, open-source web application designed to help you master foreign languages and new concepts using flashcards. Inspired by platforms like Quizlet, Quizlex offers a clean, ad-free experience focused on efficiency and learning.
 
-- **Free Vocabulary Creation and Import**: Easily create and import vocabulary cards (flashcards) for various languages.
-- **Multiple Study Modes**: Learn through different modes including:
-  - **Test Mode**: Challenge yourself with quizzes.
-  - **Flashcards**: Review words using a traditional flashcard approach.
-  - **Writing Mode**: Practice writing words to reinforce learning.
-- **No Registration Required**: Start learning right away without needing an account.
-- **User Registration**: Create an account to:
-  - Import vocabulary modules.
-  - Create an unlimited number of your own custom modules for personalized learning.
+🚀 **Live Demo:** [https://quizlex.ru](https://quizlex.ru)
 
 ---
 
-## Getting Started
+## 🌟 Features
 
-To get started with the Foreign Language Vocabulary Trainer, follow these steps:
+Quizlex is designed to be useful immediately, even without an account.
 
-### Prerequisites
+### 🔓 For Guests (No Registration Required)
+* **🔄 Smart Import:** Easily import study sets/modules from other popular flashcard applications.
+* **🧠 Study Modes:** Dive straight into learning imported modules.
+* **⭐ Favorites:** Mark specific cards as "Favorites" to focus on difficult terms.
+* **🔐 Seamless Auth:** Sign up securely via Email/Password or Google OAuth (NextAuth).
 
-1. **Node.js and npm**: Make sure you have [Node.js](https://nodejs.org/) installed on your machine. This project is built using Node.js and npm (Node Package Manager).
-2. **MySQL**: You need a MySQL database set up. Please install [MySQL](https://www.mysql.com/) if you haven't already.
-
-### Installation
-
-1. **Clone the Repository**:
-   ```bash
-   git clone https://github.com/your-username/your-repo-name.git
-   cd your-repo-name
-   ```
-
-2. **Install Dependencies**:
-   Navigate to the project directory and run:
-   ```bash
-   npm install
-   ```
-
-3. **Set Up the Database**:
-   - Create a new MySQL database.
-   - Update the database connection settings in your `.env` file:
-     ```
-     DATABASE_URL="mysql://admin:127001@localhost:3306/Quizlex"
-     ```
-
-4. **Run Migrations**:
-   Use Prisma to set up the database schema:
-   ```bash
-   npx prisma migrate deploy
-   ```
-
-5. **Start the Development Server**:
-   Run the following command to start your local development server:
-   ```bash
-   npm run dev
-   ```
-   Open your browser and navigate to `http://localhost:3000` to see the application in action.
+### 👤 For Registered Users
+* **✍️ Create Modules:** Build your own custom study sets from scratch.
+* **🛠️ Edit & Manage:** Update your cards and organize your personal library.
+* **📚 Personal Library:** Save modules to your profile for long-term study access.
 
 ---
 
+## 🎓 Study Modes
 
-## Technologies Used
+We currently support three distinct ways to learn:
 
-- React.js
-- Next.js
-- Next-Auth
-- MySQL
-- Prisma
+1.  **🃏 Flashcards:** The classic flip-card experience to memorize terms.
+2.  **📝 Test:** A generated quiz to evaluate your knowledge.
+3.  **⌨️ Write:** Type the answer to reinforce spelling and recall.
 
-## Contributing
+---
+
+## 🛠️ Tech Stack
+
+This project is built with a modern, type-safe stack ensuring performance and scalability:
+
+* **Frontend & Framework:** [Next.js](https://nextjs.org/) (App Router), React
+* **Language:** [TypeScript](https://www.typescriptlang.org/)
+* **Database:** MySQL
+* **ORM:** [Prisma](https://www.prisma.io/)
+* **Authentication:** [NextAuth.js](https://next-auth.js.org/)
+* **Testing:** Vitest (Unit & Integration), Playwright (E2E)
+* **CI/CD:** GitHub Actions (Automated testing and deployment)
+* **Infrastructure:** VPS (Ubuntu, Nginx, PM2)
+
+---
+
+## 🚀 Getting Started
+
+To run this project locally:
+
+1.  **Clone the repository:**
+    ```bash
+    git clone https://github.com/IvanYakunkin/Quizlex.git
+    cd Quizlex
+    ```
+
+2.  **Install dependencies:**
+    ```bash
+    npm install
+    ```
+
+3.  **Set up environment variables:**
+    Create a `.env` file in the root directory and add your database credentials and auth secrets:
+    ```env
+    DATABASE_URL="mysql://username:password@hostname:port/dbname"
+    DATABASE_USER=your_username
+    DATABASE_PASSWORD=your_password
+    DATABASE_NAME=your_database
+    DATABASE_HOST=db_host
+    DATABASE_PORT=db_port
+    NEXTAUTH_SECRET=your_super_secret
+    NEXTAUTH_URL=http://localhost:3000
+    GOOGLE_ID=your_google_id
+    GOOGLE_SECRET=your_google_secret
+    ```
+
+4.  **Setup Database:**
+    ```bash
+    npx prisma generate
+    npx prisma migrate dev
+    ```
+
+5.  **Run the development server:**
+    ```bash
+    npm run dev
+    ```
+
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+
+---
+
+## 🧪 Testing
+
+The project includes a comprehensive test suite to ensure stability:
+
+* **Unit & Integration Tests:** Powered by **Vitest**. Test core logic, utility functions, and component interactions.
+* **E2E (End-to-End) Testing:** Powered by **Playwright**. Simulate real user journeys, including authentication flows and study session transitions.
+* **CI Integration:** All tests are automatically executed on every push via GitHub Actions.
+
+## 🤝 Contributing
 
 Contributions are welcome!
 
 ---
 
-Feel free to customize any part of this description to better match your style or specific project details!
+## 📄 License
+
+Distributed under the MIT License. See `LICENSE` for more information.
