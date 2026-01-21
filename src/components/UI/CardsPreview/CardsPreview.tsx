@@ -4,7 +4,7 @@ import FavoriteButton from "../FavoriteButton/FavoriteButton";
 import { useSession } from "next-auth/react";
 import { useParams } from "next/navigation";
 import { setFavoriteLS } from "@/utils/favorites/favoritesLS";
-import { changeFavoriteState } from "@/utils/favorites/utils";
+import { changeFavoriteState } from "@/utils/favorites/changeFavoriteState";
 import { useState } from "react";
 import { CreateCardInput } from "@/types/module";
 import { toggleFavoriteAction } from "@/services/favoriteActions";

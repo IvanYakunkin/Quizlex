@@ -6,17 +6,6 @@ const randomLogin = `testuser${Date.now()}`;
 const password = 'TestPassword123';
 
 test.describe('Authentication Flow', () => {
-    test.afterAll(async () => {
-        try {
-            await prisma.user.delete({
-                where: { email: randomEmail }
-            });
-        } catch {
-            console.log('The user has not been created or has already been deleted.');
-        } finally {
-            await prisma.$disconnect();
-        }
-    });
     test("Full user lifecycle: Register -> Logout -> Login", async ({ page }) => {
         await test.step("Register new user", async () => {
             await page.goto('/');
@@ -49,7 +38,7 @@ test.describe('Authentication Flow', () => {
             await expect(logoutButton).toBeVisible();
             await logoutButton.click();
             const mainPage = page.getByTestId("main-page");
-            await expect(mainPage).toBeVisible();
+            await expect(mainPage).toBeVisible({ timeout: 4000 });
         });
         await test.step("Login", async () => {
 
@@ -72,7 +61,7 @@ test.describe('Authentication Flow', () => {
 
             await expect(dialog).not.toBeVisible();
             const modulesTitle = page.getByTestId("modules-title");
-            await expect(modulesTitle).toBeVisible();
+            await expect(modulesTitle).toBeVisible({ timeout: 4000 });
         });
     });
 
@@ -87,5 +76,15 @@ test.describe('Authentication Flow', () => {
 
         const errorAlert = page.getByTestId("auth-error");
         await expect(errorAlert).toBeVisible();
+    });
+
+    test.afterAll(async () => {
+        try {
+            await prisma.user.delete({
+                where: { email: randomEmail }
+            });
+        } finally {
+            await prisma.$disconnect();
+        }
     });
 });

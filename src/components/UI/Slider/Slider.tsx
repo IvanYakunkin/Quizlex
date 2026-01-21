@@ -5,7 +5,7 @@ import styles from "./Slider.module.css";
 import { useSession } from "next-auth/react";
 import { useParams } from "next/navigation";
 import { setFavoriteLS } from "@/utils/favorites/favoritesLS";
-import { changeFavoriteState } from "@/utils/favorites/utils";
+import { changeFavoriteState } from "@/utils/favorites/changeFavoriteState";
 import { BaseCard } from "@/types/module";
 import { CardFlipper } from "../CardFlipper/CardFlipper";
 import { toggleFavoriteAction } from "@/services/favoriteActions";
