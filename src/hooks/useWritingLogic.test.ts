@@ -1,14 +1,22 @@
 import { renderHook, act } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { useWritingLogic } from './useWritingLogic';
+import { BaseCard } from '@/types/module';
 
 vi.mock('@/utils/cards/shuffleCards', () => ({
     getRandomInt: vi.fn(() => 0),
 }));
 
-const mockCards = [
-    { id: 1, term: 'Hund', definition: 'Dog', moduleId: 101 },
-    { id: 2, term: 'Katze', definition: 'Cat', moduleId: 101 },
+const mockCards: BaseCard[] = [
+
+    { id: 1, isFavorite: false, term: 'a', definition: "aa" },
+    { id: 2, isFavorite: false, term: 'b', definition: "bb" },
+    { id: 3, isFavorite: false, term: 'c', definition: "cc" },
+    { id: 4, isFavorite: false, term: 'd', definition: "dd" },
+    { id: 5, isFavorite: false, term: 'e', definition: "ee" },
+    { id: 6, isFavorite: false, term: 'f', definition: "ff" },
+    { id: 7, isFavorite: false, term: 'g', definition: "gg" },
+    { id: 8, isFavorite: false, term: 'h', definition: "hh" },
 ];
 
 describe('useWritingLogic', () => {
@@ -32,7 +40,7 @@ describe('useWritingLogic', () => {
         }));
 
         act(() => {
-            result.current.actions.setInputValue('Dog');
+            result.current.actions.setInputValue('aa');
         });
 
         act(() => {
@@ -50,7 +58,7 @@ describe('useWritingLogic', () => {
         }));
 
         act(() => {
-            result.current.actions.setInputValue('Dog');
+            result.current.actions.setInputValue('aa');
         });
 
         act(() => {
@@ -71,7 +79,7 @@ describe('useWritingLogic', () => {
         expect(result.current.state.answeredCards[0].id).toBe(1);
         expect(result.current.state.testCards).toHaveLength(mockCards.length - 1);
     });
-    it('должен переходить в статус "finished", когда последняя карточка отвечена верно', async () => {
+    it('should go into "finished" status when the last card is answered correctly', async () => {
         const singleCard = [mockCards[0]];
 
         const { result } = renderHook(() => useWritingLogic({
@@ -81,7 +89,7 @@ describe('useWritingLogic', () => {
         }));
 
         act(() => {
-            result.current.actions.setInputValue('Dog');
+            result.current.actions.setInputValue('aa');
         });
 
         act(() => {
@@ -98,12 +106,12 @@ describe('useWritingLogic', () => {
         expect(result.current.state.testCards).toHaveLength(0);
     });
 
-    it('should switch to the "result" status exactly after maxWordsPerRound responses', async () => {
-        const manyCards = Array.from({ length: 5 }, (_, i) => ({
+    it('should go to the "completed" status when the last card is marked correctly', async () => {
+        const manyCards: BaseCard[] = Array.from({ length: 9 }, (_, i) => ({
             id: i,
             term: `term${i}`,
             definition: `def${i}`,
-            moduleId: 1
+            isFavorite: false,
         }));
 
         const { result } = renderHook(() => useWritingLogic({
