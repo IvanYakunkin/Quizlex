@@ -40,8 +40,8 @@ CREATE TABLE `modules` (
 CREATE TABLE `cards` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `moduleId` INTEGER NOT NULL,
-    `term` VARCHAR(191) NULL,
-    `definition` VARCHAR(191) NULL,
+    `term` VARCHAR(191) NOT NULL,
+    `definition` VARCHAR(191) NOT NULL,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -75,4 +75,3 @@ ALTER TABLE `favorite_cards` ADD CONSTRAINT `favorite_cards_moduleId_fkey` FOREI
 
 -- AddForeignKey
 ALTER TABLE `favorite_cards` ADD CONSTRAINT `favorite_cards_cardId_fkey` FOREIGN KEY (`cardId`) REFERENCES `cards`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
