@@ -44,3 +44,25 @@ jobs:
         env:
           DATABASE_URL: mysql://root:root_password@localhost:3306/quizlex_test
           NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
+
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          username: ${{secrets.SERVER_USER}}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            set -e
+            cd /var/www/Quizlex
+            echo "Pulling latest code..."
+            git pull origin main
+            echo "Installing dependencies..."
+            npm install
+            echo "Generating Prisma client..."
+            npx prisma generate
+            echo "Applying migrations..."
+            npx prisma migrate deploy
+            echo "Building project..."
+            npm run build
+            echo "Restarting PM2 process..."
+            pm2 restart quizlex
