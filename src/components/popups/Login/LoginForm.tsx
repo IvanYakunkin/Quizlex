@@ -36,7 +36,11 @@ const LoginForm = ({ selectedMethod, setSelectedMethod, closeWindow }: LoginForm
 
         if (response) {
             if (response.error) {
-                setError("Incorrect email or password!");
+                if (response.error === "Invalid credentials") {
+                    setError("Email/password combination incorrect. Let's try that again.");
+                } else {
+                    setError("Server error. Try again later.");
+                }
             } else {
                 closeWindow();
                 router.push("/modules");
@@ -73,7 +77,7 @@ const LoginForm = ({ selectedMethod, setSelectedMethod, closeWindow }: LoginForm
                 </div>
             </div>
             {error !== "" &&
-                <div className={styles.error} data-testid="auth-error" >Email/password combination incorrect. Let&apos;s try that again.</div>
+                <div className={styles.error} data-testid="auth-error">{error}</div>
             }
             <button type="submit" className={styles.button} disabled={submitLoading}>
                 {submitLoading ?

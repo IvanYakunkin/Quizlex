@@ -2,7 +2,6 @@ import { NextAuthOptions } from "next-auth";
 import CredentialsProvider from 'next-auth/providers/credentials';
 import { compare } from 'bcrypt';
 import GoogleProvider from "next-auth/providers/google"
-import { User } from '@/generated/prisma/client';
 import { prisma } from "../../lib/prisma";
 
 export const authOptions: NextAuthOptions = {
@@ -23,27 +22,25 @@ export const authOptions: NextAuthOptions = {
             },
             async authorize(credentials) {
                 try {
-                    const user: User | null = await prisma.user.findUnique({
-                        where: {
-                            email: credentials?.email
-                        }
-                    });
-
-                    if (!user?.password) {
-                        throw new Error("The password was not received");
+                    if (!credentials?.email || !credentials?.password) {
+                        throw new Error("Missing credentials");
                     }
 
-                    if (!user) {
-                        throw new Error("No user found with this email");
+                    const user = await prisma.user.findUnique({
+                        where: { email: credentials.email }
+                    });
+
+                    if (!user || !user.password) {
+                        throw new Error("Invalid credentials");
                     }
 
                     const passwordCorrect = await compare(
-                        credentials?.password || '',
+                        credentials.password,
                         user.password
                     );
 
                     if (!passwordCorrect) {
-                        throw new Error("Incorrect password");
+                        throw new Error("Invalid credentials");
                     }
 
                     return {
@@ -52,11 +49,10 @@ export const authOptions: NextAuthOptions = {
                         email: user.email,
                     };
 
-                } catch (err) {
-                    console.log(err);
-                    throw new Error("Authorize: Authentication error");
+                } catch (error) {
+                    throw error;
                 }
-            },
+            }
         }),
         GoogleProvider({
             clientId: process.env.GOOGLE_ID || "",
