@@ -1,0 +1,43 @@
+name: CI Suite
+on:
+  push:
+    branches: [ main, dev ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test-and-build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Generate Prisma Client
+        run: npx prisma generate
+
+      - name: Run Lint & Typecheck
+        run: |
+          npx eslint . || echo "Lint warnings found"
+          npx tsc --noEmit
+
+      - name: Run Unit Tests (Vitest)
+        run: npm run test
+        env:
+          NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
+          NEXTAUTH_URL: http://localhost:3000
+
+      - name: Build Project
+        run: npm run build
+        env:
+          DATABASE_URL: mysql://root:root_password@localhost:3306/Quizlex
+          NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
