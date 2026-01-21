@@ -51,14 +51,19 @@ jobs:
           host: ${{ secrets.SERVER_IP }}
           username: ${{secrets.SERVER_USER}}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          script_stop: true
+          stop_on_error: true
           script: |
-            bash -l -c '
-              cd /var/www/Quizlex
-              git pull origin main
-              npm install
-              npx prisma generate
-              npx prisma migrate deploy
-              npm run build
-              pm2 restart quizlex
-            '
+            export PATH=$PATH:/root/.nvm/versions/node/v22.18.0/bin
+            
+            echo "Using npm from: $(which npm)"
+            
+            cd /var/www/Quizlex
+            git pull origin main
+            
+            npm install
+            npx prisma generate
+            npx prisma migrate deploy
+            
+            npm run build
+            
+            pm2 restart quizlex || pm2 start npm --name "quizlex" -- start
