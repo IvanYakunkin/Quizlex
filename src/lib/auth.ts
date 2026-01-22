@@ -3,6 +3,7 @@ import CredentialsProvider from 'next-auth/providers/credentials';
 import { compare } from 'bcrypt';
 import GoogleProvider from "next-auth/providers/google"
 import { prisma } from "../../lib/prisma";
+import { createUser, findUserByEmail, findUserByGoogleSub, updateSub } from "@/services/userService";
 
 export const authOptions: NextAuthOptions = {
     session: {
@@ -61,18 +62,17 @@ export const authOptions: NextAuthOptions = {
     ],
     callbacks: {
         async jwt({ token, user, account }) {
-            if (user) {
+            if (user && account?.provider === "credentials") {
                 token.id = user.id;
                 token.login = user.login;
                 token.email = user.email;
             }
-            if (account?.provider === "google" && !token.id) {
-                const dbUser = await prisma.user.findUnique({
-                    where: { email: token.email as string }
-                });
+            else if (account?.provider === "google") {
+                const dbUser = await findUserByGoogleSub(user.id);
                 if (dbUser) {
                     token.id = dbUser.id.toString();
                     token.login = dbUser.login;
+                    token.email = dbUser.email;
                 }
             }
             return token;
@@ -85,19 +85,33 @@ export const authOptions: NextAuthOptions = {
 
             return session;
         },
-        // async signIn({ user, account }) {
-        //     if (account?.provider === "google") {
-        //         if (!user.email || !user.login) {
-        //             return false;
-        //         }
+        async signIn({ user, account }) {
+            try {
+                if (account?.provider === "google") {
+                    const googleSub = user.id;
+                    if (!googleSub || !user.email) {
+                        return false;
+                    }
 
-        //         const existingUser = await findUserIdByEmail(user.email);
-        //         if (!existingUser) {
-        //             await createUser(user.login, user.email, "google");
-        //         }
-        //     }
-        //     return true;
-        // }
+                    const existingUser = await findUserByGoogleSub(googleSub)
+
+                    if (!existingUser) {
+                        const userByEmail = await findUserByEmail(user.email);
+                        if (userByEmail) {
+                            // Merge accounts if receive the same email
+                            await updateSub(user.email, googleSub);
+                        } else {
+                            const userLogin = user.email.split('@')[0] + "_" + Math.floor(Math.random() * 1000)
+                            await createUser(userLogin, user.email, null, { authMethod: "google", googleSub });
+                        }
+                    }
+                }
+                return true;
+            } catch (error) {
+                console.error("Auth error", error);
+                return false;
+            }
+        }
     },
     secret: process.env.NEXTAUTH_SECRET
 };

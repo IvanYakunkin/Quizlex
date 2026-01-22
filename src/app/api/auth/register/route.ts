@@ -8,26 +8,25 @@ export async function POST(req: Request) {
     if (!email || !password || !login) {
       return NextResponse.json({ error: 'Fill the fields!' }, { status: 400 });
     }
-    if(password.length <= 4){
-      return NextResponse.json({error: "The password must contain at least 5 characters!"}, {status: 400});
+    if (password.length <= 4) {
+      return NextResponse.json({ error: "The password must contain at least 5 characters!" }, { status: 400 });
     }
 
-    const newUser = await createUser(login, email, "credentials", password);
+    const newUser = await createUser(login, email, password);
 
-    return NextResponse.json(newUser, { status: 201 }); 
+    return NextResponse.json(newUser, { status: 201 });
 
   } catch (error) {
 
-      console.error(error);
-      if(error instanceof Error){  
-        if(error.message === "Email is already in use!"){
-          return NextResponse.json({error: error.message}, {status: 409});
-        }
-        if(error.message === "Login is already in use!"){
-          return NextResponse.json({error: error.message}, {status: 409});
-        }
+    console.error(error);
+    if (error instanceof Error) {
+      if (error.message === "Email is already in use!") {
+        return NextResponse.json({ error: error.message }, { status: 409 });
+      }
+      if (error.message === "Login is already in use!") {
+        return NextResponse.json({ error: error.message }, { status: 409 });
+      }
     }
-
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 }

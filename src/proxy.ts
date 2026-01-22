@@ -4,15 +4,8 @@ import type { NextRequest } from 'next/server';
 
 export async function proxy(req: NextRequest) {
   const token = await getToken({ req });
-
-  const protectedRoutes = ['/modules', '/module/create'];
-
-  if (!token && protectedRoutes.some(route => req.nextUrl.pathname.startsWith(route))) {
-    return NextResponse.redirect(new URL(`/`, req.url));
-  }
-
-  if (token && req.nextUrl.pathname === '/') {
-    return NextResponse.redirect(new URL('/modules', req.url));
+  if (!token || !token.id) {
+    return NextResponse.redirect(new URL(`/404`, req.url));
   }
 
   return NextResponse.next();
@@ -20,7 +13,6 @@ export async function proxy(req: NextRequest) {
 
 export const config = {
   matcher: [
-    '/',
     '/modules/:path*',
     '/module/create'
   ],

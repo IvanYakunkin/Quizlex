@@ -11,6 +11,7 @@ datasource db {
 
 model User {
   id         Int      @id @default(autoincrement())
+  google_sub String?  @unique
   login      String   @unique
   email      String   @unique
   authMethod String   @default("credentials")
