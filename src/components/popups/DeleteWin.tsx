@@ -1,13 +1,15 @@
 "use client"
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import styles from "./windows.module.css";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { deleteModuleAction } from "@/services/moduleActions";
 import Draggable from "react-draggable";
+import { Spinner } from "../UI/Spinner/Spinner";
 
 interface DeleteWinProps {
+    isOpen: boolean;
     moduleId: number | string;
     moduleName: string;
     onClose: () => void,
@@ -16,8 +18,11 @@ interface DeleteWinProps {
 export const DeleteWin = (props: DeleteWinProps) => {
     const { status } = useSession();
     const router = useRouter();
+    const [isLoading, setIsLoading] = useState(false);
 
     const deleteModule = async () => {
+        if (isLoading) return;
+        setIsLoading(true);
         if (status === "authenticated") {
             if (Number.isInteger(props.moduleId)) {
                 await deleteModuleAction(+props.moduleId);
@@ -27,6 +32,7 @@ export const DeleteWin = (props: DeleteWinProps) => {
             localStorage.removeItem('module');
             router.push("/");
         }
+        setIsLoading(false);
     }
 
     const wrapperRef = useRef<HTMLDivElement>(null);
@@ -45,6 +51,24 @@ export const DeleteWin = (props: DeleteWinProps) => {
         };
 
     }, [props]);
+
+    useEffect(() => {
+        const body = document.body;
+        if (props.isOpen) {
+            const scrollBarWidth = window.innerWidth - document.documentElement.clientWidth;
+
+            body.style.paddingRight = `${scrollBarWidth}px`;
+            body.style.overflow = 'hidden';
+        } else {
+            body.style.paddingRight = '';
+            body.style.overflow = '';
+        }
+
+        return () => {
+            body.style.paddingRight = '';
+            body.style.overflow = '';
+        };
+    }, [props.isOpen])
 
     return (
         <div className={styles.popup}>
@@ -67,8 +91,10 @@ export const DeleteWin = (props: DeleteWinProps) => {
                         <div className={styles.warning}><div>Are you sure that you want to delete this module? It will be deleted forever.</div><div><b>This action cannot be undone!</b></div></div>
                     </div>
                     <div className={styles.buttons}>
-                        <div className={styles.btnCancel} onClick={props.onClose}>Cancel</div>
-                        <div className={styles.btnConfirm} onClick={deleteModule}>Yes, delete module</div>
+                        <button className={styles.btnCancel} onClick={props.onClose}>Cancel</button>
+                        <button className={styles.btnConfirm} onClick={deleteModule}>
+                            {isLoading ? <Spinner outerColor="#b35c5c" innerColor="white" /> : "Yes, delete module"}
+                        </button>
                     </div>
                 </div>
             </Draggable>

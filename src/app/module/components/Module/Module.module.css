@@ -54,7 +54,7 @@
 .wordsCounter .wordsCounterLine {
     width: 100%;
     text-align: center;
-    border-bottom: 1px solid var(--blue-color-600);
+    border-bottom: 1px solid #444;
     line-height: 0.1em;
     margin: 10px 0 20px;
     font-size: 1.4em;
@@ -64,7 +64,6 @@
 .wordsCounter .wordsCounterLine span {
     background: var(--background-color);
     padding: 0 10px;
-    color: var(--blue-color-200);
 }
 
 .updateButton {

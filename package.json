@@ -13,11 +13,11 @@
   },
   "dependencies": {
     "@prisma/adapter-mariadb": "^7.2.0",
+    "@prisma/client": "^7.2.0",
     "bcrypt": "^6.0.0",
     "dotenv": "^17.2.3",
     "next": "^16.1.2",
     "next-auth": "^4.24.11",
-    "nodemailer": "^7.0.12",
     "react": "^19.2.3",
     "react-confetti": "^6.4.0",
     "react-dom": "^19.2.3",
@@ -26,7 +26,6 @@
   },
   "devDependencies": {
     "@playwright/test": "^1.57.0",
-    "@prisma/client": "^7.2.0",
     "@testing-library/dom": "^10.4.1",
     "@testing-library/react": "^16.3.1",
     "@types/bcrypt": "^6.0.0",
@@ -48,10 +47,5 @@
     "typescript": "5.9.3",
     "vite-tsconfig-paths": "^6.0.4",
     "vitest": "^4.0.17"
-  },
-  "overrides": {
-    "react-card-flip": {
-      "react": "$react"
-    }
   }
 }

@@ -50,6 +50,24 @@ const LoginWin = ({ isOpen, onClose }: LoginWin) => {
         }
     }, [isOpen, handleClickOutside]);
 
+    useEffect(() => {
+        const body = document.body;
+        if (isOpen) {
+            const scrollBarWidth = window.innerWidth - document.documentElement.clientWidth;
+
+            body.style.paddingRight = `${scrollBarWidth}px`;
+            body.style.overflow = 'hidden';
+        } else {
+            body.style.paddingRight = '';
+            body.style.overflow = '';
+        }
+
+        return () => {
+            body.style.paddingRight = '';
+            body.style.overflow = '';
+        };
+    }, [isOpen])
+
     const googleAuth = async () => {
         setIsGoogleLoading(true);
         const authResult = await signIn("google", { redirect: false });

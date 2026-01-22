@@ -12,7 +12,7 @@
 }
 
 .container {
-    margin-top: 160px;
+    margin: auto;
     background-color: var(--background-color);
     border-radius: 10px;
     box-shadow: rgba(0, 0, 0, 0.3) 0px 19px 38px, rgba(0, 0, 0, 0.22) 0px 15px 12px;
@@ -84,25 +84,37 @@
 
 .btnConfirm {
     background-color: rgba(255, 0, 0, 0.597);
-    padding: 12px 25px;
+    color: white;
+    font-size: 1em;
+    width: 180px;
+    height: 40px;
+    border: 0;
     border-radius: 5px;
-    width: fit-content;
     cursor: pointer;
+    transition: all .1s ease;
 }
 
 .btnSuccess {
     background-color: green;
-    padding: 12px 25px;
+    color: white;
+    border: 0;
+    font-size: 1em;
+    width: 180px;
+    height: 40px;
     border-radius: 5px;
-    width: fit-content;
     cursor: pointer;
+    transition: all .1s ease;
 }
 
 .btnCancel {
     cursor: pointer;
     border: 1px solid white;
+    background: transparent;
+    color: white;
+    font-size: 1em;
     border-radius: 5px;
     padding: 10px 15px;
+    transition: all .1s ease;
 }
 
 .btnCancel:hover {

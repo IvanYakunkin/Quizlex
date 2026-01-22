@@ -7,7 +7,7 @@ import { BaseCard } from "@/types/module";
 import Draggable from "react-draggable";
 
 interface EditWinProps {
-    moduleId: number | string;
+    isOpen: boolean;
     card: BaseCard;
     onClose: () => void;
     save: (newCard: BaseCard) => void;
@@ -41,12 +41,30 @@ export const EditWin = (props: EditWinProps) => {
 
     }, [props]);
 
-    const closeWindow = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    useEffect(() => {
+        const body = document.body;
+        if (props.isOpen) {
+            const scrollBarWidth = window.innerWidth - document.documentElement.clientWidth;
+
+            body.style.paddingRight = `${scrollBarWidth}px`;
+            body.style.overflow = 'hidden';
+        } else {
+            body.style.paddingRight = '';
+            body.style.overflow = '';
+        }
+
+        return () => {
+            body.style.paddingRight = '';
+            body.style.overflow = '';
+        };
+    }, [props.isOpen])
+
+    const closeWindow = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         e.preventDefault();
         props.onClose();
     }
 
-    const saveChanges = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    const saveChanges = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         e.preventDefault();
         props.save(localCard);
         props.onClose();
@@ -77,14 +95,11 @@ export const EditWin = (props: EditWinProps) => {
                         />
                     </div>
                     <div className={styles.buttons}>
-                        <div className={styles.btnCancel} onMouseDown={(e) => closeWindow(e)}>Cancel</div>
-                        <div className={styles.btnSuccess} onMouseDown={(e) => saveChanges(e)}>Save</div>
+                        <button className={styles.btnCancel} onMouseDown={(e) => closeWindow(e)}>Cancel</button>
+                        <button className={styles.btnSuccess} onMouseDown={(e) => saveChanges(e)}>Save</button>
                     </div>
                 </div>
             </Draggable>
-
         </div>
-
-
     );
 }

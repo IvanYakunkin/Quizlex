@@ -13,31 +13,6 @@
     gap: 15px;
 }
 
-.option {
-    width: 24px;
-    height: 24px;
-    padding: 5px;
-    border-radius: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    border: 1px solid transparent;
-    transition: all .1s ease-in-out;
-}
-
-.option img,
-.option svg {
-    width: 20px;
-    height: auto;
-    fill: white;
-}
-
-.option:hover {
-    background: rgb(53, 53, 53);
-    border: 1px solid var(--blue-color-400);
-}
-
 .optionsAnswer {
     width: 40px;
     height: 36px;

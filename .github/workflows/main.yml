@@ -51,7 +51,6 @@ jobs:
           host: ${{ secrets.SERVER_IP }}
           username: ${{secrets.SERVER_USER}}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          stop_on_error: true
           script: |
             export PATH=$PATH:/root/.nvm/versions/node/v22.18.0/bin
             

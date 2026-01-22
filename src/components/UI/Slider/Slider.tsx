@@ -1,6 +1,4 @@
 import { useState, useEffect, useImperativeHandle, useCallback } from "react";
-import AudioButton from "../AudioButton/AudioButton";
-import FavoriteButton from "../FavoriteButton/FavoriteButton";
 import styles from "./Slider.module.css";
 import { useSession } from "next-auth/react";
 import { useParams } from "next/navigation";
@@ -9,6 +7,8 @@ import { changeFavoriteState } from "@/utils/favorites/changeFavoriteState";
 import { BaseCard } from "@/types/module";
 import { CardFlipper } from "../CardFlipper/CardFlipper";
 import { toggleFavoriteAction } from "@/services/favoriteActions";
+import { FavoriteButton } from "@/components/features/FavoriteButton";
+import { SoundButton } from "@/components/features/SoundButton";
 
 export interface SliderRef {
     refreshCards?: () => void;
@@ -190,22 +190,22 @@ export const Slider = (props: SliderProps) => {
                 <div className={styles.header}>
                     <div className={styles.headerLeft}>
                         <FavoriteButton
-                            size={25}
-                            hoverColor="var(--blue-color-400)"
                             isActive={props.cards[props.currentCardId].isFavorite}
                             cardId={props.cards[props.currentCardId].id}
                             setActive={clickFavorite}
+                            size={28}
+                            strokeWidth={1}
                         />
                     </div>
 
                     <div className={styles.counter}>{(props.currentCardId + 1) + " / " + props.cards.length}</div>
 
                     <div className={styles.headerRight}>
-                        <AudioButton
+                        <SoundButton
                             word={isTranslationShown ? currentCard.definition : currentCard.term}
                             language={isTranslationShown ? props.languages.definition : props.languages.term}
-                            size={25}
-                            hoverColor="var(--blue-color-400)"
+                            size={28}
+                            strokeWidth={1}
                         />
                     </div>
                 </div>
@@ -213,16 +213,16 @@ export const Slider = (props: SliderProps) => {
                 <div className={styles.content}>{frontSideLabel}</div>
                 {!props.isNavigationHidden &&
                     <div className={styles.footer}>
-                        <div className={styles.nav} onClick={toPreviousWordClick}>
+                        <button className={styles.nav} onClick={toPreviousWordClick}>
                             <svg fill="#000000" height="80px" width="80px" version="1.1" id="Layer_1" viewBox="0 0 476.213 476.213">
                                 <polygon points="57.427,223.107 151.82,128.713 130.607,107.5 0,238.106 130.607,368.714 151.82,347.5 57.427,253.107  " />
                             </svg>
-                        </div>
-                        <div className={`${styles.nav} ${styles.rotated}`} onClick={toNextWordClick}>
+                        </button>
+                        <button className={`${styles.nav} ${styles.rotated}`} onClick={toNextWordClick}>
                             <svg fill="#000000" height="80px" width="80px" version="1.1" id="Layer_1" viewBox="0 0 476.213 476.213">
                                 <polygon points="57.427,223.107 151.82,128.713 130.607,107.5 0,238.106 130.607,368.714 151.82,347.5 57.427,253.107  " />
                             </svg>
-                        </div>
+                        </button>
                     </div>
                 }
 
@@ -232,22 +232,22 @@ export const Slider = (props: SliderProps) => {
                 <div className={styles.header}>
                     <div className={styles.headerLeft}>
                         <FavoriteButton
-                            size={25}
-                            hoverColor="var(--blue-color-400)"
                             isActive={props.cards[props.currentCardId].isFavorite}
                             cardId={props.cards[props.currentCardId].id}
                             setActive={clickFavorite}
+                            size={28}
+                            strokeWidth={1}
                         />
                     </div>
 
                     <div className={styles.counter}>{(props.currentCardId + 1) + " / " + props.cards.length}</div>
 
                     <div className={styles.headerRight}>
-                        <AudioButton
+                        <SoundButton
                             word={isTranslationShown ? currentCard.definition : currentCard.term}
                             language={isTranslationShown ? props.languages.definition : props.languages.term}
-                            size={25}
-                            hoverColor="var(--blue-color-400)"
+                            size={28}
+                            strokeWidth={1}
                         />
                     </div>
                 </div>
@@ -256,16 +256,16 @@ export const Slider = (props: SliderProps) => {
 
                 {!props.isNavigationHidden &&
                     <div className={styles.footer}>
-                        <div className={styles.nav} onClick={toPreviousWordClick}>
+                        <button className={styles.nav} onClick={toPreviousWordClick}>
                             <svg fill="#000000" height="80px" width="80px" version="1.1" id="Layer_1" viewBox="0 0 476.213 476.213">
                                 <polygon points="57.427,223.107 151.82,128.713 130.607,107.5 0,238.106 130.607,368.714 151.82,347.5 57.427,253.107  " />
                             </svg>
-                        </div>
-                        <div className={`${styles.nav} ${styles.rotated}`} onClick={toNextWordClick}>
+                        </button>
+                        <button className={`${styles.nav} ${styles.rotated}`} onClick={toNextWordClick}>
                             <svg fill="#000000" height="80px" width="80px" version="1.1" id="Layer_1" viewBox="0 0 476.213 476.213">
                                 <polygon points="57.427,223.107 151.82,128.713 130.607,107.5 0,238.106 130.607,368.714 151.82,347.5 57.427,253.107  " />
                             </svg>
-                        </div>
+                        </button>
                     </div>
                 }
             </div>

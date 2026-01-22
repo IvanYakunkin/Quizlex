@@ -1,11 +1,13 @@
-
 :root {
   --background-color: #1f1f1f;
   --header-background: #3c3c3c;
-  --blue-color-200: #00bfff; /* blue-color */
+  --blue-color-200: #00bfff;
+  /* blue-color */
   --blue-color-300: #169fcd;
-  --blue-color-400: #007aa3; /* bluecolor */
-  --blue-color-600: #004a63; /* dark-blue */
+  --blue-color-400: #007aa3;
+  /* bluecolor */
+  --blue-color-600: #004a63;
+  /* dark-blue */
   --blue-color-700: #002e3d;
 }
 
@@ -18,48 +20,54 @@ body {
   overflow-x: hidden;
 }
 
-html{
+html {
   scrollbar-color: rgb(18, 18, 18) var(--header-background);
 }
 
-a{
+a {
   color: inherit;
   text-decoration: none;
 }
 
-main{
+button {
+  color: inherit;
+  border: 0;
+  cursor: pointer;
+}
+
+main {
   color: white;
   overflow-x: hidden;
 }
 
-.button-save{
-    padding: 10px 60px;
-    background: green;
-    font-size: 1.1em;
-    border-radius: 4px;
-    transition: all .3s ease-out;
-    cursor: pointer;
+.button-save {
+  padding: 10px 60px;
+  background: green;
+  font-size: 1.1em;
+  border-radius: 4px;
+  transition: all .3s ease-out;
+  cursor: pointer;
 }
 
-.button-save:hover{
-    background: var(--blue-color-400);
+.button-save:hover {
+  background: var(--blue-color-400);
 }
 
-.mobile{
+.mobile {
   display: none;
 }
 
 
-.responsiveText{
+.responsiveText {
   display: none;
 }
 
 @media (max-width: 1025px) {
-  .mobile{
+  .mobile {
     display: block;
   }
-  .desktop{
+
+  .desktop {
     display: none;
   }
 }
-

@@ -8,6 +8,7 @@ import { LearningType } from "@/types/types";
 import styles from "../page.module.css"
 import { Cards } from "./Cards/Cards";
 import { AppModule, BaseCard } from "@/types/module";
+import { notFound } from "next/navigation";
 
 interface LearningProps {
     learningType: LearningType;
@@ -43,7 +44,7 @@ export const LearningPage = ({ learningType, module }: LearningProps) => {
                 case "cards":
                     return <Cards cards={cards} languages={languages} changeLanguage={changeLanguage} />
                 default:
-                    return null;
+                    return notFound();
             }
         }
     }

@@ -1,10 +1,10 @@
-.header{
+.header {
   position: sticky;
   top: 0;
   z-index: 100;
 }
 
-.header__content{
+.content {
   background-color: var(--header-background);
   padding: 10px 35px;
   display: flex;
@@ -14,39 +14,41 @@
   font-size: 1.1em;
 }
 
-.header__logo{
+.logo {
   font-size: 1.9em;
   color: var(--blue-color-200);
   font-weight: bold;
 }
 
-.header__logo:hover{
+.logo:hover {
   opacity: .8;
 }
 
-.header__auth{
+.auth {
   display: flex;
   gap: 2rem;
   color: var(--blue-color-200);
 }
 
-.header__authElement{
+.authElement {
   position: relative;
   padding: 10px 0;
+  font-weight: bold;
   cursor: pointer;
 }
 
-.header__authElement img, .header__authElement svg{
+.authElement img,
+.authElement svg {
   vertical-align: middle;
-  margin-right: 10px;
+  margin-right: 5px;
 }
 
-.header__elements{
+.elements {
   display: flex;
   gap: 15px;
 }
 
-.header__buttonElement{
+.buttonElement {
   cursor: pointer;
   border-radius: 6px;
   padding: 5px 10px;
@@ -59,22 +61,22 @@
   background-color: var(--blue-color-600);
 }
 
-.header__buttonElement:hover{
+.buttonElement:hover {
   color: white;
   background-color: var(--blue-color-400);
 }
 
-.header__buttonElement:hover{
+.buttonElement:hover {
   fill: white;
 }
 
-.responsiveText{
+.responsiveText {
   display: none;
 }
 
 /* Navbar */
 
-.header__navbar{
+.navbar {
   background: var(--header-background);
   max-height: 0;
   transition: max-height 0.3s ease-out;
@@ -84,17 +86,17 @@
   width: 100%;
 }
 
-.header__navbar.active{
+.navbar.active {
   max-height: 200px;
 }
 
-.header__navbar>ul{
+.navbar>ul {
   list-style-type: none;
   margin-top: 0;
   padding: 0 10px;
 }
 
-.header__navbarElement{
+.navbarElement {
   color: #74b5e8;
   font-weight: bold;
   display: flex;
@@ -103,62 +105,73 @@
   gap: 8px;
 }
 
-.header__navbarElement img{
+.navbarElement img {
   width: 24px;
 }
 
-.header__navbarButton{
+.navbarButton {
   border-radius: 3px;
   display: none;
   border-radius: 3px;
 }
 
-.header__navbarButton path{
+.navbarButton path {
   stroke: var(--blue-color-200);
 }
 
-@media (hover: none){
-  .header__auth-element:hover:after{
+@media (hover: none) {
+  .auth-element:hover:after {
     width: 0;
   }
-  .header__authElement{
+
+  .authElement {
     -webkit-tap-highlight-color: transparent;
   }
 }
 
 @media (max-width: 768px) {
-    .responsiveText{
+  .responsiveText {
     display: inline;
-  }   
-  .normalText{
+  }
+
+  .normalText {
     display: none;
   }
-  .header__auth{
+
+  .auth {
     gap: 1.2rem;
   }
-  .header__content{
+
+  .content {
     font-size: .9em;
     padding: 10px 15px;
   }
-  .header__auth, .header__elements{
+
+  .auth,
+  .elements {
     display: none;
   }
-  .header__navbarButton, .header__navbar{
+
+  .navbarButton,
+  .navbar {
     display: block;
   }
 }
 
 @media (min-width: 768px) and (max-width: 1024px) {
-  .responsiveText{
+  .responsiveText {
     display: inline;
-  }   
-  .normalText{
+  }
+
+  .normalText {
     display: none;
   }
-  .header__auth{
+
+  .auth {
     gap: 1.2rem;
   }
-  .header__content{
+
+  .content {
     font-size: 1em;
     padding: 10px 15px;
   }
