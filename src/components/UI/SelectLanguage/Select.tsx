@@ -1,5 +1,6 @@
 import { Language } from "@/generated/prisma/browser";
 import styles from "./Select.module.css";
+import { memo } from "react";
 
 interface SelectProps {
     selectedLanguage: Language;
@@ -8,7 +9,7 @@ interface SelectProps {
     languages: Language[];
 }
 
-export const Select = (props: SelectProps) => {
+export const Select = memo((props: SelectProps) => {
     const changeLanguage = (e: React.ChangeEvent<HTMLSelectElement>) => {
         const foundLanguage = props.languages.find(l => l.id === +e.target.value);
         if (foundLanguage) {
@@ -32,4 +33,6 @@ export const Select = (props: SelectProps) => {
             {selectContainer}
         </div>
     );
-}
+});
+
+Select.displayName = "Select";

@@ -1,8 +1,8 @@
 import { memo, useCallback } from "react";
 import { WordField } from "@/components/UI/WordField/WordField";
 import styles from "./CreateCard.module.css";
-import Image from "next/image";
 import { BaseCard } from "@/types/module";
+import { CardHeader } from "./CardHeader";
 
 interface CreateCardProps {
     setCards: React.Dispatch<React.SetStateAction<BaseCard[]>>;
@@ -22,14 +22,14 @@ export const CreateCard = memo(({ setCards, card, cardId, deleteCard, useFocus }
         setCards(prevCards => prevCards.map((card, id) => cardId === id ? { ...card, definition: value } : card));
     }, [cardId, setCards]);
 
+    const handleDelete = useCallback(() => {
+        deleteCard(cardId);
+    }, [deleteCard, cardId]);
+
     return (
 
         <div className={styles.card}>
-            <div className={styles.title}>
-                <div className={styles.counter}>{cardId + 1}</div>
-                <div className={styles.deleteTitle} onClick={() => deleteCard(cardId)} title='Delete this card'><Image src="/images/trash-can.png" width={40} height={40} alt="Remove" /></div>
-            </div>
-
+            <CardHeader cardId={cardId} onDelete={handleDelete} />
             <WordField
                 card={card}
                 updateTerm={updateTerm}

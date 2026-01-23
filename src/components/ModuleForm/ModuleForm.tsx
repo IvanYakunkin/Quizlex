@@ -36,17 +36,26 @@ export const ModuleForm = ({ languagesList, initialModule }: ModuleFormProps) =>
     const nameInputRef = useRef<HTMLInputElement | null>(null);
     const descriptionInputRef = useRef<HTMLInputElement | null>(null);
 
-    const addCard = useCallback(() => {
-        setCards([...cards, { ...emptyCard, id: cards[cards.length - 1].id + 1 }]);
-        setCreatedCardIndex(cards.length);
-        newCardAdded.current = true;
-    }, [cards]);
+    const addCard = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
+        e.preventDefault();
+        setCards((prevCards) => {
+            const lastId = prevCards.length > 0 ? prevCards[prevCards.length - 1].id : 0;
+            const newCard = { ...emptyCard, id: lastId + 1 };
 
-    const deleteCard = (id: number) => {
-        if (cards.length !== 1) {
-            setCards(cards.filter((_, index) => index !== id));
-        }
-    }
+            setCreatedCardIndex(prevCards.length);
+
+            return [...prevCards, newCard];
+        });
+
+        newCardAdded.current = true;
+    }, []);
+
+    const deleteCard = useCallback((id: number) => {
+        setCards((prev) => {
+            if (prev.length === 1) return prev;
+            return prev.filter((_, index) => index !== id);
+        });
+    }, []);
 
     const saveCards = async () => {
         const name = nameInputRef.current?.value || "";
@@ -103,39 +112,6 @@ export const ModuleForm = ({ languagesList, initialModule }: ModuleFormProps) =>
         newCardAdded.current = false;
     }, [newCardAdded]);
 
-    useEffect(() => {
-        const keyboard = (event: KeyboardEvent) => {
-            if (event.key === "Enter") {
-                const children = document.querySelectorAll(".create__content");
-                if (children) {
-                    const lastFields = children[children.length - 1].querySelectorAll(".card__field");
-                    const lastField = lastFields[lastFields.length - 1];
-
-                    if (document.activeElement === lastField) {
-                        addCard();
-                    }
-                }
-            } else if (event.key === "Tab") {
-                // Check if focus on the last element
-                const children = document.querySelectorAll(".create__content");
-                if (children) {
-                    const lastFields = children[children.length - 1].querySelectorAll(".card__field");
-                    const lastField = lastFields[lastFields.length - 1];
-
-                    if (document.activeElement === lastField) {
-                        event.preventDefault();
-                        addCard();
-                    }
-                }
-            }
-        }
-
-        window.addEventListener("keydown", keyboard);
-
-        return () => {
-            window.removeEventListener("keydown", keyboard);
-        }
-    }, [cards, addCard]);
 
     return (
         <main className="main">
@@ -191,9 +167,9 @@ export const ModuleForm = ({ languagesList, initialModule }: ModuleFormProps) =>
                         />
                     ))}
                 </div>
-                <div className={styles.addCard} onMouseDown={(e) => { e.preventDefault(); addCard(); }}>
+                <button className={styles.addCard} onMouseDown={addCard}>
                     Add Card
-                </div>
+                </button>
             </div>
         </main >
     )

@@ -76,6 +76,7 @@
 }
 
 .addCard {
+    width: 100%;
     padding: 25px 0;
     background: var(--header-background);
     text-align: center;
