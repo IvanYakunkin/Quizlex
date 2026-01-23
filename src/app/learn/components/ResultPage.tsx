@@ -8,7 +8,7 @@ import ReactConfetti from "react-confetti";
 
 interface ResultPageProps<T extends BaseCard> {
     cards: T[];
-    changeCards?: (newCards: T[]) => void;
+    changeCards?: React.Dispatch<React.SetStateAction<T[]>>;
     closeResultPage: () => void;
     isGameOver: boolean;
     language: string;

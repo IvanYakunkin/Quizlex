@@ -52,7 +52,7 @@ export const Writing = (props: WritingProps) => {
             {(writingStatus === "finished" || writingStatus === "result") &&
                 <ResultPage
                     cards={answeredCards}
-                    changeCards={() => []}
+                    changeCards={actions.setAnsweredCards}
                     closeResultPage={actions.resetRound}
                     title={writingStatus === "finished" ? "Congratulations! You have completed the module!" : ""}
                     isGameOver={writingStatus === "finished"}

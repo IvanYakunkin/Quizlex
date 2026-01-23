@@ -12,6 +12,7 @@ interface CardsPreviewProps<T extends CreateCardInput> {
     language?: string;
     showNumbers?: boolean;
     showOptions?: boolean;
+    showEditButton?: boolean;
     additionalText?: string;
 }
 
@@ -23,6 +24,7 @@ const CardsPreviewInternal = <T extends CreateCardInput>({
     language,
     showNumbers,
     showOptions,
+    showEditButton,
     additionalText,
 }: CardsPreviewProps<T>) => {
     const { toggleFavorite, editCard } = useCardActions(
@@ -47,6 +49,7 @@ const CardsPreviewInternal = <T extends CreateCardInput>({
                         language={language}
                         showNumbers={showNumbers}
                         showOptions={showOptions}
+                        showEditButton={showEditButton}
                     />
                 ))}
             </div>

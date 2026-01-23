@@ -85,6 +85,7 @@ export const Module = ({ initialModule }: ModuleProps) => {
                         cards={cards}
                         changeCards={setCards}
                         language={initialModule.termLanguage.code}
+                        showEditButton={true}
                     />
                     {!initialModule.isLocal &&
                         <Link href={`/module/${initialModule.id}/edit`} className={styles.updateButton}>

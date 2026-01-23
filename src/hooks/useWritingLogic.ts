@@ -118,7 +118,8 @@ export const useWritingLogic = ({
             setInputValue,
             checkAnswer,
             toNextWord,
-            resetRound
+            resetRound,
+            setAnsweredCards
         }
     };
 };

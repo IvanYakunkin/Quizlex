@@ -116,7 +116,7 @@ export const Cards = (props: CardsProps) => {
             {isFinished ?
                 <ResultPage
                     cards={answeredCards.filter(card => !card.isCorrect)}
-                    changeCards={(newCards: AnsweredCard[]) => setAnsweredCards(newCards)}
+                    changeCards={setAnsweredCards}
                     closeResultPage={refreshCards}
                     isGameOver={incorrectNumber === 0}
                     language="german"

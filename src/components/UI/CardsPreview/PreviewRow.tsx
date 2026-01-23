@@ -13,6 +13,7 @@ interface PreviewRowProps<T extends CreateCardInput> {
     language?: string;
     showNumbers?: boolean;
     showOptions?: boolean;
+    showEditButton?: boolean;
 }
 
 export const PreviewRow = memo(<T extends CreateCardInput>({
@@ -22,7 +23,8 @@ export const PreviewRow = memo(<T extends CreateCardInput>({
     index,
     language,
     showNumbers,
-    showOptions
+    showOptions,
+    showEditButton
 }: PreviewRowProps<T>) => {
 
     const favoriteHandleClick = useCallback(() => {
@@ -51,7 +53,7 @@ export const PreviewRow = memo(<T extends CreateCardInput>({
                             setActive={favoriteHandleClick}
                         />
 
-                        <EditButton card={card as BaseCard} onSave={handleEdit} />
+                        {showEditButton && <EditButton card={card as BaseCard} onSave={handleEdit} />}
 
                         <SoundButton word={card.term} language={language} />
                     </div>
