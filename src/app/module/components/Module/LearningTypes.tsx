@@ -2,8 +2,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import styles from "./Module.module.css";
+import { memo } from "react";
 
-export const LearningTypes = () => {
+export const LearningTypes = memo(() => {
     const { id } = useParams();
 
     return (
@@ -14,4 +15,6 @@ export const LearningTypes = () => {
             <Link href={"#"} className={styles.learningBtn}><Image src="/images/choose.png" width={50} height={50} alt="Match" />Match</Link>
         </div>
     );
-}
+});
+
+LearningTypes.displayName = "LearningTypes";

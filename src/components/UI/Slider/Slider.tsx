@@ -1,4 +1,4 @@
-import { useState, useEffect, useImperativeHandle, useCallback } from "react";
+import { useState, useEffect, useImperativeHandle, useCallback, memo } from "react";
 import styles from "./Slider.module.css";
 import { useSession } from "next-auth/react";
 import { useParams } from "next/navigation";
@@ -32,7 +32,7 @@ interface SliderProps {
 const slideAnimationTypes: string[] = ["slideRightAnimation", "slideLeftAnimation"];
 const horizontalAnimationDuration = 100;
 
-export const Slider = (props: SliderProps) => {
+export const Slider = memo((props: SliderProps) => {
     const { status } = useSession();
     const { id } = useParams();
     const [isFrontDefault, setIsFrontDefault] = useState(true);
@@ -271,4 +271,6 @@ export const Slider = (props: SliderProps) => {
             </div>
         </CardFlipper>
     )
-};
+});
+
+Slider.displayName = "Slider";

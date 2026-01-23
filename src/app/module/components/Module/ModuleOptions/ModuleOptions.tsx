@@ -2,6 +2,7 @@ import { SwitchSidesButton } from "@/components/features/SwitchSidesButton";
 import styles from "./ModuleOptions.module.css";
 import { DeleteModuleButton } from "@/components/features/DeleteModuleButton";
 import { ReloadButton } from "@/components/features/ReloadButton";
+import { memo } from "react";
 
 interface ModuleOptionsProps {
     moduleId: number | string;
@@ -10,7 +11,7 @@ interface ModuleOptionsProps {
     onRefreshClick: () => void;
 }
 
-export const ModuleOptions = ({ moduleId, moduleName, onSwitchSidesClick, onRefreshClick }: ModuleOptionsProps) => {
+export const ModuleOptions = memo(({ moduleId, moduleName, onSwitchSidesClick, onRefreshClick }: ModuleOptionsProps) => {
     return (
         <div className={styles.options}>
             <div className={styles.optionsLeft}>
@@ -23,4 +24,6 @@ export const ModuleOptions = ({ moduleId, moduleName, onSwitchSidesClick, onRefr
             </div>
         </div>
     );
-}
+});
+
+ModuleOptions.displayName = "ModuleOptions";

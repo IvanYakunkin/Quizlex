@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { memo, useCallback, useState } from 'react';
 
 interface IconActionProps {
     children: React.ReactNode;
@@ -13,7 +13,7 @@ interface IconActionProps {
     strokeWidth?: number;
 }
 
-export const IconAction = ({
+const IconActionComponent = ({
     children,
     onClick,
     variant = 'color',
@@ -31,6 +31,14 @@ export const IconAction = ({
         e.stopPropagation();
         onClick(e);
     };
+
+    const makeHovered = useCallback(() => {
+        setIsHovered(true);
+    }, []);
+
+    const cancelHover = useCallback(() => {
+        setIsHovered(false);
+    }, []);
 
     const containerStyle: React.CSSProperties = {
         display: 'inline-flex',
@@ -62,8 +70,8 @@ export const IconAction = ({
             title={title}
             style={containerStyle}
             onClick={handleClick}
-            onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => setIsHovered(false)}
+            onMouseEnter={makeHovered}
+            onMouseLeave={cancelHover}
         >
             <svg viewBox="0 0 24 24" style={svgStyle} xmlns="http://www.w3.org/2000/svg">
                 {children}
@@ -71,3 +79,6 @@ export const IconAction = ({
         </button>
     );
 };
+
+export const IconAction = memo(IconActionComponent)
+IconAction.displayName = "IconAction";

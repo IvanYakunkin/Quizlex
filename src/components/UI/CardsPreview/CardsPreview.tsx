@@ -1,13 +1,12 @@
 import styles from "./CardsPreview.module.css";
 import { BaseCard, CreateCardInput } from "@/types/module";
-import { FavoriteButton } from "@/components/features/FavoriteButton";
-import { SoundButton } from "@/components/features/SoundButton";
-import { EditButton } from "@/components/features/EditButton";
 import { useCardActions } from "@/hooks/useCardActions";
+import { memo } from "react";
+import { PreviewRow } from "./PreviewRow";
 
 interface CardsPreviewProps<T extends CreateCardInput> {
     cards: T[];
-    changeCards?: (newCards: T[]) => void;
+    changeCards?: React.Dispatch<React.SetStateAction<T[]>>;
     moduleId?: number;
     title?: string;
     language?: string;
@@ -16,15 +15,10 @@ interface CardsPreviewProps<T extends CreateCardInput> {
     additionalText?: string;
 }
 
-export const CardsPreview = <T extends CreateCardInput>(
+export const CardsPreview = memo(<T extends BaseCard>(
     props: CardsPreviewProps<T>
 ) => {
-
-    const { toggleFavorite, editCard } = useCardActions(
-        props.cards as BaseCard[],
-        (props.changeCards || (() => { })) as (cards: BaseCard[]) => void,
-        props.moduleId
-    );
+    const { toggleFavorite, editCard } = useCardActions(props.changeCards, props.moduleId);
 
     return (
         <div className={styles.wordsPreview}>
@@ -33,30 +27,21 @@ export const CardsPreview = <T extends CreateCardInput>(
                 <div className={styles.additional}>{props.additionalText === undefined ? "No data to preview." : props.additionalText}</div>}
 
             <div className={styles.previewContainer}>
-                {props.cards.map((card, key) => (
-                    <div className={styles.previewCard} key={key}>
-                        {props.showNumbers && <div className={styles.number}>{key + 1}</div>}
-                        <div className={key % 2 === 0 ? styles.data : styles.data + " " + styles.next}>
-                            <div className={styles.name}><div>{card.term}</div></div>
-                            <div className={styles.definition}>{card.definition}</div>
-                            {props.showOptions && props.language &&
-                                <div className={styles.options}>
-
-                                    <FavoriteButton
-                                        cardId={card.id as number}
-                                        isActive={card.isFavorite ?? false}
-                                        setActive={() => toggleFavorite(card.id as number)}
-                                    />
-
-                                    <EditButton card={card as BaseCard} onSave={editCard} />
-
-                                    <SoundButton word={card.term} language={props.language} />
-                                </div>
-                            }
-                        </div>
-                    </div>
+                {props.cards.map((card, index) => (
+                    <PreviewRow
+                        key={card.id}
+                        card={card}
+                        toggleFavorite={toggleFavorite}
+                        editCard={editCard}
+                        index={index}
+                        language={props.language}
+                        showNumbers={props.showNumbers}
+                        showOptions={props.showOptions}
+                    />
                 ))}
             </div>
         </div>
     );
-}
+});
+
+CardsPreview.displayName = "CardsPreview";

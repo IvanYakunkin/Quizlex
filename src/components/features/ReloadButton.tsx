@@ -1,11 +1,14 @@
 import { ReloadIcon } from "@/icons/ReloadIcon";
 import { IconAction } from "../UI/IconAction/IconAction";
+import { memo, useMemo } from "react";
 
 interface ReloadButtonProps {
     onClick: () => void;
 }
 
-export const ReloadButton = ({ onClick }: ReloadButtonProps) => {
+export const ReloadButton = memo(({ onClick }: ReloadButtonProps) => {
+    const icon = useMemo(() => <ReloadIcon />, []);
+
     return (
         <IconAction
             title="Reload"
@@ -13,7 +16,9 @@ export const ReloadButton = ({ onClick }: ReloadButtonProps) => {
             variant="background"
             hoverColor="var(--blue-color-400)"
         >
-            <ReloadIcon />
+            {icon}
         </IconAction>
     )
-}
+});
+
+ReloadButton.displayName = "ReloadButton";

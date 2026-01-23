@@ -2,24 +2,30 @@ import { BaseCard } from "@/types/module";
 import { EditWin } from "../popups/EditWin";
 import { IconAction } from "../UI/IconAction/IconAction";
 import { PencilIcon } from "@/icons/PencilIcon";
-import { useState } from "react";
+import { memo, useCallback, useMemo, useState } from "react";
 
 interface EditButtonProps {
     card: BaseCard;
     onSave: (newCard: BaseCard) => void;
 }
 
-export const EditButton = ({ card, onSave }: EditButtonProps) => {
+export const EditButton = memo(({ card, onSave }: EditButtonProps) => {
     const [isOpen, setIsOpen] = useState(false);
+
+    const handleToggle = useCallback(() => {
+        setIsOpen(prev => !prev);
+    }, []);
+
+    const icon = useMemo(() => <PencilIcon />, []);
 
     return (
         <>
             <IconAction
                 title="Edit"
-                onClick={() => setIsOpen(prev => !prev)}
+                onClick={handleToggle}
                 hoverColor="var(--blue-color-400)"
             >
-                <PencilIcon />
+                {icon}
             </IconAction>
 
             {isOpen && (
@@ -32,4 +38,6 @@ export const EditButton = ({ card, onSave }: EditButtonProps) => {
             )}
         </>
     );
-};
+});
+
+EditButton.displayName = "EditButton";

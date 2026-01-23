@@ -9,7 +9,7 @@ import { AppModule, BaseCard } from "@/types/module";
 import styles from "./Module.module.css";
 import Image from "next/image";
 import Link from "next/link";
-import { useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 
 interface SliderRef {
     refreshCards: () => void;
@@ -26,17 +26,17 @@ export const Module = ({ initialModule }: ModuleProps) => {
     const [isDeleteWin, setIsDeleteWin] = useState(false);
     const sliderRef = useRef<SliderRef>(null);
 
-    const callRefreshCards = () => {
+    const callRefreshCards = useCallback(() => {
         if (sliderRef.current) {
             sliderRef.current.refreshCards();
         }
-    }
+    }, []);
 
-    const callSwitchDefaultSides = () => {
+    const callSwitchDefaultSides = useCallback(() => {
         if (sliderRef.current) {
             sliderRef.current.switchDefaultSides();
         }
-    }
+    }, []);
 
     return (
         <main>
@@ -59,7 +59,7 @@ export const Module = ({ initialModule }: ModuleProps) => {
 
                     <Slider
                         cards={cards}
-                        changeCards={(newCards: BaseCard[]) => setCards(newCards)}
+                        changeCards={setCards}
                         sliderRef={sliderRef}
                         languages={{ term: initialModule.termLanguage.code, definition: initialModule.definitionLanguage.code }}
                         currentCardId={currentCardId}
@@ -83,7 +83,7 @@ export const Module = ({ initialModule }: ModuleProps) => {
                         moduleId={!initialModule.isLocal ? +initialModule.id : undefined}
                         showOptions={true}
                         cards={cards}
-                        changeCards={(newCards: BaseCard[]) => setCards(newCards)}
+                        changeCards={setCards}
                         language={initialModule.termLanguage.code}
                     />
                     {!initialModule.isLocal &&

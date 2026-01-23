@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useCallback, useRef } from 'react';
 import { BaseCard } from '@/types/module';
 import { setFavoriteLS } from '@/utils/favorites/favoritesLS';
 import { changeFavoriteState } from '@/utils/favorites/changeFavoriteState';
@@ -6,39 +6,44 @@ import { useSession } from 'next-auth/react';
 import { toggleFavoriteAction } from '@/services/favoriteActions';
 import { updateCardAction } from '@/services/cardActions';
 
-export const useCardActions = (
-    cards: BaseCard[],
-    changeCards: (cards: BaseCard[]) => void,
+export const useCardActions = <T extends BaseCard>(
+    changeCards?: React.Dispatch<React.SetStateAction<T[]>>,
     moduleId?: number
 ) => {
-    const [isLoading, setIsLoading] = useState(false);
     const { data: session, status } = useSession();
+    const loadingRef = useRef(false);
 
-    const toggleFavorite = async (cardId: number) => {
-        const updatedCards = changeFavoriteState(cards, cardId);
+    const toggleFavorite = useCallback(async (cardId: number) => {
+        if (!changeCards) return;
 
         if (status === "authenticated") {
-            if (isLoading) return;
-            setIsLoading(true);
+            if (loadingRef.current) return;
+            loadingRef.current = true;
 
-            changeCards(updatedCards);
+            changeCards((prev) => changeFavoriteState(prev, cardId) as T[]);
 
-            const result = await toggleFavoriteAction(cardId, +session.user.id);
+            try {
+                const result = await toggleFavoriteAction(cardId, +session.user.id);
 
-            if (result.error || result.success === false) {
-                changeCards(changeFavoriteState(updatedCards, cardId));
-                console.error(result.error);
+                if (result.error || result.success === false) {
+                    changeCards((prev) => changeFavoriteState(prev, cardId));
+                    console.error(result.error);
+                }
+            } catch {
+                changeCards((prev) => changeFavoriteState(prev, cardId));
+            } finally {
+                loadingRef.current = false;
             }
-            setIsLoading(false);
         } else {
             setFavoriteLS(cardId);
-            changeCards(updatedCards);
+            changeCards((prev) => changeFavoriteState(prev, cardId) as T[]);
         }
-    };
+    }, [status, session?.user?.id, changeCards]);
 
-    const editCard = async (newCard: BaseCard) => {
-        const updatedCards = cards.map(card => card.id === newCard.id ? newCard : card);
-        changeCards(updatedCards);
+    const editCard = useCallback(async (newCard: BaseCard) => {
+        if (!changeCards) return;
+
+        changeCards((prev) => prev.map(card => card.id === newCard.id ? newCard : card) as T[]);
         if (status === "authenticated") {
             if (!moduleId) return;
             await updateCardAction(moduleId, newCard);
@@ -46,11 +51,11 @@ export const useCardActions = (
             const storedData = localStorage.getItem('module');
             if (storedData) {
                 const cardsModule = JSON.parse(storedData);
-                cardsModule.cards = updatedCards;
+                cardsModule.cards = cardsModule.cards.map((c: BaseCard) => c.id === newCard.id ? newCard : c);
                 localStorage.setItem('module', JSON.stringify(cardsModule));
             }
         }
-    };
+    }, [status, moduleId, changeCards]);
 
     return { toggleFavorite, editCard };
 };
