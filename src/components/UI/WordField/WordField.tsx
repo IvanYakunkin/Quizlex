@@ -8,6 +8,7 @@ interface WordFieldProps {
     updateTerm: (value: string, id?: number) => void;
     updateDefinition: (value: string, id?: number) => void;
     useFocus?: boolean;
+    onDefinitionKeyDown?: (e: React.KeyboardEvent) => void;
 }
 
 export const WordField = memo((props: WordFieldProps) => {
@@ -39,6 +40,7 @@ export const WordField = memo((props: WordFieldProps) => {
                     onChange={props.updateDefinition}
                     language="russian"
                     placeholder="Definition"
+                    onDefinitionKeyDown={props.onDefinitionKeyDown}
                 />
             </div>
         </div>

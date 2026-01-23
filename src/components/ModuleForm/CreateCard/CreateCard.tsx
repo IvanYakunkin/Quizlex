@@ -10,9 +10,12 @@ interface CreateCardProps {
     cardId: number;
     deleteCard: (id: number) => void;
     useFocus: boolean;
+    isLast: boolean;
+    onAddCard: () => void;
+
 }
 
-export const CreateCard = memo(({ setCards, card, cardId, deleteCard, useFocus }: CreateCardProps) => {
+export const CreateCard = memo(({ setCards, card, cardId, deleteCard, useFocus, isLast, onAddCard }: CreateCardProps) => {
 
     const updateTerm = useCallback((value: string) => {
         setCards(prevCards => prevCards.map((card, id) => cardId === id ? { ...card, term: value } : card));
@@ -26,6 +29,17 @@ export const CreateCard = memo(({ setCards, card, cardId, deleteCard, useFocus }
         deleteCard(cardId);
     }, [deleteCard, cardId]);
 
+    const handleKeyDown = (e: React.KeyboardEvent) => {
+        if (!isLast) return;
+
+        if (e.key === "Enter") {
+            onAddCard();
+        } else if (e.key === "Tab") {
+            e.preventDefault();
+            onAddCard();
+        }
+    };
+
     return (
 
         <div className={styles.card}>
@@ -35,6 +49,7 @@ export const CreateCard = memo(({ setCards, card, cardId, deleteCard, useFocus }
                 updateTerm={updateTerm}
                 updateDefinition={updateDefinition}
                 useFocus={useFocus}
+                onDefinitionKeyDown={handleKeyDown}
             />
         </div>
     );

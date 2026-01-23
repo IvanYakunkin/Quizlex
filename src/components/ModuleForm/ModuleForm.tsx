@@ -35,9 +35,10 @@ export const ModuleForm = ({ languagesList, initialModule }: ModuleFormProps) =>
 
     const nameInputRef = useRef<HTMLInputElement | null>(null);
     const descriptionInputRef = useRef<HTMLInputElement | null>(null);
+    const bottomRef = useRef<HTMLButtonElement>(null);
 
-    const addCard = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
-        e.preventDefault();
+    const addCard = useCallback((e?: React.MouseEvent<HTMLButtonElement>) => {
+        if (e) e.preventDefault();
         setCards((prevCards) => {
             const lastId = prevCards.length > 0 ? prevCards[prevCards.length - 1].id : 0;
             const newCard = { ...emptyCard, id: lastId + 1 };
@@ -104,14 +105,10 @@ export const ModuleForm = ({ languagesList, initialModule }: ModuleFormProps) =>
     // Scroll down
     useEffect(() => {
         if (newCardAdded.current) {
-            window.scrollTo({
-                top: document.body.scrollHeight,
-                behavior: 'smooth'
-            });
+            bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+            newCardAdded.current = false;
         }
-        newCardAdded.current = false;
-    }, [newCardAdded]);
-
+    }, [cards.length]);
 
     return (
         <main className="main">
@@ -164,10 +161,12 @@ export const ModuleForm = ({ languagesList, initialModule }: ModuleFormProps) =>
                             card={el}
                             cardId={id}
                             useFocus={createdCardIndex === id}
+                            isLast={id === cards.length - 1}
+                            onAddCard={addCard}
                         />
                     ))}
                 </div>
-                <button className={styles.addCard} onMouseDown={addCard}>
+                <button className={styles.addCard} ref={bottomRef} onMouseDown={addCard}>
                     Add Card
                 </button>
             </div>

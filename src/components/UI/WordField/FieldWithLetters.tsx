@@ -10,6 +10,7 @@ interface FieldWithLettersProps {
     value: string;
     ref: RefObject<HTMLInputElement | null>;
     isAlwaysShown?: boolean;
+    onDefinitionKeyDown?: (e: React.KeyboardEvent) => void;
 }
 
 export const FieldWithLetters = memo(({
@@ -20,6 +21,7 @@ export const FieldWithLetters = memo(({
     placeholder,
     language,
     isAlwaysShown,
+    onDefinitionKeyDown
 }: FieldWithLettersProps) => {
 
     const [isAnimation, setIsAnimation] = useState(false);
@@ -48,6 +50,7 @@ export const FieldWithLetters = memo(({
                 onFocus={() => setIsAnimation(true)}
                 onBlur={() => setIsAnimation(false)}
                 placeholder={placeholder}
+                onKeyDown={onDefinitionKeyDown}
                 onChange={(e) => onChange(e.target.value, cardId)}
                 value={value}
             />
