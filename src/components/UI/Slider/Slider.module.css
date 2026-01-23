@@ -88,9 +88,8 @@
 }
 
 .slideRightAnimation {
-    animation: slideRightAnimate .2s forwards;
+    animation: slideRightAnimate .2s ease-out forwards;
 }
-
 
 .options {
     padding: 10px 0;
@@ -152,25 +151,25 @@
 
 @keyframes slideRightAnimate {
     from {
-        transform: translateX(20%);
+        transform: translateX(15%) rotateY(-20deg);
     }
 
     to {
-        transform: translateX(0%);
+        transform: translateX(0%) rotateY(0);
     }
 }
 
 .slideLeftAnimation {
-    animation: slideLeftAnimate .2s forwards;
+    animation: slideLeftAnimate .2s ease-out forwards;
 }
 
 @keyframes slideLeftAnimate {
     from {
-        transform: translateX(-20%);
+        transform: translateX(-15%) rotateY(20deg);
     }
 
     to {
-        transform: translateX(0%);
+        transform: translateX(0%) rotateY(0);
     }
 }
 

@@ -30,7 +30,7 @@ interface SliderProps {
 
 // Collection of classes for animation
 const slideAnimationTypes: string[] = ["slideRightAnimation", "slideLeftAnimation"];
-const horizontalAnimationDuration = 100;
+const horizontalAnimationDuration = 200;
 
 export const Slider = memo((props: SliderProps) => {
     const { status } = useSession();
@@ -182,11 +182,33 @@ export const Slider = memo((props: SliderProps) => {
     }, [props.currentCardId, flipCart, toNextWord, toPreviousWord, props.isNavigationHidden]);
 
     const moduleSliderClass = props.isMaxHeight ? `${styles.slider} ${styles.maxHeight}` : styles.slider;
-    const modulesSliderAnimationClass = slideAnimate === "slideRightAnimation" ? styles.slideRightAnimation : styles.slideLeftAnimation;
+    let firstSlideAnimationCls = "";
+    let secondSlideAnimationCls = "";
+
+    if (slideAnimate === "slideRightAnimation") {
+        if (isFlipped) {
+            firstSlideAnimationCls = "";
+            secondSlideAnimationCls = styles.slideRightAnimation;
+        } else {
+            firstSlideAnimationCls = styles.slideRightAnimation;
+            secondSlideAnimationCls = "";
+        }
+    } else if (slideAnimate === "slideLeftAnimation") {
+        if (isFlipped) {
+            firstSlideAnimationCls = "";
+            secondSlideAnimationCls = styles.slideLeftAnimation;
+        } else {
+            firstSlideAnimationCls = styles.slideLeftAnimation;
+            secondSlideAnimationCls = "";
+        }
+    } else {
+        firstSlideAnimationCls = "";
+        secondSlideAnimationCls = "";
+    }
 
     return (
         <CardFlipper flipDirection="vertical" isFlipped={isFlipped} infinite={true} flipSpeedBackToFront={0.3} flipSpeedFrontToBack={0.3}>
-            <div className={slideAnimate ? moduleSliderClass + " " + modulesSliderAnimationClass : moduleSliderClass} onClick={flipCart} onTouchStart={handleTouchStart} onTouchMove={handleTouchMove}>
+            <div className={slideAnimate ? moduleSliderClass + " " + firstSlideAnimationCls : moduleSliderClass} onClick={flipCart} onTouchStart={handleTouchStart} onTouchMove={handleTouchMove}>
                 <div className={styles.header}>
                     <div className={styles.headerLeft}>
                         <FavoriteButton
@@ -228,7 +250,7 @@ export const Slider = memo((props: SliderProps) => {
 
             </div>
 
-            <div className={slideAnimate ? moduleSliderClass + " " + modulesSliderAnimationClass : moduleSliderClass} onClick={flipCart} onTouchStart={handleTouchStart} onTouchMove={handleTouchMove}>
+            <div className={slideAnimate ? moduleSliderClass + " " + secondSlideAnimationCls : moduleSliderClass} onClick={flipCart} onTouchStart={handleTouchStart} onTouchMove={handleTouchMove}>
                 <div className={styles.header}>
                     <div className={styles.headerLeft}>
                         <FavoriteButton
