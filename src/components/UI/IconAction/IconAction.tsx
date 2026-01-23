@@ -7,10 +7,12 @@ interface IconActionProps {
     size?: number;
     color?: string;
     hoverColor?: string;
+    hoverBackground?: string;
     isActive?: boolean;
     activeColor?: string;
     title?: string;
     strokeWidth?: number;
+    tabIndex?: number;
 }
 
 const IconActionComponent = ({
@@ -20,10 +22,12 @@ const IconActionComponent = ({
     size = 24,
     color = 'currentColor',
     hoverColor,
+    hoverBackground = "rgba(255,255,255,0.1)",
     isActive = false,
     activeColor = '#ef8504',
     title,
     strokeWidth = 2,
+    tabIndex
 }: IconActionProps) => {
     const [isHovered, setIsHovered] = useState(false);
 
@@ -50,7 +54,7 @@ const IconActionComponent = ({
         cursor: 'pointer',
         transition: 'all 0.2s ease',
         border: "1px solid transparent",
-        backgroundColor: variant === 'background' && hoverColor && isHovered ? 'rgba(255,255,255,0.1)' : 'transparent',
+        backgroundColor: variant === 'background' && hoverColor && isHovered ? hoverBackground : 'transparent',
         borderColor: variant === 'background' && hoverColor && isHovered ? hoverColor : 'transparent'
     };
 
@@ -69,6 +73,7 @@ const IconActionComponent = ({
         <button
             title={title}
             style={containerStyle}
+            tabIndex={tabIndex}
             onClick={handleClick}
             onMouseEnter={makeHovered}
             onMouseLeave={cancelHover}

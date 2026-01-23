@@ -4,8 +4,9 @@ import { Slider } from "@/components/UI/Slider/Slider";
 import { ResultPage } from "../ResultPage";
 import { shuffleCards } from "@/utils/cards/shuffleCards";
 import { BaseCard } from "@/types/module";
-import Image from "next/image";
 import styles from "../../page.module.css";
+import { ShuffleButton } from "@/components/features/ShuffleButton";
+import { BackButton } from "@/components/features/BackButton";
 
 interface SliderRef {
     toPrevious: () => void;
@@ -148,9 +149,7 @@ export const Cards = (props: CardsProps) => {
 
                     <div className={styles.options}>
                         <div className={styles.optionsLeft}>
-                            <div className={styles.option} onClick={backBtnClick} title="Cancel">
-                                <Image src="/images/back-arrow.svg" width={30} height={30} alt="Back Arrow" />
-                            </div>
+                            <BackButton onClick={backBtnClick} />
                         </div>
 
                         <div className={styles.optionsCenter}>
@@ -168,9 +167,7 @@ export const Cards = (props: CardsProps) => {
                         </div>
 
                         <div className={styles.optionsRight}>
-                            <div className={styles.option} onClick={shuffleBtnClick} title="Mix">
-                                <Image src="/images/shuffle.png" width={30} height={30} alt="Shuffle icon" />
-                            </div>
+                            <ShuffleButton onClick={shuffleBtnClick} />
                         </div>
                     </div>
                 </div>
