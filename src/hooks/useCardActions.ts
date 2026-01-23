@@ -1,12 +1,12 @@
 import { useCallback, useRef } from 'react';
-import { BaseCard } from '@/types/module';
+import { BaseCard, CreateCardInput } from '@/types/module';
 import { setFavoriteLS } from '@/utils/favorites/favoritesLS';
 import { changeFavoriteState } from '@/utils/favorites/changeFavoriteState';
 import { useSession } from 'next-auth/react';
 import { toggleFavoriteAction } from '@/services/favoriteActions';
 import { updateCardAction } from '@/services/cardActions';
 
-export const useCardActions = <T extends BaseCard>(
+export const useCardActions = <T extends CreateCardInput>(
     changeCards?: React.Dispatch<React.SetStateAction<T[]>>,
     moduleId?: number
 ) => {

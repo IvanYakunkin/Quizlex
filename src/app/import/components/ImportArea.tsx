@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useCallback, memo } from "react";
 import { ImportTextarea } from "@/components/UI/ImportTextarea/ImportTextarea";
 import { ISeparators, ValidationErrors } from "@/types/types";
 import { Select } from "@/components/UI/SelectLanguage/Select";
@@ -26,7 +26,7 @@ const separators: ISeparators[] = [
     { name: "-", value: "-" },
 ];
 
-export const ImportArea = (props: ImportAreaProps) => {
+export const ImportArea = memo((props: ImportAreaProps) => {
     const router = useRouter();
     const { status } = useSession();
     const [activeSeparatorId, setActiveSeparatorId] = useState<number>(0);
@@ -98,6 +98,14 @@ export const ImportArea = (props: ImportAreaProps) => {
         return false;
     }
 
+    const changeTermLang = useCallback((newLang: Language) => {
+        setSelectedTermLang(newLang);
+    }, []);
+
+    const changeDefLang = useCallback((newLang: Language) => {
+        setSelectedDefLang(newLang);
+    }, []);
+
     return (
         <div className={styles.importArea}>
             <div className={styles.infoFields}>
@@ -125,7 +133,7 @@ export const ImportArea = (props: ImportAreaProps) => {
                         label="Original Language"
                         languages={props.languages}
                         selectedLanguage={selectedTermLang}
-                        changeLanguage={(newLanguage: Language) => setSelectedTermLang(newLanguage)}
+                        changeLanguage={changeTermLang}
                     />
                 </div>
                 <div className={styles.language}>
@@ -133,7 +141,7 @@ export const ImportArea = (props: ImportAreaProps) => {
                         label="Translation Language"
                         languages={props.languages}
                         selectedLanguage={selectedDefLang}
-                        changeLanguage={(newLanguage: Language) => setSelectedDefLang(newLanguage)}
+                        changeLanguage={changeDefLang}
                     />
                 </div>
             </div>
@@ -173,4 +181,6 @@ export const ImportArea = (props: ImportAreaProps) => {
             </div>
         </div>
     );
-}
+});
+
+ImportArea.displayName = "ImportArea";

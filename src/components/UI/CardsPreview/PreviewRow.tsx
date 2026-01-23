@@ -2,11 +2,11 @@ import { EditButton } from "@/components/features/EditButton";
 import styles from "./CardsPreview.module.css";
 import { FavoriteButton } from "@/components/features/FavoriteButton";
 import { SoundButton } from "@/components/features/SoundButton";
-import { BaseCard } from "@/types/module";
+import { BaseCard, CreateCardInput } from "@/types/module";
 import { memo, useCallback } from "react";
 
-interface PreviewRowProps {
-    card: BaseCard,
+interface PreviewRowProps<T extends CreateCardInput> {
+    card: T,
     toggleFavorite: (id: number) => Promise<void>;
     editCard: (newCard: BaseCard) => Promise<void>;
     index: number;
@@ -15,9 +15,20 @@ interface PreviewRowProps {
     showOptions?: boolean;
 }
 
-export const PreviewRow = memo(({ card, toggleFavorite, editCard, index, language, showNumbers, showOptions }: PreviewRowProps) => {
+export const PreviewRow = memo(<T extends CreateCardInput>({
+    card,
+    toggleFavorite,
+    editCard,
+    index,
+    language,
+    showNumbers,
+    showOptions
+}: PreviewRowProps<T>) => {
+
     const favoriteHandleClick = useCallback(() => {
-        toggleFavorite(card.id);
+        if (card.id) {
+            toggleFavorite(card.id);
+        }
 
     }, [toggleFavorite, card.id]);
 
