@@ -72,7 +72,9 @@ export const Match = ({ loadCards, moduleName, moduleId }: MatchProps) => {
     const showResultsPage = useCallback(() => {
         stopTimer();
         setSeconds(secondsRef.current);
-        setCurrentPage("results");
+        setTimeout(() => {
+            setCurrentPage("results");
+        }, 500);
     }, []);
 
     const addPenalty = useCallback(() => {
