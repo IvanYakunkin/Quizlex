@@ -57,7 +57,8 @@ jobs:
             echo "Using npm from: $(which npm)"
             
             cd /var/www/Quizlex
-            git pull origin main
+            git fetch origin
+            git reset --hard origin/main
             
             npm ci
             npx prisma generate
@@ -66,4 +67,4 @@ jobs:
             rm -rf .next
             npm run build
             
-            pm2 restart quizlex --update-env || pm2 start npm --name "quizlex" -- start
+            pm2 restart quizlex || pm2 start npm --name "quizlex" -- start
