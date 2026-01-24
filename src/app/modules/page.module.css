@@ -1,17 +1,17 @@
-.modules{
+.modules {
     width: 980px;
     margin: 25px auto;
     color: white;
 }
 
-.title{
+.title {
     font-size: 1.6em;
-    font-weight: bold;   
+    font-weight: bold;
     margin-bottom: 10px;
     text-align: center;
 }
 
-.module{
+.module {
     padding: 10px 20px;
     box-sizing: border-box;
     display: flex;
@@ -26,30 +26,30 @@
 }
 
 
-.module:hover{
+.module:hover {
     border-bottom: 2px solid var(--blue-color-400);
 }
 
-.date{
+.date {
     font-style: italic;
 }
 
-.name{
+.name {
     font-size: 22px;
     padding-bottom: 5px;
     font-weight: bold;
 }
 
-.wordsNumber{
+.wordsNumber {
     font-size: 14px;
     font-weight: bold;
 }
 
-.collection{
+.collection {
     margin-top: 15px;
 }
 
-.options{
+.options {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -57,9 +57,9 @@
     gap: 10px;
 }
 
-.createBtn{
-    padding: 12px;
+.createBtn {
     width: 10%;
+    height: 42px;
     box-sizing: border-box;
     background: var(--blue-color-400);
     border-radius: 5px;
@@ -73,15 +73,15 @@
     font-weight: bold;
 }
 
-.createBtn:hover{
+.createBtn:hover {
     background: var(--blue-color-600);
 }
 
-.search{
+.search {
     width: 80%;
 }
 
-.search>input{
+.search>input {
     box-sizing: border-box;
     width: 100%;
     font-size: 18px;
@@ -96,57 +96,58 @@
     border: 1px solid transparent;
 }
 
-.search>input:focus{
+.search>input:focus {
     border: 1px solid var(--blue-color-400);
 }
 
-.darkgreen{
+.darkgreen {
     background: darkgreen;
 }
-.darkgreen:hover{
-    background: rgb(0, 76, 0)!important;
+
+.darkgreen:hover {
+    background: rgb(0, 76, 0) !important;
 }
 
 @media (max-width: 467px) {
-    .modules{
+    .modules {
         width: 90%;
     }
 
-    .options{
+    .options {
         flex-direction: column;
         padding-bottom: 15px;
     }
 
-    .search{
+    .search {
         width: 100%;
     }
 
-    .createBtn{
+    .createBtn {
         width: 100%;
     }
 }
 
 @media (min-width: 468px) and (max-width: 767px) {
-    .modules{
+    .modules {
         width: 90%;
     }
 
-    .options{
+    .options {
         flex-direction: column;
         padding-bottom: 15px;
     }
 
-    .search{
+    .search {
         width: 100%;
     }
 
-    .createBtn{
+    .createBtn {
         width: 100%;
     }
 }
 
 @media (min-width: 768px) and (max-width: 1024px) {
-    .modules{
+    .modules {
         width: 90%;
     }
 

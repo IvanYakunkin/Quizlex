@@ -23,7 +23,7 @@ export const useWritingLogic = ({
 }: UseWritingLogicProps) => {
     const isMounted = useSyncExternalStore(subscribe, getClientSnapshot, getServerSnapshot);
 
-    const [testCards, setTestCards] = useState<BaseCard[]>(() => cards);
+    const [testCards, setTestCards] = useState<BaseCard[]>(cards);
     const [answeredCards, setAnsweredCards] = useState<BaseCard[]>([]);
     const [writingStatus, setWritingStatus] = useState<WritingStatus>("");
     const [inputValue, setInputValue] = useState("");

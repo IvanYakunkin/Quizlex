@@ -14,6 +14,14 @@ export default async function Page({
   const moduleId = (await params).id;
   const learningType = (await params).learningType;
 
+  if (!learningType || (learningType !== "writing" &&
+    learningType !== "cards" &&
+    learningType !== "match" &&
+    learningType !== "test")) {
+
+    notFound();
+  }
+
   const session: Session | null = await getServerSession(authOptions);
   if (!session || !session.user?.id) {
     notFound();

@@ -8,7 +8,8 @@ import { LearningType } from "@/types/types";
 import styles from "../page.module.css"
 import { Cards } from "./Cards/Cards";
 import { AppModule, BaseCard } from "@/types/module";
-import { notFound } from "next/navigation";
+import { Match } from "./Match/Match";
+import { shuffleCards } from "@/utils/cards/shuffleCards";
 
 interface LearningProps {
     learningType: LearningType;
@@ -21,6 +22,13 @@ export const LearningPage = ({ learningType, module }: LearningProps) => {
     const [cards, setCards] = useState<BaseCard[] | null>(module ? module.cards : null);
     const [changeLanguage, setChangeLanguage] = useState(false);
     const [languages, setLanguages] = useState(module ? { term: module.termLanguage.code, definition: module.definitionLanguage.code } : defaultLanguages);
+    const [localModuleName, setLocalModuleName] = useState<string | null>(null);
+
+    const getCardsForMatch = () => {
+        if (!cards) return null;
+
+        return shuffleCards(cards).splice(0, 6);
+    }
 
     useEffect(() => {
         if (!cards) {
@@ -29,31 +37,29 @@ export const LearningPage = ({ learningType, module }: LearningProps) => {
                 const parsedModule: AppModule = JSON.parse(cardsRawModule);
                 setCards(parsedModule.cards);
                 setLanguages({ term: parsedModule.termLanguage.code, definition: parsedModule.definitionLanguage.code });
+                setLocalModuleName(parsedModule.name);
             }
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+    if (!cards) return;
 
-    const renderLearningComponent = () => {
-        if (cards) {
-            switch (learningType) {
-                case "test":
-                    return <Test cards={cards} languages={languages} changeLanguage={changeLanguage} />
-                case "writing":
-                    return <Writing cards={cards} languages={languages} changeLanguage={changeLanguage} />
-                case "cards":
-                    return <Cards cards={cards} languages={languages} changeLanguage={changeLanguage} />
-                default:
-                    return notFound();
-            }
-        }
+    if (learningType === "match" && (module || localModuleName)) {
+        return <Match loadCards={getCardsForMatch} moduleId={module?.id} moduleName={module?.name ?? localModuleName as string} />;
     }
 
     return (
         <main className="main">
             <div className={styles.learning}>
-                <LearningHeader changeLanguage={changeLanguage} setChangeLanguage={setChangeLanguage} moduleId={module ? module.id : undefined} />
-                {renderLearningComponent()}
+                <LearningHeader
+                    changeLanguage={changeLanguage}
+                    setChangeLanguage={setChangeLanguage}
+                    moduleId={module ? module.id : undefined}
+                    moduleName={module ? module.name : undefined}
+                />
+                {learningType === "test" && <Test cards={cards} languages={languages} changeLanguage={changeLanguage} />}
+                {learningType === "writing" && <Writing cards={cards} languages={languages} changeLanguage={changeLanguage} />}
+                {learningType === "cards" && <Cards cards={cards} languages={languages} changeLanguage={changeLanguage} />}
             </div>
         </main>
     );

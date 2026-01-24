@@ -1,6 +1,6 @@
 import { CreateCardInput } from "./module";
 
-export type LearningType = "cards" | "test" | "writing";
+export type LearningType = "cards" | "test" | "writing" | "match";
 
 export interface Languages {
     term: string;
@@ -27,4 +27,9 @@ export interface ValidationResult {
     isValid: boolean;
     errors: ValidationErrors;
     sanitizedCards: CreateCardInput[];
+}
+
+export interface MatchCard {
+    cardId: number;
+    displayValue: string;
 }

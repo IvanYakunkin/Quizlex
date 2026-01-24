@@ -12,6 +12,7 @@ interface TestProps {
     changeLanguage: boolean;
     languages: Languages;
 }
+
 interface AnswerResultOptions {
     class: string;
     value: string;
@@ -45,7 +46,7 @@ const wordsPerRound = 10;
 const switchCorrectCardDuration = 600;
 
 export const Test = (props: TestProps) => {
-    const [testCards, setTestCards] = useState<BaseCard[]>(shuffleCards(props.cards)); // These are terms that remain to be answered
+    const [testCards, setTestCards] = useState<BaseCard[]>(props.cards); // These are terms that remain to be answered
     const [answeredCards, setAnsweredCards] = useState<BaseCard[]>([]); // Per round
     const [currentCard, setCurrentCard] = useState<BaseCard>(testCards[0]);
     const [answerStatus, setAnswerStatus] = useState<AnswerResult>("");

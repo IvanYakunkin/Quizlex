@@ -1,0 +1,40 @@
+.header {
+    display: flex;
+    position: relative;
+    justify-content: center;
+    align-items: center;
+    height: 4rem;
+}
+
+.middle {
+    font-weight: 600;
+    font-size: 1em;
+}
+
+.right {
+    position: absolute;
+    right: 30px;
+}
+
+.left {
+    position: absolute;
+    left: 30px;
+}
+
+.muteButton {
+    cursor: pointer;
+}
+
+.muteButton:hover {
+    opacity: .8;
+}
+
+@media (max-width: 467px) {
+    .right {
+        right: 0;
+    }
+
+    .left {
+        left: 0;
+    }
+}
