@@ -5,7 +5,7 @@ import Navbar from "./Navbar";
 import styles from "./Header.module.css";
 import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import LoginWin from "../popups/Login/LoginWin";
+import LoginWin from "../dialogs/Login/LoginWin";
 
 export default function Header() {
     const router = useRouter();
@@ -75,7 +75,7 @@ export default function Header() {
                                     <path d="M11 15l-3 -3" />
                                 </svg>
 
-                                <span className={styles.normalText}>Log In</span><span className={styles.responsiveText}>Log in</span>
+                                <span>Log In</span>
                             </div>
                         </div>
                     </div>

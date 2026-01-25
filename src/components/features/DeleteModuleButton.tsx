@@ -1,7 +1,7 @@
 import { TrashIcon } from "@/icons/TrashIcon"
 import { IconAction } from "../UI/IconAction/IconAction"
 import { useState } from "react"
-import { DeleteWin } from "../popups/DeleteWin";
+import { DeleteDialog } from "../dialogs/DeleteDialog";
 
 interface DeleteModuleButtonProps {
     moduleId: number | string;
@@ -23,7 +23,7 @@ export const DeleteModuleButton = ({ moduleId, moduleName }: DeleteModuleButtonP
             </IconAction>
 
             {isOpen &&
-                <DeleteWin isOpen={isOpen} moduleId={moduleId} moduleName={moduleName} onClose={() => setIsOpen(false)} />
+                <DeleteDialog isOpen={isOpen} moduleId={moduleId} moduleName={moduleName} onClose={() => setIsOpen(false)} />
             }
         </>
     )

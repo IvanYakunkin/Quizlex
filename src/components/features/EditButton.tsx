@@ -1,8 +1,8 @@
 import { BaseCard } from "@/types/module";
-import { EditWin } from "../popups/EditWin";
 import { IconAction } from "../UI/IconAction/IconAction";
 import { PencilIcon } from "@/icons/PencilIcon";
 import { memo, useCallback, useMemo, useState } from "react";
+import { EditDialog } from "../dialogs/EditDialog";
 
 interface EditButtonProps {
     card: BaseCard;
@@ -29,7 +29,7 @@ export const EditButton = memo(({ card, onSave }: EditButtonProps) => {
             </IconAction>
 
             {isOpen && (
-                <EditWin
+                <EditDialog
                     isOpen={isOpen}
                     onClose={() => setIsOpen(false)}
                     card={card}
