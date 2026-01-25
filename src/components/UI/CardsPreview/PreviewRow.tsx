@@ -38,10 +38,24 @@ export const PreviewRow = memo(<T extends CreateCardInput>({
         editCard(newCard);
     }, [editCard]);
 
+    const getFieldsClass = (index: number) => {
+        let className = "";
+        if (index % 2 === 0) {
+            className = styles.data;
+        } else {
+            className = styles.data + " " + styles.next;
+        }
+        if (showOptions) {
+            className += " " + styles.heighten;
+        }
+
+        return className;
+    }
+
     return (
         <div className={styles.previewCard}>
             {showNumbers && <div className={styles.number}>{index + 1}</div>}
-            <div className={index % 2 === 0 ? styles.data : styles.data + " " + styles.next}>
+            <div className={getFieldsClass(index)}>
                 <div className={styles.name}><div>{card.term}</div></div>
                 <div className={styles.definition}>{card.definition}</div>
                 {showOptions && language &&

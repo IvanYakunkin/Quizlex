@@ -2,9 +2,9 @@
 
 import styles from "../page.module.css";
 import { useState } from "react";
-import Link from "next/link";
 import { DbModuleWithCount } from "@/types/module";
 import { Module } from "./Module";
+import { Button } from "@/components/UI/Button/Button";
 
 export const Modules = ({ modules }: { modules: DbModuleWithCount[] }) => {
     const [searchValue, setSearchValue] = useState("");
@@ -24,8 +24,14 @@ export const Modules = ({ modules }: { modules: DbModuleWithCount[] }) => {
                         placeholder="Searching..."
                     />
                 </div>
-                <Link href={"/module/create"} className={`${styles.createBtn} ${styles.darkgreen}`}><span>Create</span></Link>
-                <Link href={"/import"} className={styles.createBtn}><span>Import</span></Link>
+                <div className={styles.btns}>
+                    <div className={styles.btn}>
+                        <Button href="/module/create" size="full" isBold>Create</Button>
+                    </div>
+                    <div className={styles.btn}>
+                        <Button href="/import" size="full" background="primary" isBold>Import</Button>
+                    </div>
+                </div>
             </div>
             <div className={styles.collection}>
                 {filteredModules.length > 0 ? (

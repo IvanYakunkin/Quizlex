@@ -11,6 +11,7 @@ import { CreateCard } from './CreateCard/CreateCard';
 import { AppModule, BaseCard, CreateModuleInput } from '@/types/module';
 import { createModuleAction, updateModuleAction } from '@/services/moduleActions';
 import { Spinner } from '../UI/Spinner/Spinner';
+import { Button } from '../UI/Button/Button';
 
 const emptyCard = { id: 0, term: "", definition: "", isFavorite: false };
 
@@ -19,7 +20,6 @@ interface ModuleFormProps {
     initialModule?: AppModule;
 }
 
-// TODO: 1) Re-renders could be optimized!
 export const ModuleForm = ({ languagesList, initialModule }: ModuleFormProps) => {
     const [cards, setCards] = useState<BaseCard[]>(initialModule ? initialModule.cards : [emptyCard]);
     const [termLanguage, setTermLanguage] = useState(initialModule?.termLanguage || languagesList[0]);
@@ -58,7 +58,7 @@ export const ModuleForm = ({ languagesList, initialModule }: ModuleFormProps) =>
         });
     }, []);
 
-    const saveCards = async () => {
+    const saveModule = async () => {
         const name = nameInputRef.current?.value || "";
         const description = descriptionInputRef.current?.value || "";
         const { isValid, errors, sanitizedCards } = validateAndSanitize(name, description, cards);
@@ -133,7 +133,11 @@ export const ModuleForm = ({ languagesList, initialModule }: ModuleFormProps) =>
                             placeholder='Description'
                         />
                     </div>
-                    <div className={styles.buttonSave} onClick={saveCards}>{saveLoading ? <Spinner /> : "Save"}</div>
+                    <div className={styles.buttonSave}>
+                        <Button size='full' isBold fontSize='1em' onClick={saveModule}>
+                            {saveLoading ? <Spinner /> : "Save"}
+                        </Button>
+                    </div>
                 </div>
                 <div className={styles.languages}>
                     <div className={styles.language}>
@@ -152,7 +156,7 @@ export const ModuleForm = ({ languagesList, initialModule }: ModuleFormProps) =>
                         />
                     </div>
                 </div>
-                <div className={styles.createContainer + " create__content"}>
+                <div className={styles.createContainer}>
                     {cards.map((el, id) => (
                         <CreateCard
                             key={el.id}

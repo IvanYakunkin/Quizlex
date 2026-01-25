@@ -2,12 +2,10 @@
   --background-color: #1f1f1f;
   --header-background: #3c3c3c;
   --blue-color-200: #00bfff;
-  /* blue-color */
   --blue-color-300: #169fcd;
   --blue-color-400: #007aa3;
-  /* bluecolor */
+  --blue-color-500: #006385;
   --blue-color-600: #004a63;
-  /* dark-blue */
   --blue-color-700: #002e3d;
 }
 

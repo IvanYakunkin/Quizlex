@@ -45,6 +45,16 @@
     padding-left: 15px;
 }
 
+.save {
+    width: 200px;
+}
+
+.saveBtnContent {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
 /* Import Area */
 
 .areaContent {
@@ -82,25 +92,6 @@
     opacity: .8;
 }
 
-.buttonSave {
-    padding: 10px 40px;
-    background: green;
-    font-size: 1.1em;
-    border-radius: 4px;
-    transition: all .3s ease-out;
-    cursor: pointer;
-}
-
-.buttonSave:hover {
-    background: var(--blue-color-400);
-}
-
-.buttonSave>.buttonSaveContent {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-}
-
 .moduleField {
     width: 100%;
     display: block;
@@ -131,17 +122,29 @@
     margin-bottom: 20px;
 }
 
-@media (max-width: 468px) {
+@media (max-width: 1024px) {
     .importContent {
         width: 95%;
     }
+}
 
+@media (max-width: 767px) {
     .languages {
         flex-direction: column;
         gap: 25px;
     }
 
     .language {
+        width: 100%;
+    }
+
+    .save {
+        width: 140px;
+    }
+}
+
+@media (max-width: 468px) {
+    .save {
         width: 100%;
     }
 
@@ -154,29 +157,7 @@
         justify-content: center;
     }
 
-}
-
-@media (min-width: 468px) and (max-width: 767px) {
-    .importContent {
-        width: 95%;
-    }
-
-    .languages {
-        flex-direction: column;
-        gap: 25px;
-    }
-
-    .language {
-        width: 100%;
-    }
-
-    .buttonSave {
-        padding: 10px 40px;
-    }
-}
-
-@media (min-width: 768px) and (max-width: 1024px) {
-    .importContent {
-        width: 95%;
+    .areaContent {
+        padding: 10px;
     }
 }

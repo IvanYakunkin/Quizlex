@@ -5,6 +5,7 @@ import styles from "../page.module.css";
 import { useParams, useRouter } from "next/navigation";
 import { BaseCard } from "@/types/module";
 import ReactConfetti from "react-confetti";
+import { Button } from "@/components/UI/Button/Button";
 
 interface ResultPageProps<T extends BaseCard> {
     cards: T[];
@@ -72,8 +73,12 @@ export const ResultPage = <T extends BaseCard>(props: ResultPageProps<T>) => {
                 additionalText={props.additionalText !== undefined ? props.additionalText : undefined}
             />
 
-            {!props.isGameOver && <div className={styles.next} onClick={learnNext}>Next</div>}
-            {props.isGameOver && <div className={styles.next} onClick={toHome}>Home</div>}
+            {!props.isGameOver &&
+                <div className={styles.resultBtn}><Button onClick={learnNext} size="lg" background="primary" isBold>Next</Button></div>
+            }
+            {props.isGameOver &&
+                <div className={styles.resultBtn}><Button onClick={toHome} size="full" background="primary" isBold>Home</Button></div>
+            }
         </div>
     )
 }

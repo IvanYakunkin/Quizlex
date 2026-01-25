@@ -82,7 +82,7 @@
 }
 
 @media (max-width: 767px) {
-    .data {
+    .data.heighten {
         padding: 40px 10px 20px 10px;
     }
 

@@ -1,0 +1,76 @@
+.button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid transparent;
+    border-radius: 5px;
+    cursor: pointer;
+    box-shadow: 0 3px 8px #0000003d;
+    transition: 0.2s;
+    box-sizing: border-box;
+}
+
+/* Sizes */
+.sm {
+    padding: 5px 15px;
+    font-size: 12px;
+}
+
+.md {
+    padding: 10px 22px;
+    font-size: 16px;
+}
+
+.lg {
+    padding: 10px 40px;
+    font-size: 20px;
+}
+
+.full {
+    width: 100%;
+    height: 44px;
+}
+
+.h-full {
+    height: 100%;
+    display: inline-flex;
+    align-items: center;
+}
+
+/* Themes */
+.success {
+    background-color: green;
+    color: white;
+}
+
+.success:hover {
+    background-color: var(--hover-bg, darkgreen);
+}
+
+.error {
+    background-color: #ff000098;
+    color: white;
+}
+
+.error:hover {
+    background-color: var(--hover-bg, #790611);
+}
+
+.primary {
+    background-color: var(--blue-color-400);
+    color: white;
+}
+
+.primary:hover {
+    background-color: var(--hover-bg, var(--blue-color-500));
+}
+
+.empty {
+    background-color: transparent;
+    border: 1px solid currentColor;
+}
+
+.empty:hover {
+    color: var(--hover-bg, var(--blue-color-400));
+    border-color: var(--hover-bg, var(--blue-color-400));
+}

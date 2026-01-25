@@ -37,6 +37,10 @@
   cursor: pointer;
 }
 
+.authElement:hover {
+  opacity: .8;
+}
+
 .authElement img,
 .authElement svg {
   vertical-align: middle;
@@ -64,10 +68,6 @@
 .buttonElement:hover {
   color: white;
   background-color: var(--blue-color-400);
-}
-
-.buttonElement:hover {
-  fill: white;
 }
 
 .responsiveText {

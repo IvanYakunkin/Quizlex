@@ -2,14 +2,14 @@
 
 import { CardsPreview } from "@/components/UI/CardsPreview/CardsPreview";
 import { Slider } from "@/components/UI/Slider/Slider";
-import { DeleteWin } from "@/components/popups/DeleteWin";
+import { DeleteDialog } from "@/components/dialogs/DeleteDialog";
 import { ModuleOptions } from "./ModuleOptions/ModuleOptions";
 import { LearningTypes } from "./LearningTypes";
 import { AppModule, BaseCard } from "@/types/module";
 import styles from "./Module.module.css";
-import Image from "next/image";
-import Link from "next/link";
 import { useCallback, useRef, useState } from "react";
+import { PencilIcon } from "@/icons/PencilIcon";
+import { Button } from "@/components/UI/Button/Button";
 
 interface SliderRef {
     refreshCards: () => void;
@@ -42,7 +42,7 @@ export const Module = ({ initialModule }: ModuleProps) => {
         <main>
             {cards && cards.length > 0 && <div>
                 {isDeleteWin && (
-                    <DeleteWin
+                    <DeleteDialog
                         isOpen={isDeleteWin}
                         moduleId={initialModule.id}
                         moduleName={initialModule.name}
@@ -88,10 +88,14 @@ export const Module = ({ initialModule }: ModuleProps) => {
                         showEditButton={true}
                     />
                     {!initialModule.isLocal &&
-                        <Link href={`/module/${initialModule.id}/edit`} className={styles.updateButton}>
-                            <Image src="/images/pen-white.png" width={20} height={20} alt="Pen" />
-                            <span>Add or remove words</span>
-                        </Link>
+                        <div className={styles.updateButton}>
+                            <Button href={`/module/${initialModule.id}/edit`} background="primary" size="full" isBold>
+                                <>
+                                    <svg viewBox="0 0 24 24" width={24} height={24} strokeWidth={2} stroke="white" fill="transparent" xmlns="http://www.w3.org/2000/svg"><PencilIcon /></svg>&nbsp;
+                                    <span>Add or remove words</span>
+                                </>
+                            </Button>
+                        </div>
                     }
                 </div>
             </div>}
