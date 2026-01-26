@@ -87,7 +87,7 @@ export const LearningPage = ({ learningType, module }: LearningProps) => {
     }
 
     useEffect(() => {
-        if (!cards) {
+        if (!cards.length) {
             const cardsRawModule = localStorage.getItem("module");
             if (cardsRawModule) {
                 const parsedModule: AppModule = JSON.parse(cardsRawModule);
@@ -98,7 +98,7 @@ export const LearningPage = ({ learningType, module }: LearningProps) => {
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
-    if (!cards) return;
+    if (!cards.length) return;
 
     if (learningType === "match" && (module || localModuleName)) {
         return <Match loadCards={getCardsForMatch} moduleId={module?.id} moduleName={module?.name ?? localModuleName as string} />;
