@@ -1,18 +1,21 @@
-import { Dispatch, SetStateAction } from "react";
-import styles from "./Switcher.module.css";
+import { memo } from "react";
+import Switch from "react-switch";
 
 interface SwitcherProps {
-    selectedMethod: "login" | "signUp";
-    setSelectedMethod: Dispatch<SetStateAction<"login" | "signUp">>;
+    checked: boolean;
+    onChange: () => void;
 }
 
-const Switcher = ({ selectedMethod, setSelectedMethod }: SwitcherProps) => {
+export const Switcher = memo(({ checked, onChange }: SwitcherProps) => {
     return (
-        <div className={styles.switcher}>
-            <div className={`${styles.method} ${selectedMethod === "login" ? styles.active : ""}`} onClick={() => setSelectedMethod("login")}>Login</div>
-            <div className={`${styles.method} ${selectedMethod === "signUp" ? styles.active : ""}`} data-testid="switcher-signup-btn" onClick={() => setSelectedMethod("signUp")}>Sign up</div>
-        </div>
+        <Switch
+            onChange={onChange}
+            uncheckedIcon={false}
+            checkedIcon={false}
+            onColor="#169fcd"
+            checked={checked}
+        />
     );
-}
+});
 
-export default Switcher;
+Switcher.displayName = "Switcher";

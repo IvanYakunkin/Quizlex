@@ -22,6 +22,7 @@
     "react-confetti": "^6.4.0",
     "react-dom": "^19.2.3",
     "react-draggable": "^4.5.0",
+    "react-switch": "^7.1.0",
     "slugify": "^1.6.6"
   },
   "devDependencies": {

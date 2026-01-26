@@ -1,13 +1,13 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import styles from "./login.module.css";
 import Image from "next/image";
-import Switcher from "../../UI/Switcher/Switcher";
 import LoginForm from "./LoginForm";
 import SignUpForm from "./SignUpForm";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Draggable from "react-draggable";
 import { Spinner } from "@/components/UI/Spinner/Spinner";
+import { AuthSwitcher } from "@/components/UI/AuthSwitcher/AuthSwitcher";
 
 interface LoginWin {
     isOpen: boolean;
@@ -95,7 +95,7 @@ const LoginWin = ({ isOpen, onClose }: LoginWin) => {
                         </div>
                         {!isEmailLogin &&
                             <div className={styles.methods}>
-                                <Switcher selectedMethod={selectedMethod} setSelectedMethod={setSelectedMethod} />
+                                <AuthSwitcher selectedMethod={selectedMethod} setSelectedMethod={setSelectedMethod} />
                                 <div className={styles.google} onClick={googleAuth}>{!isGoogleLoading && <Image src={"/images/google.png"} width={32} height={32} alt="Google" />}{isGoogleLoading ?
                                     <Spinner />
                                     : "Continue with Google"}</div>

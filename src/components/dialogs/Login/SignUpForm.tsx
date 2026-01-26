@@ -1,9 +1,9 @@
 import { Dispatch, RefObject, SetStateAction, useRef, useState } from "react";
 import styles from "./login.module.css";
-import Switcher from "../../UI/Switcher/Switcher";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { Spinner } from "@/components/UI/Spinner/Spinner";
+import { AuthSwitcher } from "@/components/UI/AuthSwitcher/AuthSwitcher";
 
 interface SignUpFormProps {
     selectedMethod: "login" | "signUp";
@@ -97,7 +97,7 @@ const SignUpForm = ({ selectedMethod, setSelectedMethod, closeWindow }: SignUpFo
 
     return (
         <form className={styles.form} onSubmit={handleSubmit}>
-            <Switcher selectedMethod={selectedMethod} setSelectedMethod={setSelectedMethod} />
+            <AuthSwitcher selectedMethod={selectedMethod} setSelectedMethod={setSelectedMethod} />
 
             <div className={styles.formBlock} onClick={() => focusInput(emailRef)}>
                 <div className={styles.icon}>
