@@ -1,0 +1,40 @@
+.settings {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.setting {
+    display: flex;
+    justify-content: space-between;
+}
+
+.name {
+    width: 45%;
+    font-weight: 1em;
+    font-weight: bold;
+}
+
+.value {
+    width: 45%;
+    text-align: right;
+}
+
+.link {
+    color: var(--blue-color-200);
+    cursor: pointer;
+    width: fit-content;
+}
+
+.link.red {
+    color: #ff4848;
+}
+
+.link.red:hover {
+    color: #ff2727;
+}
+
+.link:hover {
+    color: var(--blue-color-400);
+    text-decoration: underline;
+}
