@@ -2,6 +2,7 @@ import { describe, expect, it, vi } from "vitest";
 import { render, screen } from '@testing-library/react';
 import { Slider, SliderRef } from "./Slider";
 import { BaseCard } from "@/types/module";
+import { Languages } from "@/types/types";
 
 vi.mock('next-auth/react', () => ({
     useSession: vi.fn(() => ({
@@ -29,7 +30,8 @@ describe('Slider Component', () => {
         { id: 7, isFavorite: false, term: 'g', definition: "gg" },
         { id: 8, isFavorite: false, term: 'h', definition: "hh" },
     ];
-    const mockLanguages = { term: 'en', definition: 'ru' };
+
+    const mockLanguages: Languages = { term: { id: 1, code: "EN-en", name: "English" }, definition: { id: 1, code: "EN-en", name: "English" } };
 
     it('should render the current card term', () => {
         const mockSliderRef = {
