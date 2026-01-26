@@ -132,17 +132,17 @@ export const ImportArea = memo((props: ImportAreaProps) => {
                 <div className={styles.language}>
                     <Select
                         label="Original Language"
-                        languages={props.languages}
-                        selectedLanguage={selectedTermLang}
-                        changeLanguage={changeTermLang}
+                        dataList={props.languages}
+                        selectedValue={selectedTermLang}
+                        changeValue={changeTermLang}
                     />
                 </div>
                 <div className={styles.language}>
                     <Select
                         label="Translation Language"
-                        languages={props.languages}
-                        selectedLanguage={selectedDefLang}
-                        changeLanguage={changeDefLang}
+                        dataList={props.languages}
+                        selectedValue={selectedDefLang}
+                        changeValue={changeDefLang}
                     />
                 </div>
             </div>

@@ -9,6 +9,7 @@ import { CardFlipper } from "../CardFlipper/CardFlipper";
 import { toggleFavoriteAction } from "@/services/favoriteActions";
 import { FavoriteButton } from "@/components/features/FavoriteButton";
 import { SoundButton } from "@/components/features/SoundButton";
+import { Languages } from "@/types/types";
 
 export interface SliderRef {
     refreshCards?: () => void;
@@ -19,7 +20,7 @@ export interface SliderRef {
 
 interface SliderProps {
     cards: BaseCard[],
-    languages: { term: string, definition: string },
+    languages: Languages,
     changeCards: (newCards: BaseCard[]) => void,
     currentCardId: number;
     setCurrentCardId: React.Dispatch<React.SetStateAction<number>>;
@@ -225,7 +226,7 @@ export const Slider = memo((props: SliderProps) => {
                     <div className={styles.headerRight}>
                         <SoundButton
                             word={isTranslationShown ? currentCard.definition : currentCard.term}
-                            language={isTranslationShown ? props.languages.definition : props.languages.term}
+                            language={isTranslationShown ? props.languages.definition.code : props.languages.term.code}
                             size={28}
                             strokeWidth={1}
                         />
@@ -267,7 +268,7 @@ export const Slider = memo((props: SliderProps) => {
                     <div className={styles.headerRight}>
                         <SoundButton
                             word={isTranslationShown ? currentCard.definition : currentCard.term}
-                            language={isTranslationShown ? props.languages.definition : props.languages.term}
+                            language={isTranslationShown ? props.languages.definition.code : props.languages.term.code}
                             size={28}
                             strokeWidth={1}
                         />

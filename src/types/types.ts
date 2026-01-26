@@ -1,10 +1,11 @@
+import { Language } from "@/generated/prisma/browser";
 import { CreateCardInput } from "./module";
 
 export type LearningType = "cards" | "test" | "writing" | "match";
 
 export interface Languages {
-    term: string;
-    definition: string;
+    term: Language;
+    definition: Language;
 }
 
 export type WritingStatus = "correct" | "finished" | "empty" | "mistake" | "result" | "";
@@ -32,4 +33,12 @@ export interface ValidationResult {
 export interface MatchCard {
     cardId: number;
     displayValue: string;
+}
+
+export interface StudySettings {
+    frontLanguage: Language;
+    isStudyFavorites: boolean;
+    isPronounce: boolean;
+    wordsPerRound?: number;
+    trackProgress?: boolean;
 }

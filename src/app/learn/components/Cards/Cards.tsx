@@ -1,12 +1,12 @@
-import { Languages } from "@/types/types";
+import { Languages, StudySettings } from "@/types/types";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Slider } from "@/components/UI/Slider/Slider";
 import { ResultPage } from "../ResultPage";
-import { shuffleCards } from "@/utils/cards/shuffleCards";
 import { BaseCard } from "@/types/module";
 import styles from "../../page.module.css";
 import { ShuffleButton } from "@/components/features/ShuffleButton";
 import { BackButton } from "@/components/features/BackButton";
+import { playSound } from "@/utils/audio/playSound";
 
 interface SliderRef {
     toPrevious: () => void;
@@ -16,8 +16,9 @@ interface SliderRef {
 
 interface CardsProps {
     cards: BaseCard[];
-    changeLanguage: boolean;
+    settings: StudySettings;
     languages: Languages;
+    shuffleCards: () => void;
 }
 
 interface AnsweredCard extends BaseCard {
@@ -32,9 +33,11 @@ export const Cards = (props: CardsProps) => {
     const [correctNumber, setCorrectNumber] = useState(0);
     const [incorrectNumber, setIncorrectNumber] = useState(0);
     const [isFinished, setIsFinished] = useState(false);
+    const currentLanguage = useRef(props.settings.frontLanguage);
 
     const sliderRef = useRef<SliderRef>(null);
-    const prevSliderLanguage = useRef(props.changeLanguage);
+
+    const isFrontLanguageChanged = props.settings.frontLanguage.id !== props.languages.term.id;
 
     const backBtnClick = () => {
         if (sliderRef.current && currentCardId !== 0) {
@@ -47,10 +50,6 @@ export const Cards = (props: CardsProps) => {
             setAnsweredCards(answeredCards.slice(0, -1));
             sliderRef.current.toPrevious();
         }
-    }
-
-    const shuffleBtnClick = () => {
-        setCards(shuffleCards(cards));
     }
 
     const goNextCorrect = useCallback(() => {
@@ -74,6 +73,14 @@ export const Cards = (props: CardsProps) => {
             sliderRef.current.toNext();
         }
     }, [answeredCards, cards, currentCardId, incorrectNumber]);
+
+    const pronounceWord = useCallback(() => {
+        const word = isFrontLanguageChanged ? cards[currentCardId].definition : cards[currentCardId].term;
+        const language = isFrontLanguageChanged ? props.languages.definition : props.languages.term;
+        if (word) {
+            playSound(word, language.code);
+        }
+    }, [cards, currentCardId, props.languages, isFrontLanguageChanged]);
 
     // Go to the next round
     const refreshCards = () => {
@@ -101,15 +108,28 @@ export const Cards = (props: CardsProps) => {
         }
     }, [goNextCorrect, goNextIncorrect]);
 
-    // Changing sides
+    // TODO: when change favorites and front lang - language is the same!
     useEffect(() => {
-        if (prevSliderLanguage.current !== props.changeLanguage) {
-            if (sliderRef.current) {
-                sliderRef.current.switchDefaultSides();
-                prevSliderLanguage.current = props.changeLanguage;
-            }
+        if (currentLanguage.current.id !== props.settings.frontLanguage.id) {
+            sliderRef.current?.switchDefaultSides();
+            currentLanguage.current = props.settings.frontLanguage;
         }
-    }, [props.changeLanguage]);
+    }, [props.settings]);
+
+    if (props.cards !== cards) {
+        setCards(props.cards);
+        setAnsweredCards([]);
+        setCurrentCardId(0);
+        setCorrectNumber(0);
+        setIncorrectNumber(0);
+    }
+
+    // <Pronounce the term> setting 
+    useEffect(() => {
+        if (props.settings.isPronounce) {
+            pronounceWord();
+        }
+    }, [pronounceWord, props.settings.isPronounce]);
 
     return (
         <div>
@@ -120,7 +140,7 @@ export const Cards = (props: CardsProps) => {
                     closeResultPage={refreshCards}
                     isGameOver={incorrectNumber === 0}
                     language="german"
-                    additionalText={""}
+                    additionalText=""
                     title={incorrectNumber > 0 ? "Words you should learn:" : "Congratulations! You have learned all the words!"}
                 />
                 :
@@ -167,7 +187,7 @@ export const Cards = (props: CardsProps) => {
                         </div>
 
                         <div className={styles.optionsRight}>
-                            <ShuffleButton onClick={shuffleBtnClick} />
+                            <ShuffleButton onClick={props.shuffleCards} />
                         </div>
                     </div>
                 </div>

@@ -1,16 +1,16 @@
-import { Languages } from "@/types/types";
-import { useState, useEffect, useRef, useCallback } from "react";
+import { Languages, StudySettings } from "@/types/types";
+import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { ResultPage } from "../ResultPage";
 import { TestOptions } from "./TestOptions";
-import { getRandomInt, shuffleCards } from "@/utils/cards/shuffleCards";
+import { getRandomInt } from "@/utils/cards/shuffleCards";
 import { playSound } from "@/utils/audio/playSound";
 import { BaseCard, CardWithClass } from "@/types/module";
 import styles from "../../page.module.css";
 
 interface TestProps {
     cards: BaseCard[];
-    changeLanguage: boolean;
     languages: Languages;
+    settings: StudySettings;
 }
 
 interface AnswerResultOptions {
@@ -42,7 +42,6 @@ const deniedKeys = [
     "F4", "F5", "F6", "F7", "F8", "F9", "F10", "F11", "F12", "PrintScreen"
 ];
 
-const wordsPerRound = 10;
 const switchCorrectCardDuration = 600;
 
 export const Test = (props: TestProps) => {
@@ -56,8 +55,18 @@ export const Test = (props: TestProps) => {
     const correctAnswerPosition = useRef(0);
     const answerTemplateOptions = useRef<AnswerResultOptions>(templateOptions.default);
     const wordsRoundCounter = useRef(0);
+    // use it in effect for generating new testCards when props.cards was changed
+    const currentIdRef = useRef(currentCard.id);
+
+    const wordsPerRound = useMemo(() => {
+        if (props.settings.wordsPerRound && props.settings.wordsPerRound < props.cards.length) {
+            return props.settings.wordsPerRound;
+        }
+        return 10;
+    }, [props.settings.wordsPerRound, props.cards.length]);
 
     const answersNumber = props.cards.length > 3 ? 4 : props.cards.length;
+    const isFrontLanguageChanged = props.settings.frontLanguage.id !== props.languages.term.id;
 
     const checkAnswer = useCallback((id: TestAnswerId) => {
         if (answerStatus) return;
@@ -88,17 +97,29 @@ export const Test = (props: TestProps) => {
         }
     }, [answerOptions, answerStatus, currentCard]);
 
+    const pronounceWord = useCallback(() => {
+        const word = isFrontLanguageChanged ? currentCard.definition : currentCard.term;
+        const language = isFrontLanguageChanged ? props.languages.definition : props.languages.term;
+        if (word) {
+            playSound(word, language.code);
+        }
+    }, [currentCard.definition, currentCard.term, isFrontLanguageChanged, props.languages]);
+
+    useEffect(() => {
+        currentIdRef.current = currentCard.id;
+    }, [currentCard.id]);
+
     const toNextWord = useCallback(() => {
-        let updatedTestCards = testCards.slice();
+        const updatedTestCards = testCards.slice();
 
         if (answerStatus === "correct") {
             // remove the correct word from the collection 
             updatedTestCards.shift();
             wordsRoundCounter.current++;
             setAnsweredCards([...answeredCards, currentCard]);
-
         } else {
-            updatedTestCards = shuffleCards(testCards)
+            const incorrectAnswer = updatedTestCards.shift();
+            if (incorrectAnswer) updatedTestCards.splice(wordsPerRound - answeredCards.length - 1, 0, incorrectAnswer);
         }
 
         // Show the result page
@@ -112,8 +133,22 @@ export const Test = (props: TestProps) => {
         setCurrentCard(updatedTestCards[0]);
         answerTemplateOptions.current = templateOptions.default;
 
-    }, [testCards, answerStatus, currentCard, answeredCards]);
+    }, [testCards, answerStatus, currentCard, answeredCards, wordsPerRound]);
 
+    // if props.cards was changed then need to update studying-data
+    useEffect(() => {
+        setTestCards((prevTestCards) => {
+            const updatedQueue = props.cards.filter(pCard =>
+                prevTestCards.some(tCard => tCard.id === pCard.id) || pCard.id === currentIdRef.current
+            );
+            if (updatedQueue.length > 0) {
+                setCurrentCard(updatedQueue[0]);
+            }
+            return updatedQueue;
+        });
+    }, [props.cards]);
+
+    // TODO: rewrite this to function
     // Set answer options
     useEffect(() => {
         if (!testCards || !currentCard) return;
@@ -126,7 +161,6 @@ export const Test = (props: TestProps) => {
             if (i === correctAnswerPosition.current) {
                 newOption = currentCard;
             } else {
-
                 // Trying to generate unique incorrect answer options
                 let isGenerating = true;
                 let incorrectAnswerId: number;
@@ -153,6 +187,13 @@ export const Test = (props: TestProps) => {
         setAnswerOptions(localOptions);
 
     }, [answersNumber, testCards, currentCard, props.cards]);
+
+    // <Pronounce the term> setting 
+    useEffect(() => {
+        if (!showResultPage && props.settings.isPronounce) {
+            pronounceWord();
+        }
+    }, [showResultPage, pronounceWord, props.settings.isPronounce]);
 
     // Keyboard
     useEffect(() => {
@@ -185,14 +226,6 @@ export const Test = (props: TestProps) => {
 
     const wordsCounterLabel = props.cards.length - testCards.length + 1 + " / " + props.cards.length;
 
-    const wordClick = () => {
-        const word = props.changeLanguage ? currentCard.definition : currentCard.term;
-        const language = props.changeLanguage ? props.languages.definition : props.languages.term;
-        if (word) {
-            playSound(word, language);
-        }
-    }
-
     return (
         <div>
             {testCards.length !== 0 && !showResultPage ?
@@ -200,14 +233,14 @@ export const Test = (props: TestProps) => {
                     <div className={styles.container}>
                         <div className={styles.progress}>{wordsCounterLabel}</div>
                         <div className={styles.term} >
-                            <span onClick={wordClick}>{props.changeLanguage ? currentCard.definition : currentCard.term}</span>
+                            <span onClick={pronounceWord}>{isFrontLanguageChanged ? currentCard.definition : currentCard.term}</span>
                         </div>
                         <TestOptions
                             currentCard={currentCard}
                             answerOptions={answerOptions}
                             selectionHandler={checkAnswer}
                             testTitleOptions={answerTemplateOptions}
-                            changeLanguage={props.changeLanguage}
+                            changeLanguage={isFrontLanguageChanged}
                             isNextBtn={answerStatus !== "" && answerStatus !== "correct"}
                             toNextWord={toNextWord}
                         />
@@ -218,7 +251,7 @@ export const Test = (props: TestProps) => {
                     changeCards={setAnsweredCards}
                     closeResultPage={() => { setShowResultPage(false); setAnsweredCards([]) }}
                     isGameOver={testCards.length === 0}
-                    language={props.languages.term}
+                    language={props.languages.term.code}
                     additionalText=""
                 />
             }

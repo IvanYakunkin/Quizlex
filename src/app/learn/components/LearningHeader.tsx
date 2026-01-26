@@ -1,11 +1,8 @@
 import styles from "../page.module.css";
-import { Dispatch, SetStateAction } from "react";
 import { useRouter } from "next/navigation";
 import { SettingsIcon } from "@/icons/SettingsIcon";
 
 interface LearningHeaderProps {
-    changeLanguage: boolean;
-    setChangeLanguage: Dispatch<SetStateAction<boolean>>;
     openSettings: () => void;
     moduleName?: string;
     moduleId?: number | string;

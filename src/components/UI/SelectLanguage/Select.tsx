@@ -1,28 +1,32 @@
-import { Language } from "@/generated/prisma/browser";
 import styles from "./Select.module.css";
 import { memo } from "react";
 
-interface SelectProps {
-    selectedLanguage: Language;
-    changeLanguage: (newLanguage: Language) => void;
-    label: string;
-    languages: Language[];
+interface SelectProps<T> {
+    selectedValue: T;
+    changeValue: (newValue: T) => void;
+    dataList: T[];
+    label?: string;
 }
 
-export const Select = memo((props: SelectProps) => {
-    const changeLanguage = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        const foundLanguage = props.languages.find(l => l.id === +e.target.value);
-        if (foundLanguage) {
-            props.changeLanguage(foundLanguage);
+export interface BaseItem {
+    id: number | string;
+    name: string;
+}
+
+const SelectComponent = <T extends BaseItem>(props: SelectProps<T>) => {
+    const changeSelectedElement = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        const foundElement = props.dataList.find(l => l.id === +e.target.value);
+        if (foundElement) {
+            props.changeValue(foundElement);
         }
     }
 
     const selectContainer = (
         <div className={styles.selectContainer}>
-            <label className={styles.selectLabel}>{props.label}</label>
-            <select className={styles.selectTag} value={props.selectedLanguage.id} onChange={changeLanguage}>
-                {props.languages.map(el => (
-                    <option value={el.id} key={el.id}>{el.name}</option>
+            {props.label && <label className={styles.selectLabel}>{props.label}</label>}
+            <select className={styles.selectTag} value={props.selectedValue.id} onChange={changeSelectedElement}>
+                {props.dataList.map((el, index) => (
+                    <option value={el.id} key={index}>{el.name}</option>
                 ))}
             </select>
         </div>
@@ -33,6 +37,8 @@ export const Select = memo((props: SelectProps) => {
             {selectContainer}
         </div>
     );
-});
+};
 
-Select.displayName = "Select";
+export const Select = memo(SelectComponent) as <T extends BaseItem>(
+    props: SelectProps<T>
+) => React.ReactElement;

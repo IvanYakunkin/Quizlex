@@ -39,7 +39,7 @@ export const EditDialog = (props: EditDialogProps) => {
             footerButtons={
                 <>
                     <Button className={styles.btnCancel} onClick={props.onClose} background="empty">Cancel</Button>
-                    <Button className={styles.btnSuccess} width="150px" onMouseDown={saveChanges}>Save</Button>
+                    <Button className={styles.btnSuccess} width="150px" onClick={saveChanges}>Save</Button>
                 </>
             }
         >

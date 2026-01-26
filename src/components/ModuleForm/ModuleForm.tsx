@@ -23,7 +23,7 @@ interface ModuleFormProps {
 export const ModuleForm = ({ languagesList, initialModule }: ModuleFormProps) => {
     const [cards, setCards] = useState<BaseCard[]>(initialModule ? initialModule.cards : [emptyCard]);
     const [termLanguage, setTermLanguage] = useState(initialModule?.termLanguage || languagesList[0]);
-    const [definitionLanguage, setDefinitionLanguage] = useState(initialModule?.termLanguage || languagesList[0]);
+    const [definitionLanguage, setDefinitionLanguage] = useState(initialModule?.definitionLanguage || languagesList[0]);
 
     const [formErrors, setFormErrors] = useState<ValidationErrors>();
     const [createdCardIndex, setCreatedCardIndex] = useState<number | null>(null);
@@ -141,18 +141,19 @@ export const ModuleForm = ({ languagesList, initialModule }: ModuleFormProps) =>
                 </div>
                 <div className={styles.languages}>
                     <div className={styles.language}>
-                        <Select languages={languagesList}
+                        <Select
+                            dataList={languagesList}
                             label="Original Language"
-                            selectedLanguage={termLanguage}
-                            changeLanguage={setTermLanguage}
+                            selectedValue={termLanguage}
+                            changeValue={setTermLanguage}
                         />
                     </div>
                     <div className={styles.language}>
                         <Select
-                            languages={languagesList}
+                            dataList={languagesList}
                             label="Translation Language"
-                            selectedLanguage={definitionLanguage}
-                            changeLanguage={setDefinitionLanguage}
+                            selectedValue={definitionLanguage}
+                            changeValue={setDefinitionLanguage}
                         />
                     </div>
                 </div>

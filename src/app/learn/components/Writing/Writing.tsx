@@ -1,21 +1,24 @@
 import { ResultPage } from "../ResultPage";
 import { WritingMistakePage } from "./WritingMistakePage";
 import { WritingTemplate } from "./WritingTemplate";
-import { Languages } from "@/types/types";
+import { Languages, StudySettings } from "@/types/types";
 import { useWritingLogic } from "@/hooks/useWritingLogic";
 import { BaseCard } from "@/types/module";
 
 interface WritingProps {
     cards: BaseCard[];
-    changeLanguage: boolean;
     languages: Languages;
+    settings: StudySettings;
 }
 
 export const Writing = (props: WritingProps) => {
     const { state, actions } = useWritingLogic({
         cards: props.cards,
-        changeLanguage: props.changeLanguage
+        settings: props.settings,
+        languages: props.languages
     });
+
+    const isFrontLanguageChanged = props.settings.frontLanguage.id !== props.languages.term.id;
 
     const {
         writingStatus,
@@ -42,7 +45,7 @@ export const Writing = (props: WritingProps) => {
                 <WritingTemplate
                     inputValue={inputValue}
                     onChange={actions.setInputValue}
-                    termToShow={props.changeLanguage ? currentCard.definition : currentCard.term}
+                    termToShow={isFrontLanguageChanged ? currentCard.definition : currentCard.term}
                     checkAnswer={actions.checkAnswer}
                     writingStatus={writingStatus}
                     progressLabel={progressLabel}
@@ -56,7 +59,7 @@ export const Writing = (props: WritingProps) => {
                     closeResultPage={actions.resetRound}
                     title={writingStatus === "finished" ? "Congratulations! You have completed the module!" : ""}
                     isGameOver={writingStatus === "finished"}
-                    language={props.languages.term}
+                    language={props.languages.term.code}
                 />
             }
 
@@ -64,7 +67,7 @@ export const Writing = (props: WritingProps) => {
                 <WritingMistakePage
                     currentCard={currentCard}
                     enteredAnswer={inputValue}
-                    changeLanguage={props.changeLanguage}
+                    changeLanguage={isFrontLanguageChanged}
                     toNextWord={actions.toNextWord}
                 />
             }
