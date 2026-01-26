@@ -44,7 +44,7 @@ export const LearningPage = ({ learningType, module }: LearningProps) => {
         return { ...base, wordsPerRound: 5 };
     }, [learningType, module]);
 
-    const [cards, setCards] = useState<BaseCard[] | null>(module ? module.cards : null);
+    const [cards, setCards] = useState<BaseCard[]>(module ? module.cards : []);
     const [languages, setLanguages] = useState(module ? { term: module.termLanguage, definition: module.definitionLanguage } : defaultLanguages);
     const [localModuleName, setLocalModuleName] = useState<string | null>(null);
     const [isSettingsOpen, setIsSettingsOpen] = useState(false);
@@ -114,7 +114,7 @@ export const LearningPage = ({ learningType, module }: LearningProps) => {
                 />
                 {learningType === "test" && <Test key={currentSession} cards={cards} languages={languages} settings={settings} />}
                 {learningType === "writing" && <Writing key={currentSession} cards={cards} languages={languages} settings={settings} />}
-                {learningType === "cards" && <Cards key={currentSession} cards={cards} languages={languages} settings={settings} shuffleCards={() => setCards(shuffleCards(cards))} />}
+                {learningType === "cards" && <Cards key={currentSession} cards={cards} languages={languages} settings={settings} setCards={setCards} />}
             </div>
 
             <SettingsDialog

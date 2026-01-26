@@ -1,5 +1,5 @@
 import { Languages, StudySettings } from "@/types/types";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { Dispatch, SetStateAction, useCallback, useEffect, useRef, useState } from "react";
 import { Slider } from "@/components/UI/Slider/Slider";
 import { ResultPage } from "../ResultPage";
 import { BaseCard } from "@/types/module";
@@ -7,6 +7,7 @@ import styles from "../../page.module.css";
 import { ShuffleButton } from "@/components/features/ShuffleButton";
 import { BackButton } from "@/components/features/BackButton";
 import { playSound } from "@/utils/audio/playSound";
+import { shuffleCards } from "@/utils/cards/shuffleCards";
 
 interface SliderRef {
     toPrevious: () => void;
@@ -18,7 +19,7 @@ interface CardsProps {
     cards: BaseCard[];
     settings: StudySettings;
     languages: Languages;
-    shuffleCards: () => void;
+    setCards: Dispatch<SetStateAction<BaseCard[]>>;
 }
 
 interface AnsweredCard extends BaseCard {
@@ -85,11 +86,17 @@ export const Cards = (props: CardsProps) => {
     // Go to the next round
     const refreshCards = () => {
         setIsFinished(false);
-        setCards(answeredCards.filter(card => !card.isCorrect));
+        const newCards = answeredCards.filter(card => !card.isCorrect);
+        setCards(newCards);
+        props.setCards(newCards);
         setAnsweredCards([]);
         setCorrectNumber(0);
         setIncorrectNumber(0);
         setCurrentCardId(0)
+    }
+
+    const getCardsShuffled = () => {
+        props.setCards(prev => shuffleCards(prev));
     }
 
     useEffect(() => {
@@ -188,7 +195,7 @@ export const Cards = (props: CardsProps) => {
                         </div>
 
                         <div className={styles.optionsRight}>
-                            <ShuffleButton onClick={props.shuffleCards} />
+                            <ShuffleButton onClick={getCardsShuffled} />
                         </div>
                     </div>
                 </div>
