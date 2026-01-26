@@ -61,7 +61,7 @@ export const Module = ({ initialModule }: ModuleProps) => {
                         cards={cards}
                         changeCards={setCards}
                         sliderRef={sliderRef}
-                        languages={{ term: initialModule.termLanguage.code, definition: initialModule.definitionLanguage.code }}
+                        languages={{ term: initialModule.termLanguage, definition: initialModule.definitionLanguage }}
                         currentCardId={currentCardId}
                         setCurrentCardId={setCurrentCardId}
                     />
