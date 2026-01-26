@@ -77,7 +77,7 @@ export const ResultPage = <T extends BaseCard>(props: ResultPageProps<T>) => {
                 <div className={styles.resultBtn}><Button onClick={learnNext} size="lg" background="primary" isBold>Next</Button></div>
             }
             {props.isGameOver &&
-                <div className={styles.resultBtn}><Button onClick={toHome} size="full" background="primary" isBold>Home</Button></div>
+                <div className={styles.resultBtn}><Button onClick={toHome} size="lg" background="primary" isBold>Home</Button></div>
             }
         </div>
     )

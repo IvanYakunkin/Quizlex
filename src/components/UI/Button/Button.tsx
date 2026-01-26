@@ -3,7 +3,6 @@ import styles from "./Button.module.css";
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
     onClick?: () => void;
-    onMouseDown?: () => void;
     href?: string;
     children: React.ReactNode;
     background?: "success" | "primary" | "error" | "empty";
@@ -17,7 +16,6 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 
 export const Button = ({
     onClick,
-    onMouseDown,
     href,
     children,
     background = "success",
@@ -55,15 +53,16 @@ export const Button = ({
     const handleClick = (e: React.MouseEvent) => {
         e.preventDefault();
         e.stopPropagation();
-        if (onMouseDown) {
-            onMouseDown();
-        } else if (onClick) {
-            onClick();
-        }
+        if (onClick) onClick();
+    }
+
+    const handleMouseDown = (e: React.MouseEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
     }
 
     return (
-        <button className={combinedClasses} style={inlineStyles} onMouseDown={handleClick} onClick={handleClick}>
+        <button className={combinedClasses} style={inlineStyles} onMouseDown={handleMouseDown} onClick={handleClick}>
             {children}
         </button>
     );
