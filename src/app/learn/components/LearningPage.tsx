@@ -70,11 +70,19 @@ export const LearningPage = ({ learningType, module }: LearningProps) => {
         if (newSettings.isStudyFavorites !== settings.isStudyFavorites && module) {
             resetStudying();
             if (newSettings.isStudyFavorites) {
-                setCards(module.cards.filter(c => c.isFavorite));
+                if (newSettings.isStudyFavorites) {
+                    const favorites = module.cards.filter(c => c.isFavorite);
+                    if (favorites.length === 0) {
+                        newSettings.isStudyFavorites = false;
+                    } else {
+                        setCards(favorites);
+                    }
+                }
             } else {
                 setCards(module.cards);
             }
         }
+
         setSettings(newSettings);
     }
 

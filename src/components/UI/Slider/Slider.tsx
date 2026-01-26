@@ -24,6 +24,7 @@ interface SliderProps {
     changeCards: (newCards: BaseCard[]) => void,
     currentCardId: number;
     setCurrentCardId: React.Dispatch<React.SetStateAction<number>>;
+    isFavoriteHidden?: boolean;
     isNavigationHidden?: boolean;
     isMaxHeight?: boolean;
     sliderRef: React.RefObject<SliderRef | null>;
@@ -212,13 +213,15 @@ export const Slider = memo((props: SliderProps) => {
             <div className={slideAnimate ? moduleSliderClass + " " + firstSlideAnimationCls : moduleSliderClass} onClick={flipCart} onTouchStart={handleTouchStart} onTouchMove={handleTouchMove}>
                 <div className={styles.header}>
                     <div className={styles.headerLeft}>
-                        <FavoriteButton
-                            isActive={props.cards[props.currentCardId].isFavorite}
-                            cardId={props.cards[props.currentCardId].id}
-                            setActive={clickFavorite}
-                            size={28}
-                            strokeWidth={1}
-                        />
+                        {!props.isFavoriteHidden &&
+                            <FavoriteButton
+                                isActive={props.cards[props.currentCardId].isFavorite}
+                                cardId={props.cards[props.currentCardId].id}
+                                setActive={clickFavorite}
+                                size={28}
+                                strokeWidth={1}
+                            />
+                        }
                     </div>
 
                     <div className={styles.counter}>{(props.currentCardId + 1) + " / " + props.cards.length}</div>

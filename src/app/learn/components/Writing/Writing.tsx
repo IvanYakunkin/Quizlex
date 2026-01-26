@@ -37,8 +37,6 @@ export const Writing = (props: WritingProps) => {
         );
     }
 
-    if (!currentCard) return null;
-
     return (
         <div className="writing-container">
             {(writingStatus === "correct" || writingStatus === "") &&

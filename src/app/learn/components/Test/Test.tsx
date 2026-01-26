@@ -110,11 +110,19 @@ export const Test = (props: TestProps) => {
     }, [currentCard.id]);
 
     const toNextWord = useCallback(() => {
+        if (showResultPage) return;
         const updatedTestCards = testCards.slice();
 
         if (answerStatus === "correct") {
             // remove the correct word from the collection 
             updatedTestCards.shift();
+            if (updatedTestCards.length === 0) {
+                setShowResultPage(true);
+                setTestCards([]);
+                setAnsweredCards([...answeredCards, currentCard]);
+
+                return;
+            }
             wordsRoundCounter.current++;
             setAnsweredCards([...answeredCards, currentCard]);
         } else {
@@ -133,7 +141,7 @@ export const Test = (props: TestProps) => {
         setCurrentCard(updatedTestCards[0]);
         answerTemplateOptions.current = templateOptions.default;
 
-    }, [testCards, answerStatus, currentCard, answeredCards, wordsPerRound]);
+    }, [testCards, answerStatus, currentCard, answeredCards, wordsPerRound, showResultPage]);
 
     // if props.cards was changed then need to update studying-data
     useEffect(() => {

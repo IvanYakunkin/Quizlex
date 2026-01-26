@@ -29,19 +29,23 @@ export const ResultPage = <T extends BaseCard>(props: ResultPageProps<T>) => {
         props.closeResultPage();
     }, [router, props]);
 
-    const toHome = () => {
+    const toHome = useCallback(() => {
         if (id) {
             router.push(`/module/${id}`);
         } else {
             router.push('/module/');
         }
-    }
+    }, [id, router]);
 
     useEffect(() => {
         const keyboard = (event: KeyboardEvent) => {
             if (event.code === "Space" || event.code === "Enter") {
                 event.preventDefault();
-                learnNext();
+                if (props.isGameOver) {
+                    toHome();
+                } else {
+                    learnNext();
+                }
             }
         }
 
@@ -51,7 +55,7 @@ export const ResultPage = <T extends BaseCard>(props: ResultPageProps<T>) => {
             window.removeEventListener("keydown", keyboard);
         }
 
-    }, [learnNext]);
+    }, [learnNext, props.isGameOver, toHome]);
 
     return (
         <div className={styles.result}>
@@ -63,7 +67,7 @@ export const ResultPage = <T extends BaseCard>(props: ResultPageProps<T>) => {
                     recycle={false}
                 />}
             <div className={styles.status}>{props.title ? props.title : "At this stage you have studied:"}</div>
-            {props.isGameOver && <div className={styles.congratulations}><Image src="/images/celebrate3.gif" width={200} height={200} alt="Congratulations Icon" /></div>}
+            {props.isGameOver && <div className={styles.congratulations}><Image src="/images/celebrate3.gif" preload={false} width={200} height={200} alt="Congratulations Icon" /></div>}
             <CardsPreview
                 cards={props.cards}
                 changeCards={props.changeCards}

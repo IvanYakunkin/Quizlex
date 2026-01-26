@@ -159,12 +159,13 @@ export const Cards = (props: CardsProps) => {
                     <Slider
                         cards={cards}
                         sliderRef={sliderRef}
-                        changeCards={(newCards: BaseCard[]) => setCards(newCards)}
+                        changeCards={setCards}
                         languages={props.languages}
                         currentCardId={currentCardId}
                         setCurrentCardId={setCurrentCardId}
-                        isNavigationHidden={true}
-                        isMaxHeight={true}
+                        isNavigationHidden
+                        isMaxHeight
+                        isFavoriteHidden
                     />
 
                     <div className={styles.options}>

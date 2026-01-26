@@ -70,6 +70,11 @@ export const useWritingLogic = ({
 
             wordsRoundCounter.current += 1;
 
+            if (testCards.length === 1) {
+                setWritingStatus("finished");
+                return;
+            }
+
             if (wordsRoundCounter.current >= wordsPerRound) {
                 setWritingStatus("result");
                 wordsRoundCounter.current = 0;
@@ -111,9 +116,7 @@ export const useWritingLogic = ({
             const updatedQueue = cards.filter(pCard =>
                 prevTestCards.some(tCard => tCard.id === pCard.id) || pCard.id === currentIdRef.current.id
             );
-            if (updatedQueue.length > 0) {
-                //settestCards[0](updatedQueue[0]);
-            }
+
             return updatedQueue;
         });
     }, [cards]);
