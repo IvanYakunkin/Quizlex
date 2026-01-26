@@ -8,7 +8,9 @@
 
 **Quizlex** is a free, open-source web application designed to help you master foreign languages and new concepts using flashcards. Inspired by platforms like Quizlet, Quizlex offers a clean, ad-free experience focused on efficiency and learning.
 
-🚀 **Live Demo:** [https://quizlex.ru](https://quizlex.ru)
+🚀 **Live Demo:** [https://quizlex.ru](https://quizlex.ru)    
+📄 **RU Version:** [https://github.com/IvanYakunkin/Quizlex/blob/main/README-RU.md](https://github.com/IvanYakunkin/Quizlex/blob/main/README-RU.md)        
+📸 **Photos/Videos** [https://github.com/IvanYakunkin/Quizlex/tree/main/DEMO](https://github.com/IvanYakunkin/Quizlex/tree/main/DEMO)
 
 ---
 
@@ -36,6 +38,8 @@ We currently support three distinct ways to learn:
 1.  **🃏 Flashcards:** The classic flip-card experience to memorize terms.
 2.  **📝 Test:** A generated quiz to evaluate your knowledge.
 3.  **⌨️ Write:** Type the answer to reinforce spelling and recall.
+4.  **⚡ Match:** Connect terms with their definitions by tapping on the matching pairs.
+
 
 ---
 
