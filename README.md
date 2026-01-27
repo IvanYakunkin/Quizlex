@@ -33,7 +33,7 @@ Quizlex is designed to be useful immediately, even without an account.
 
 ## 🎓 Study Modes
 
-We currently support three distinct ways to learn:
+Currently, four different learning methods are supported:
 
 1.  **🃏 Flashcards:** The classic flip-card experience to memorize terms.
 2.  **📝 Test:** A generated quiz to evaluate your knowledge.
